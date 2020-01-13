@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>Spark之GraphX | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GraphX相关学习：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark之GraphX">
+<meta property="og:url" content="https://www.hphblog.cn/2019/06/08/Spark%E4%B9%8BGraphX/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="GraphX相关学习：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608150952.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608153045.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608153513.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608155611.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608155624.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608155637.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608162612.png">
+<meta property="article:published_time" content="2019-06-08T06:33:32.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:26.445Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="Spark">
+<meta property="article:tag" content="GraphX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608150952.png">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-Spark之GraphX" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2019/06/08/Spark%E4%B9%8BGraphX/" class="article-date">
+      <time datetime="2019-06-08T06:33:32.000Z" itemprop="datePublished">2019-06-08</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Spark之GraphX
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/GraphX/" rel="tag">GraphX</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Spark/" rel="tag">Spark</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+         GraphX相关学习：<Excerpt in index | 首页摘要><a id="more"></a> 
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>GraphX 是 Spark 图表和图形并行计算的新组件。GraphX 延伸 Spark <a href="http://spark.apache.org/docs/latest/api/scala/index.html#org.apache.spark.rdd.RDD" target="_blank" rel="noopener">RDD</a> 通过引入新的<a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html#property_graph" target="_blank" rel="noopener">图形</a>的抽象：计算与连接到每个顶点和边缘性的向量。以支持图形计算，GraphX 公开了一组基本的操作符（例如  <a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html#structural_operators" target="_blank" rel="noopener">subgraph</a>, <a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html#join_operators" target="_blank" rel="noopener">joinVertices</a>和 <a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html#aggregateMessages" target="_blank" rel="noopener">aggregateMessages</a>）以及一个优化高阶API。此外，GraphX 包括的图形越来越多的收集 <a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html#graph_algorithms" target="_blank" rel="noopener">algorithms</a> 和 <a href="http://spark.apache.org/docs/latest/graphx-programming-guide.html#graph_builders" target="_blank" rel="noopener">builders</a> ，以简化图形分析任务。</p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="顶点"><a href="#顶点" class="headerlink" title="顶点"></a>顶点</h3><p><code>RDD[(VertexId, VD)]</code>表示顶点。  VertexId 就是Long类型，表示顶点的ID【主键】。 VD表示类型参数，可以是任意类型, 表示的是该顶点的属性。<br>VertexRDD[VD] 继承了RDD[(VertexId, VD)]， 他是顶点的另外一种表示方式， 在内部的计算上提供了很多的优化还有一些更高级的API。</p>
+<h3 id="边"><a href="#边" class="headerlink" title="边"></a>边</h3><p>RDD[Edge[VD]]  表示边，  Edge中有三个东西： srcId表示 源顶点的ID， dstId表示的是目标顶点的ID， attr表示表的属性，属性的类型是VD类型，VD是一个类型参数，可以是任意类型。</p>
+<p>EdgeRDD[ED] 继承了 RDD[Edge[ED]] ,他是边的另外一种表示方式，在内部的计算上提供您改了很多的优化还有一些更高级的API。</p>
+<h3 id="三元组"><a href="#三元组" class="headerlink" title="三元组"></a>三元组</h3><p> EdgeTriplet[VD, ED] extends Edge[ED]   他表示一个三元组， 比边多了两个顶点的属性</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608150952.png" alt=""></p>
+<h3 id="图"><a href="#图" class="headerlink" title="图"></a>图</h3><p> Graph[VD: ClassTag, ED: ClassTag]  VD 是顶点的属性、  ED是边的属性</p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>1、直接创建 sparkConf  -》  sparkContext<br>2、创建顶点的RDD  RDD[(VertexId, VD)]<br>3、创建边的RDD  RDD[Edge[ED]]<br>4、根据边和顶点创建 Graph<br>5、对图进行计算<br>6、关闭 SparkContext</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.graphx.&#123;<span class="type">Edge</span>, <span class="type">Graph</span>, <span class="type">VertexId</span>&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.rdd.<span class="type">RDD</span></span><br><span class="line"><span class="keyword">import</span> org.apache.spark.&#123;<span class="type">SparkConf</span>, <span class="type">SparkContext</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">GraphxHelloWorld</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line">  <span class="comment">//创建sparkConf</span></span><br><span class="line">  <span class="keyword">val</span> sparkConf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">"graphx"</span>).setMaster(<span class="string">"local[*]"</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment">//创建SparkContext</span></span><br><span class="line">  <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(sparkConf)</span><br><span class="line"></span><br><span class="line">  <span class="comment">//业务逻辑</span></span><br><span class="line">  <span class="keyword">val</span> users: <span class="type">RDD</span>[(<span class="type">VertexId</span>, (<span class="type">String</span>, <span class="type">String</span>))] =</span><br><span class="line">    sc.parallelize(<span class="type">Array</span>(</span><br><span class="line">      (<span class="number">3</span>L, (<span class="string">"rxin"</span>, <span class="string">"student"</span>)),</span><br><span class="line">      (<span class="number">7</span>L, (<span class="string">"jgonzal"</span>, <span class="string">"postdoc"</span>)),</span><br><span class="line">      (<span class="number">5</span>L, (<span class="string">"franklin"</span>, <span class="string">"prof"</span>)),</span><br><span class="line">      (<span class="number">2</span>L, (<span class="string">"istoica"</span>, <span class="string">"prof"</span>)))</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> relationships: <span class="type">RDD</span>[<span class="type">Edge</span>[<span class="type">String</span>]] =</span><br><span class="line">    sc.parallelize(<span class="type">Array</span>(</span><br><span class="line">      <span class="type">Edge</span>(<span class="number">3</span>L, <span class="number">7</span>L, <span class="string">"collab"</span>),</span><br><span class="line">      <span class="type">Edge</span>(<span class="number">5</span>L, <span class="number">3</span>L, <span class="string">"advisor"</span>),</span><br><span class="line">      <span class="type">Edge</span>(<span class="number">2</span>L, <span class="number">5</span>L, <span class="string">"colleague"</span>),</span><br><span class="line">      <span class="type">Edge</span>(<span class="number">5</span>L, <span class="number">7</span>L, <span class="string">"pi"</span>))</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> defaultUser = (<span class="string">"John Doe"</span>, <span class="string">"Missing"</span>)</span><br><span class="line">  <span class="keyword">val</span> graph = <span class="type">Graph</span>(users, relationships, defaultUser)</span><br><span class="line">  <span class="keyword">val</span> facts: <span class="type">RDD</span>[<span class="type">String</span>] =</span><br><span class="line">    graph.triplets.map(triplet =&gt;</span><br><span class="line">      triplet.srcAttr._1 + <span class="string">" is the "</span> + triplet.attr + <span class="string">" of "</span> + triplet.dstAttr._1)</span><br><span class="line">  facts.collect.foreach(println(_))</span><br><span class="line"></span><br><span class="line">  <span class="comment">//关闭</span></span><br><span class="line">  sc.stop()</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608153045.png" alt=""></p>
+<h2 id="操作"><a href="#操作" class="headerlink" title="操作"></a>操作</h2><h3 id="创建操作"><a href="#创建操作" class="headerlink" title="创建操作"></a>创建操作</h3><p> 根据边和顶点的数据来创建。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">apply</span></span>[<span class="type">VD</span>: <span class="type">ClassTag</span>, <span class="type">ED</span>: <span class="type">ClassTag</span>](</span><br><span class="line">    vertices: <span class="type">RDD</span>[(<span class="type">VertexId</span>, <span class="type">VD</span>)],</span><br><span class="line">    edges: <span class="type">RDD</span>[<span class="type">Edge</span>[<span class="type">ED</span>]],</span><br><span class="line">    defaultVertexAttr: <span class="type">VD</span> = <span class="literal">null</span>.asInstanceOf[<span class="type">VD</span>],</span><br><span class="line">    edgeStorageLevel: <span class="type">StorageLevel</span> = <span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>,</span><br><span class="line">    vertexStorageLevel: <span class="type">StorageLevel</span> = <span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>): <span class="type">Graph</span>[<span class="type">VD</span>, <span class="type">ED</span>]</span><br></pre></td></tr></table></figure>
+
+<p>根据边直接创建， 所有顶点的属性都一样为 defaultValue</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fromEdges</span></span>[<span class="type">VD</span>: <span class="type">ClassTag</span>, <span class="type">ED</span>: <span class="type">ClassTag</span>](</span><br><span class="line">    edges: <span class="type">RDD</span>[<span class="type">Edge</span>[<span class="type">ED</span>]],</span><br><span class="line">    defaultValue: <span class="type">VD</span>,</span><br><span class="line">    edgeStorageLevel: <span class="type">StorageLevel</span> = <span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>,</span><br><span class="line">    vertexStorageLevel: <span class="type">StorageLevel</span> = <span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>): <span class="type">Graph</span>[<span class="type">VD</span>, <span class="type">ED</span>]</span><br></pre></td></tr></table></figure>
+
+<p>根据裸边来进行创建，顶点的属性是 defaultValue  ，边的属性为1</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fromEdgeTuples</span></span>[<span class="type">VD</span>: <span class="type">ClassTag</span>](</span><br><span class="line">    rawEdges: <span class="type">RDD</span>[(<span class="type">VertexId</span>, <span class="type">VertexId</span>)],</span><br><span class="line">    defaultValue: <span class="type">VD</span>,</span><br><span class="line">    uniqueEdges: <span class="type">Option</span>[<span class="type">PartitionStrategy</span>] = <span class="type">None</span>,</span><br><span class="line">    edgeStorageLevel: <span class="type">StorageLevel</span> = <span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>,</span><br><span class="line">    vertexStorageLevel: <span class="type">StorageLevel</span> = <span class="type">StorageLevel</span>.<span class="type">MEMORY_ONLY</span>): <span class="type">Graph</span>[<span class="type">VD</span>, <span class="type">Int</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="转换操作"><a href="#转换操作" class="headerlink" title="转换操作"></a>转换操作</h3><p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608153513.png" alt=""></p>
+<p><code>numEdges</code>  返回边的个数</p>
+<p><code>numVertices</code>  顶点的个数</p>
+<p><code>inDegrees: VertexRDD[Int]</code>  返回顶点的入度， 返回类型为 <code>RDD[(VertexId, Int)] Int</code>就是入度的具体值</p>
+<p><code>outDegrees: VertexRDD[Int]</code>  返回顶点的出度， 返回类型为 <code>RDD[(VertexId, Int)]</code> Int就是出度的具体值<br> <code>degrees: VertexRDD[Int]</code>  返回顶点的入度和出度之和。 返回类型为 <code>RDD[(VertexId, Int)]</code> Int就是出度的具体值</p>
+<h3 id="结构操作"><a href="#结构操作" class="headerlink" title="结构操作"></a>结构操作</h3><p><code>def reverse: Graph[VD, ED]</code>   反转整个图  ，将边的方向调头</p>
+<p><code>def subgraph( epred: EdgeTriplet[VD, ED] =&gt; Boolean = (x =&gt; true), vpred: (VertexId, VD) =&gt; Boolean = ((v, d) =&gt; true)) : Graph[VD, ED]</code>可以通过参数名来指定传参，  如果``subGraph`中有的边没有顶点对应，那么会自动将该边去除  。   没有边的顶点不会自动被删除</p>
+<p><code>def mask[VD2: ClassTag, ED2: ClassTag](other:Graph[VD2, ED2]): Graph[VD, ED]</code>将当前图和Other图做交集，返回一个新图，如果other中的属性和原图的属性不同，那么保留原图的属性</p>
+<p><code>def groupEdges(merge: (ED, ED) =&gt; ED): Graph[VD, ED]</code> 合并两条边，通过函数合并边的属性。</p>
+<h3 id="聚合操作"><a href="#聚合操作" class="headerlink" title="聚合操作"></a>聚合操作</h3><p><code>def collectNeighbors(edgeDirection: EdgeDirection): VertexRDD[Array[(VertexId, VD)]]</code> 收集邻居节点的数据，根据指定的方向。返回的数据为RDD[(VertexId,  Array[(VertexId, VD)] )]   顶点的属性是 一个数组。数组中包含邻居节点的顶点</p>
+<p><code>def collectNeighborIds(edgeDirection: EdgeDirection): VertexRDD[Array[VertexId]]</code> 跟上一个相同，只不过只收集ID</p>
+<p><code>def aggregateMessages[A: ClassTag]( sendMsg: EdgeContext[VD, ED, A] =&gt; Unit, mergeMsg: (A, A) =&gt; A, tripletFields: TripletFields = TripletFields.All) : VertexRDD[A]</code>  每一个边都会通过<code>sendMsg</code> 发送一个消息， 每一个顶点都会通过<code>mergeMsg</code> 来处理所有他收到的消息。  <code>TripletFields</code>存在主要用于定制 <code>EdgeContext</code>对象中的属性的值是否存在， 为了减少数据通信量。</p>
+<h3 id="关联操作"><a href="#关联操作" class="headerlink" title="关联操作"></a>关联操作</h3><p><code>def joinVertices[U: ClassTag](table: RDD[(VertexId, U)])(mapFunc: (VertexId, VD, U) =&gt; VD) : Graph[VD, ED]</code> 将相同顶点ID的数据进行加权，  将U这种类型的数据加入到 VD这种类型的数据上，但是不能修改VD的类型。</p>
+<p><code>def outerJoinVertices[U: ClassTag, VD2: ClassTag](other: RDD[(VertexId, U)]) (mapFunc: (VertexId, VD, Option[U]) =&gt; VD2)(implicit eq: VD =:= VD2 = null) : Graph[VD2, ED]</code>   和<code>joinVertices</code>类似。，只不是如果没有相对应的节点，那么join的值默认为None。</p>
+<h3 id="Pregel"><a href="#Pregel" class="headerlink" title="Pregel"></a>Pregel</h3><p>节点：  有两种状态：</p>
+<p>1、钝化态【类似于休眠，不做任何事】 </p>
+<p> 2、激活态【干活】<br>2、节点能够处于激活态需要有条件：</p>
+<p>（1）、节点收到消息  </p>
+<p> （2）、成功发送了任何一条消息</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pregel</span></span>[<span class="type">A</span>: <span class="type">ClassTag</span>](</span><br><span class="line">    initialMsg: <span class="type">A</span>,        <span class="comment">//     图初始化的时候，开始模型计算的时候，所有节点都会先收到一个消息。</span></span><br><span class="line">    maxIterations: <span class="type">Int</span> = <span class="type">Int</span>.<span class="type">MaxValue</span>,     <span class="comment">//最大迭代次数  </span></span><br><span class="line">    activeDirection: <span class="type">EdgeDirection</span> = <span class="type">EdgeDirection</span>.<span class="type">Either</span>)   <span class="comment">//规定了发送消息的方向</span></span><br><span class="line">   (</span><br><span class="line">    vprog: (<span class="type">VertexId</span>, <span class="type">VD</span>, <span class="type">A</span>) =&gt; <span class="type">VD</span>,  <span class="comment">//节点调用该消息将聚合后的数据和本节点进行属性的合并。  </span></span><br><span class="line">    sendMsg: <span class="type">EdgeTriplet</span>[<span class="type">VD</span>, <span class="type">ED</span>] =&gt; <span class="type">Iterator</span>[(<span class="type">VertexId</span>, <span class="type">A</span>)],   <span class="comment">//激活态的节点调用该方法发送消息</span></span><br><span class="line">    mergeMsg: (<span class="type">A</span>, <span class="type">A</span>) =&gt; <span class="type">A</span>)	<span class="comment">//如果一个节点接收到多条消息，先用mergeMsg 来将多条消息聚合成为一条消息，如果节点只收到一条消息，则不调用该函数</span></span><br><span class="line">  : <span class="type">Graph</span>[<span class="type">VD</span>, <span class="type">ED</span>]</span><br></pre></td></tr></table></figure>
+
+<h2 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h2><figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.log4j.&#123;<span class="type">Level</span>, <span class="type">Logger</span>&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.graphx.&#123;<span class="type">Edge</span>, _&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.rdd.<span class="type">RDD</span></span><br><span class="line"><span class="keyword">import</span> org.apache.spark.&#123;<span class="type">SparkConf</span>, <span class="type">SparkContext</span>&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Created by wuyufei on 2017/9/22.</span></span><br><span class="line"><span class="comment">  *</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">Practice</span> <span class="keyword">extends</span> <span class="title">App</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//屏蔽日志</span></span><br><span class="line">  <span class="type">Logger</span>.getLogger(<span class="string">"org.apache.spark"</span>).setLevel(<span class="type">Level</span>.<span class="type">ERROR</span>)</span><br><span class="line">  <span class="type">Logger</span>.getLogger(<span class="string">"org.eclipse.jetty.server"</span>).setLevel(<span class="type">Level</span>.<span class="type">OFF</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">//设定一个SparkConf</span></span><br><span class="line">  <span class="keyword">val</span> conf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">"SimpleGraphX"</span>).setMaster(<span class="string">"local[4]"</span>)</span><br><span class="line">  <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(conf)</span><br><span class="line"></span><br><span class="line">  <span class="comment">//初始化顶点集合</span></span><br><span class="line">  <span class="keyword">val</span> vertexArray = <span class="type">Array</span>(</span><br><span class="line">    (<span class="number">1</span>L, (<span class="string">"Alice"</span>, <span class="number">28</span>)),</span><br><span class="line">    (<span class="number">2</span>L, (<span class="string">"Bob"</span>, <span class="number">27</span>)),</span><br><span class="line">    (<span class="number">3</span>L, (<span class="string">"Charlie"</span>, <span class="number">65</span>)),</span><br><span class="line">    (<span class="number">4</span>L, (<span class="string">"David"</span>, <span class="number">42</span>)),</span><br><span class="line">    (<span class="number">5</span>L, (<span class="string">"Ed"</span>, <span class="number">55</span>)),</span><br><span class="line">    (<span class="number">6</span>L, (<span class="string">"Fran"</span>, <span class="number">50</span>))</span><br><span class="line">  )</span><br><span class="line">  <span class="comment">//创建顶点的RDD表示</span></span><br><span class="line">  <span class="keyword">val</span> vertexRDD: <span class="type">RDD</span>[(<span class="type">Long</span>, (<span class="type">String</span>, <span class="type">Int</span>))] = sc.parallelize(vertexArray)</span><br><span class="line"></span><br><span class="line">  <span class="comment">//初始化边的集合</span></span><br><span class="line">  <span class="keyword">val</span> edgeArray = <span class="type">Array</span>(</span><br><span class="line">    <span class="type">Edge</span>(<span class="number">2</span>L, <span class="number">1</span>L, <span class="number">7</span>),</span><br><span class="line">    <span class="type">Edge</span>(<span class="number">2</span>L, <span class="number">4</span>L, <span class="number">2</span>),</span><br><span class="line">    <span class="type">Edge</span>(<span class="number">3</span>L, <span class="number">2</span>L, <span class="number">4</span>),</span><br><span class="line">    <span class="type">Edge</span>(<span class="number">3</span>L, <span class="number">6</span>L, <span class="number">3</span>),</span><br><span class="line">    <span class="type">Edge</span>(<span class="number">4</span>L, <span class="number">1</span>L, <span class="number">1</span>),</span><br><span class="line">    <span class="type">Edge</span>(<span class="number">2</span>L, <span class="number">5</span>L, <span class="number">2</span>),</span><br><span class="line">    <span class="type">Edge</span>(<span class="number">5</span>L, <span class="number">3</span>L, <span class="number">8</span>),</span><br><span class="line">    <span class="type">Edge</span>(<span class="number">5</span>L, <span class="number">6</span>L, <span class="number">3</span>)</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  <span class="comment">//创建边的RDD表示</span></span><br><span class="line">  <span class="keyword">val</span> edgeRDD: <span class="type">RDD</span>[<span class="type">Edge</span>[<span class="type">Int</span>]] = sc.parallelize(edgeArray)</span><br><span class="line"></span><br><span class="line">  <span class="comment">//创建一个图</span></span><br><span class="line">  <span class="keyword">val</span> graph: <span class="type">Graph</span>[(<span class="type">String</span>, <span class="type">Int</span>), <span class="type">Int</span>] = <span class="type">Graph</span>(vertexRDD, edgeRDD)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">//***************************  图的属性    ****************************************</span></span><br><span class="line"></span><br><span class="line">  println(<span class="string">"属性演示"</span>)</span><br><span class="line">  println(<span class="string">"**********************************************************"</span>)</span><br><span class="line">  println(<span class="string">"找出图中年龄大于30的顶点："</span>)</span><br><span class="line">  graph.vertices.filter &#123; <span class="keyword">case</span> (id, (name, age)) =&gt; age &gt; <span class="number">30</span> &#125;.collect.foreach &#123;</span><br><span class="line">    <span class="keyword">case</span> (id, (name, age)) =&gt; println(<span class="string">s"<span class="subst">$name</span> is <span class="subst">$age</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  println</span><br><span class="line">  <span class="comment">//</span></span><br><span class="line">  println(<span class="string">"找出图中属性大于5的边："</span>)</span><br><span class="line">  graph.edges.filter(e =&gt; e.attr &gt; <span class="number">5</span>).collect.foreach(e =&gt; println(<span class="string">s"<span class="subst">$&#123;e.srcId&#125;</span> to <span class="subst">$&#123;e.dstId&#125;</span> att <span class="subst">$&#123;e.attr&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line"></span><br><span class="line">  <span class="comment">//triplets操作，((srcId, srcAttr), (dstId, dstAttr), attr)</span></span><br><span class="line">  println(<span class="string">"列出边属性&gt;5的tripltes："</span>)</span><br><span class="line">  <span class="keyword">for</span> (triplet &lt;- graph.triplets.filter(t =&gt; t.attr &gt; <span class="number">5</span>).collect) &#123;</span><br><span class="line">    println(<span class="string">s"<span class="subst">$&#123;triplet.srcAttr._1&#125;</span> likes <span class="subst">$&#123;triplet.dstAttr._1&#125;</span>"</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  println</span><br><span class="line"></span><br><span class="line">  <span class="comment">//Degrees操作</span></span><br><span class="line">  println(<span class="string">"找出图中最大的出度、入度、度数："</span>)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">max</span></span>(a: (<span class="type">VertexId</span>, <span class="type">Int</span>), b: (<span class="type">VertexId</span>, <span class="type">Int</span>)): (<span class="type">VertexId</span>, <span class="type">Int</span>) = &#123;</span><br><span class="line">    <span class="keyword">if</span> (a._2 &gt; b._2) a <span class="keyword">else</span> b</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"max of outDegrees:"</span> + graph.outDegrees.reduce(max) + <span class="string">" max of inDegrees:"</span> + graph.inDegrees.reduce(max) + <span class="string">" max of Degrees:"</span> + graph.degrees.reduce(max))</span><br><span class="line">  println</span><br><span class="line"></span><br><span class="line">  <span class="comment">//***************************  转换操作    ****************************************</span></span><br><span class="line">  println(<span class="string">"转换操作"</span>)</span><br><span class="line">  println(<span class="string">"**********************************************************"</span>)</span><br><span class="line">  println(<span class="string">"顶点的转换操作，顶点age + 10："</span>)</span><br><span class="line">  graph.mapVertices &#123; <span class="keyword">case</span> (id, (name, age)) =&gt; (id, (name, age + <span class="number">10</span>)) &#125;.vertices.collect.foreach(v =&gt; println(<span class="string">s"<span class="subst">$&#123;v._2._1&#125;</span> is <span class="subst">$&#123;v._2._2&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line">  println(<span class="string">"边的转换操作，边的属性*2："</span>)</span><br><span class="line">  graph.mapEdges(e =&gt; e.attr * <span class="number">2</span>).edges.collect.foreach(e =&gt; println(<span class="string">s"<span class="subst">$&#123;e.srcId&#125;</span> to <span class="subst">$&#123;e.dstId&#125;</span> att <span class="subst">$&#123;e.attr&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line">  println(<span class="string">"三元组的转换操作，边的属性为端点的age相加："</span>)</span><br><span class="line">  graph.mapTriplets(tri =&gt; tri.srcAttr._2 * tri.dstAttr._2).triplets.collect.foreach(e =&gt; println(<span class="string">s"<span class="subst">$&#123;e.srcId&#125;</span> to <span class="subst">$&#123;e.dstId&#125;</span> att <span class="subst">$&#123;e.attr&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line"></span><br><span class="line">  <span class="comment">//***************************  结构操作    ****************************************</span></span><br><span class="line">  println(<span class="string">"结构操作"</span>)</span><br><span class="line">  println(<span class="string">"**********************************************************"</span>)</span><br><span class="line">  println(<span class="string">"顶点年纪&gt;30的子图："</span>)</span><br><span class="line">  <span class="keyword">val</span> subGraph = graph.subgraph(vpred = (id, vd) =&gt; vd._2 &gt;= <span class="number">30</span>)</span><br><span class="line">  println(<span class="string">"子图所有顶点："</span>)</span><br><span class="line">  subGraph.vertices.collect.foreach(v =&gt; println(<span class="string">s"<span class="subst">$&#123;v._2._1&#125;</span> is <span class="subst">$&#123;v._2._2&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line">  println(<span class="string">"子图所有边："</span>)</span><br><span class="line">  subGraph.edges.collect.foreach(e =&gt; println(<span class="string">s"<span class="subst">$&#123;e.srcId&#125;</span> to <span class="subst">$&#123;e.dstId&#125;</span> att <span class="subst">$&#123;e.attr&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line">  println(<span class="string">"反转整个图："</span>)</span><br><span class="line">  <span class="keyword">val</span> reverseGraph = graph.reverse</span><br><span class="line">  println(<span class="string">"子图所有顶点："</span>)</span><br><span class="line">  reverseGraph.vertices.collect.foreach(v =&gt; println(<span class="string">s"<span class="subst">$&#123;v._2._1&#125;</span> is <span class="subst">$&#123;v._2._2&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line">  println(<span class="string">"子图所有边："</span>)</span><br><span class="line">  reverseGraph.edges.collect.foreach(e =&gt; println(<span class="string">s"<span class="subst">$&#123;e.srcId&#125;</span> to <span class="subst">$&#123;e.dstId&#125;</span> att <span class="subst">$&#123;e.attr&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line"></span><br><span class="line">  <span class="comment">//***************************  连接操作    ****************************************</span></span><br><span class="line">  println(<span class="string">"连接操作"</span>)</span><br><span class="line">  println(<span class="string">"**********************************************************"</span>)</span><br><span class="line">  <span class="keyword">val</span> inDegrees: <span class="type">VertexRDD</span>[<span class="type">Int</span>] = graph.inDegrees</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span>(<span class="params">name: <span class="type">String</span>, age: <span class="type">Int</span>, inDeg: <span class="type">Int</span>, outDeg: <span class="type">Int</span></span>)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class">  <span class="title">//创建一个新图，顶类点VD的数据型为User，并从graph做类型转换</span></span></span><br><span class="line"><span class="class">  <span class="title">val</span> <span class="title">initialUserGraph</span></span>: <span class="type">Graph</span>[<span class="type">User</span>, <span class="type">Int</span>] = graph.mapVertices &#123; <span class="keyword">case</span> (id, (name, age)) =&gt; <span class="type">User</span>(name, age, <span class="number">0</span>, <span class="number">0</span>) &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">//initialUserGraph与inDegrees、outDegrees（RDD）进行连接，并修改initialUserGraph中inDeg值、outDeg值</span></span><br><span class="line">  <span class="keyword">val</span> userGraph = initialUserGraph.outerJoinVertices(initialUserGraph.inDegrees) &#123;</span><br><span class="line">    <span class="keyword">case</span> (id, u, inDegOpt) =&gt; <span class="type">User</span>(u.name, u.age, inDegOpt.getOrElse(<span class="number">0</span>), u.outDeg)</span><br><span class="line">  &#125;.outerJoinVertices(initialUserGraph.outDegrees) &#123;</span><br><span class="line">    <span class="keyword">case</span> (id, u, outDegOpt) =&gt; <span class="type">User</span>(u.name, u.age, u.inDeg, outDegOpt.getOrElse(<span class="number">0</span>))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"连接图的属性："</span>)</span><br><span class="line">  userGraph.vertices.collect.foreach(v =&gt; println(<span class="string">s"<span class="subst">$&#123;v._2.name&#125;</span> inDeg: <span class="subst">$&#123;v._2.inDeg&#125;</span>  outDeg: <span class="subst">$&#123;v._2.outDeg&#125;</span>"</span>))</span><br><span class="line">  println</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"出度和入读相同的人员："</span>)</span><br><span class="line">  userGraph.vertices.filter &#123;</span><br><span class="line">    <span class="keyword">case</span> (id, u) =&gt; u.inDeg == u.outDeg</span><br><span class="line">  &#125;.collect.foreach &#123;</span><br><span class="line">    <span class="keyword">case</span> (id, property) =&gt; println(property.name)</span><br><span class="line">  &#125;</span><br><span class="line">  println</span><br><span class="line"></span><br><span class="line">  <span class="comment">//***************************  聚合操作    ****************************************</span></span><br><span class="line">  println(<span class="string">"聚合操作"</span>)</span><br><span class="line">  println(<span class="string">"**********************************************************"</span>)</span><br><span class="line">  println(<span class="string">"collectNeighbors：获取当前节点source节点的id和属性"</span>)</span><br><span class="line">  graph.collectNeighbors(<span class="type">EdgeDirection</span>.<span class="type">In</span>).collect.foreach(v =&gt; &#123;</span><br><span class="line">    println(<span class="string">s"id: <span class="subst">$&#123;v._1&#125;</span>"</span>); <span class="keyword">for</span> (arr &lt;- v._2) &#123;</span><br><span class="line">      println(<span class="string">s"      <span class="subst">$&#123;arr._1&#125;</span> (name: <span class="subst">$&#123;arr._2._1&#125;</span>  age: <span class="subst">$&#123;arr._2._2&#125;</span>)"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"aggregateMessages版本："</span>)</span><br><span class="line">  graph.aggregateMessages[<span class="type">Array</span>[(<span class="type">VertexId</span>, (<span class="type">String</span>, <span class="type">Int</span>))]](ctx =&gt; ctx.sendToDst(<span class="type">Array</span>((ctx.srcId.toLong, (ctx.srcAttr._1, ctx.srcAttr._2)))), _ ++ _).collect.foreach(v =&gt; &#123;</span><br><span class="line">    println(<span class="string">s"id: <span class="subst">$&#123;v._1&#125;</span>"</span>); <span class="keyword">for</span> (arr &lt;- v._2) &#123;</span><br><span class="line">      println(<span class="string">s"    <span class="subst">$&#123;arr._1&#125;</span> (name: <span class="subst">$&#123;arr._2._1&#125;</span>  age: <span class="subst">$&#123;arr._2._2&#125;</span>)"</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"聚合操作"</span>)</span><br><span class="line">  println(<span class="string">"**********************************************************"</span>)</span><br><span class="line">  println(<span class="string">"找出年纪最大的追求者："</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> oldestFollower: <span class="type">VertexRDD</span>[(<span class="type">String</span>, <span class="type">Int</span>)] = userGraph.aggregateMessages[(<span class="type">String</span>, <span class="type">Int</span>)](</span><br><span class="line">    <span class="comment">// 将源顶点的属性发送给目标顶点，map过程</span></span><br><span class="line">    ctx =&gt; ctx.sendToDst((ctx.srcAttr.name, ctx.srcAttr.age)),</span><br><span class="line">    <span class="comment">// 得到最大追求者，reduce过程</span></span><br><span class="line">    (a, b) =&gt; <span class="keyword">if</span> (a._2 &gt; b._2) a <span class="keyword">else</span> b</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">  userGraph.vertices.leftJoin(oldestFollower) &#123; (id, user, optOldestFollower) =&gt;</span><br><span class="line">    optOldestFollower <span class="keyword">match</span> &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="type">None</span> =&gt; <span class="string">s"<span class="subst">$&#123;user.name&#125;</span> does not have any followers."</span></span><br><span class="line">      <span class="keyword">case</span> <span class="type">Some</span>((name, age)) =&gt; <span class="string">s"<span class="subst">$&#123;name&#125;</span> is the oldest follower of <span class="subst">$&#123;user.name&#125;</span>."</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;.collect.foreach &#123; <span class="keyword">case</span> (id, str) =&gt; println(str) &#125;</span><br><span class="line">  println</span><br><span class="line"></span><br><span class="line">  <span class="comment">//***************************  实用操作    ****************************************</span></span><br><span class="line">  println(<span class="string">"聚合操作"</span>)</span><br><span class="line">  println(<span class="string">"**********************************************************"</span>)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">val</span> sourceId: <span class="type">VertexId</span> = <span class="number">5</span>L <span class="comment">// 定义源点</span></span><br><span class="line">  <span class="keyword">val</span> initialGraph = graph.mapVertices((id, _) =&gt; <span class="keyword">if</span> (id == sourceId) <span class="number">0.0</span> <span class="keyword">else</span> <span class="type">Double</span>.<span class="type">PositiveInfinity</span>)</span><br><span class="line"></span><br><span class="line">  initialGraph.triplets.collect().foreach(println)</span><br><span class="line"></span><br><span class="line">  println(<span class="string">"找出5到各顶点的最短距离："</span>)</span><br><span class="line">  <span class="keyword">val</span> sssp = initialGraph.pregel(<span class="type">Double</span>.<span class="type">PositiveInfinity</span>, <span class="type">Int</span>.<span class="type">MaxValue</span>, <span class="type">EdgeDirection</span>.<span class="type">Out</span>)(</span><br><span class="line">    (id, dist, newDist) =&gt; &#123;</span><br><span class="line">      println(<span class="string">"||||"</span> + id); math.min(dist, newDist)</span><br><span class="line">    &#125;,</span><br><span class="line">    triplet =&gt; &#123; <span class="comment">// 计算权重</span></span><br><span class="line">      println(<span class="string">"&gt;&gt;&gt;&gt;"</span> + triplet.srcId)</span><br><span class="line">      <span class="keyword">if</span> (triplet.srcAttr + triplet.attr &lt; triplet.dstAttr) &#123;</span><br><span class="line">        <span class="comment">//发送成功</span></span><br><span class="line">        <span class="type">Iterator</span>((triplet.dstId, triplet.srcAttr + triplet.attr))</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//发送不成功</span></span><br><span class="line">        <span class="type">Iterator</span>.empty</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    (a, b) =&gt; math.min(a, b) <span class="comment">// 当前节点所有输入的最短距离</span></span><br><span class="line">  )</span><br><span class="line">  sssp.triplets.collect().foreach(println)</span><br><span class="line"></span><br><span class="line">  println(sssp.vertices.collect.mkString(<span class="string">"\n"</span>))</span><br><span class="line"></span><br><span class="line">  sc.stop()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="PageRank"><a href="#PageRank" class="headerlink" title="PageRank"></a>PageRank</h2><p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608155611.png" alt=""></p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608155624.png" alt=""></p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608155637.png" alt=""></p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.spark.graphx.&#123;<span class="type">Graph</span>, <span class="type">VertexId</span>&#125;</span><br><span class="line"><span class="keyword">import</span> org.apache.spark.&#123;<span class="type">SparkConf</span>, <span class="type">SparkContext</span>, graphx&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Created by 清风笑丶 Cotter on 2019/6/8.</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"><span class="class"><span class="keyword">object</span> <span class="title">PageRank</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">main</span></span>(args: <span class="type">Array</span>[<span class="type">String</span>]): <span class="type">Unit</span> = &#123;</span><br><span class="line">    <span class="keyword">val</span> sparkConf = <span class="keyword">new</span> <span class="type">SparkConf</span>().setAppName(<span class="string">"Spark Graphx PageRank"</span>).setMaster(<span class="string">"local[*]"</span>)</span><br><span class="line">    <span class="keyword">val</span> sc = <span class="keyword">new</span> <span class="type">SparkContext</span>(sparkConf)</span><br><span class="line">    <span class="keyword">val</span> erdd = sc.textFile(<span class="string">"D:\\input\\graphx-wiki-edges.txt"</span>)</span><br><span class="line">    <span class="keyword">val</span> edges = erdd.map(x =&gt; &#123;</span><br><span class="line">      <span class="keyword">val</span> para = x.split(<span class="string">"\t"</span>); graphx.<span class="type">Edge</span>(para(<span class="number">0</span>).trim.toLong, para(<span class="number">1</span>).trim.toLong, <span class="number">0</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="keyword">val</span> vrdd = sc.textFile(<span class="string">"D:\\input\\graphx-wiki-vertices.txt"</span>)</span><br><span class="line">    <span class="keyword">val</span> vertices = vrdd.map(x =&gt;&#123;<span class="keyword">val</span> para =x.split(<span class="string">"\t"</span>);(para(<span class="number">0</span>).trim.toLong,para(<span class="number">1</span>).trim)&#125;)</span><br><span class="line">    <span class="keyword">val</span> graph =<span class="type">Graph</span>(vertices,edges)</span><br><span class="line">    println(<span class="string">"*****************************************************"</span>)</span><br><span class="line">    println(<span class="string">"PageRank计算,获取最有价值的数据"</span>)</span><br><span class="line">    println(<span class="string">"*****************************************************"</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> prGraph = graph.pageRank(<span class="number">0.001</span>).cache()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">val</span> titleAndPrGraph = graph.outerJoinVertices(prGraph.vertices) &#123;</span><br><span class="line">      (v, title, rank) =&gt; (rank.getOrElse(<span class="number">0.0</span>), title)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   titleAndPrGraph.vertices.top(<span class="number">10</span>) &#123;</span><br><span class="line">      <span class="type">Ordering</span>.by((entry: (<span class="type">VertexId</span>, (<span class="type">Double</span>, <span class="type">String</span>))) =&gt; entry._2._1)</span><br><span class="line">    &#125;.foreach(t =&gt; println(t._2._2 + <span class="string">": "</span> + t._2._1))</span><br><span class="line">    </span><br><span class="line">    sc.stop()</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Spark/Graphx/20190608162612.png" alt=""></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2019年06月08日 - 14时33分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/06/08/Spark%E4%B9%8BGraphX/" title="Spark之GraphX">https://www.hphblog.cn/2019/06/08/Spark%E4%B9%8BGraphX/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2019/06/08/Spark%E4%B9%8BGraphX/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Spark内核解析1
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Spark之StructuredStreaming</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#概念"><span class="toc-number">2.</span> <span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#顶点"><span class="toc-number">2.1.</span> <span class="toc-text">顶点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#边"><span class="toc-number">2.2.</span> <span class="toc-text">边</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#三元组"><span class="toc-number">2.3.</span> <span class="toc-text">三元组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#图"><span class="toc-number">2.4.</span> <span class="toc-text">图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#思路"><span class="toc-number">3.</span> <span class="toc-text">思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#操作"><span class="toc-number">4.</span> <span class="toc-text">操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建操作"><span class="toc-number">4.1.</span> <span class="toc-text">创建操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#转换操作"><span class="toc-number">4.2.</span> <span class="toc-text">转换操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#结构操作"><span class="toc-number">4.3.</span> <span class="toc-text">结构操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#聚合操作"><span class="toc-number">4.4.</span> <span class="toc-text">聚合操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关联操作"><span class="toc-number">4.5.</span> <span class="toc-text">关联操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Pregel"><span class="toc-number">4.6.</span> <span class="toc-text">Pregel</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#案例"><span class="toc-number">5.</span> <span class="toc-text">案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PageRank"><span class="toc-number">6.</span> <span class="toc-text">PageRank</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/" title="上一篇: Spark内核解析1">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/" title="下一篇: Spark之StructuredStreaming">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

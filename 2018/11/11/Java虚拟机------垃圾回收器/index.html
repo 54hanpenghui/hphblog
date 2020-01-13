@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>Java虚拟机------垃圾收集器 | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="JVM系列最核心的文章没有之一：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java虚拟机------垃圾收集器">
+<meta property="og:url" content="https://www.hphblog.cn/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="JVM系列最核心的文章没有之一：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izjqxJ.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izjHGF.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izj7PU.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izjb24.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izjo5T.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izjIaV.md.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izjg2Q.md.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izjWKs.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izjhbq.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izj5V0.md.jpg">
+<meta property="article:published_time" content="2018-11-11T08:17:28.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:39.873Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/11/18/izjqxJ.md.png">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-Java虚拟机------垃圾回收器" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/" class="article-date">
+      <time datetime="2018-11-11T08:17:28.000Z" itemprop="datePublished">2018-11-11</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java虚拟机------垃圾收集器
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JVM/" rel="tag">JVM</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        JVM系列最核心的文章没有之一： <Excerpt in index | 首页摘要><a id="more"></a>
+
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><p>只要引用存在,垃圾回收器就永远不会回收。当内存空足，Java虚拟机宁愿抛出<strong>OutOfMemoryError</strong>错误，使程序异常终止，也不会靠随意回收具有强引用的对象来解决内存不足的问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="keyword">new</span> Object();</span><br></pre></td></tr></table></figure>
+
+<p>//可直接通过obj取得对应的对象 如obj.equels(new Object());</p>
+<p>而这样 obj对象对后面new Object的一个强引用，只有当obj这个引用被释放之后，对象才会被释放掉，这也是我们经常所用到的编码形式。</p>
+<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><p>如果一个对象只具有软引用，则<strong>内存空间足够，垃圾回收器就不会回收它；如果内存空间不足了，就会回收这些对象的内存。只要垃圾回收器没有回收它，该对象就可以被程序使用。软引用可用来实现</strong>内存敏感的高速缓存**</p>
+<p>软引用可以和一个引用队列（ReferenceQueue）联合使用，如果软引用所引用的对象被垃圾回收器回收，Java虚拟机就会把这个软引用加入到与之关联的引用队列中。非必须引用，内存溢出之前进行回收，可以通过以下代码实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Object obj = <span class="keyword">new</span> Object();</span><br><span class="line">SoftReference&lt;Object&gt; sf = <span class="keyword">new</span> SoftReference&lt;Object&gt;(obj);</span><br><span class="line">obj = <span class="keyword">null</span>;</span><br><span class="line">sf.get();<span class="comment">//有时候会返回null</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3><p>弱引用与软引用的区别在于：只具有弱引用的对象拥有<strong>更短暂</strong>的生命周期。在垃圾回收器线程扫描它所管辖的内存区域的过程中，<strong>一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存</strong>。不过，由于垃圾回收器是一个优先级很低的线程，因此不一定会很快发现那些只具有弱引用的对象。<br>弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。</p>
+<p>弱引用是在第二次垃圾回收时回收，<strong>短时间内通过弱引用取对应的数据，可以取到</strong>，当执行过第二次垃圾回收时，将返回null。<br>弱引用主要用于监控对象是否已经被垃圾回收器标记为即将回收的垃圾，可以通过弱引用的isEnQueued方法返回对象是否被垃圾回收器标记。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>生命周期</th>
+<th>数据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>软引用:</strong></td>
+<td>内存空间足够，垃圾回收器就不会回收它</td>
+<td>内存空间足够是都可以取到.(<strong>存敏感的高速缓存</strong>)</td>
+</tr>
+<tr>
+<td><strong>弱引用</strong>()</td>
+<td>不管当前内存空间足够与否，都会回收它</td>
+<td>回收短时间内通过弱引用取对应的数据，可以取到,执行过第<strong>二次垃圾回收</strong>时，将返回null。</td>
+</tr>
+</tbody></table>
+<h3 id="虚引用"><a href="#虚引用" class="headerlink" title="虚引用"></a>虚引用</h3><p>“虚引用”顾名思义，就是形同虚设，与其他几种引用都不同，虚引用并不会决定对象的生命周期。如果一个对象仅持有虚引用，那么它就和没有任何引用一样，在任何时候都可能被垃圾回收器回收。<br>虚引用主要用来跟踪对象被垃圾回收器回收的活动。虚引用与软引用和弱引用的一个区别在于：虚引用必须和引用队列 （ReferenceQueue）联合使用。当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会在回收对象的内存之前，把这个虚引用加入到与之 关联的引用队列中。</p>
+<p>对被引用对象的生存时间不影响；无法通过虚引用来取得一个对象实例；为一个对象设置虚引用关联的<strong>唯一目的</strong>就是能在这个对象被收集器回收时收到一个系统通知；jdk提PhantomReference类来实现虚引用。</p>
+<h2 id="对象的可达性分析"><a href="#对象的可达性分析" class="headerlink" title="对象的可达性分析"></a>对象的可达性分析</h2><p>判断对象存活，常用的方式是<strong>引用计数算法、可达性分析</strong>：主流的商用程序语言的主流实现中是通过可达性分析；</p>
+<p>引用计数算法基本思想：给对象中添加一个引用计数器，每当对象被一个地方引用，计数器便+1；当引用失效时，计数器-1。当对象的计数器为0时，该对象便是一个不被使用的对象，即“死亡”。</p>
+<h3 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h3><p>[<img src="https://s1.ax1x.com/2018/11/18/izjqxJ.md.png" alt="计数法"></p>
+<p>引用计数器实现简单，效率高。然而难以解决对象之间相互循环引用的问题（两个失效对象相互保存了对方的指针）。故JVM判定对象是否存活，并没有使用引用计数器，而是使用可达性分析算法。</p>
+<p>可达性分析基本思想：通过一系列的称为“GC    Roots”的对象作为起始点，从这些节点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain），当一个对象到GC   Roots没有任何引用链相连（即不可达）时，则证明此对象是不可用的。</p>
+<p>GC Roots对象：</p>
+<ol>
+<li>虚拟机栈（栈帧中的本地变量表）中引用的对象。</li>
+<li>方法区中类静态属性引用的对象。</li>
+<li>方法区中常量引用的对象。</li>
+<li>本地方法栈中JNI（Java Native Interface即一般说的Native方法）引用的对象。</li>
+</ol>
+<p>[<img src="https://s1.ax1x.com/2018/11/18/izjHGF.md.png" alt="izjHGF.md.png"></p>
+<p>　　          目前可达性分析算法已是主流算法，原因是，引用计数器算法无法解决<strong>对象互相引用</strong>的问题</p>
+<h3 id="对象的生死"><a href="#对象的生死" class="headerlink" title="对象的生死"></a>对象的生死</h3><p>不可达的对象真正死亡<strong>需要两次标记</strong></p>
+<p>可达性分析判断过程:</p>
+<p>对对象进行可达性分析之后，发现他没有<strong>任何引用链相连</strong>，则对他进行<strong>第一次标记*，并进行一次筛选，筛选条件是是否需要执行finalize()方法，当对象没有覆盖finalize方法或已经finalize方法已经被调用过，则认为没有必要执行，如果判断为有必要执行，则会将他放入一个叫做F-Queue的队列中，稍后JVM会</strong>自动建立一个低优先级**的finalizer线程去执行这些对象的finalize方法，Finalize()方法是对象逃脱死亡命运的最后一次机会，稍后GC将对F-Queue中的对象进行第二次小规模的标记，如果对象要在finalize()中重新与引用链上的任何一个对象建立关联那么他被移除出“即将回收”的集合，否则就被回收了。</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line"></span><br><span class="line">  System.out.println(<span class="string">"finalized"</span>);</span><br><span class="line"></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="垃圾收集器-GC算法"><a href="#垃圾收集器-GC算法" class="headerlink" title="垃圾收集器-GC算法"></a>垃圾收集器-GC算法</h2><ul>
+<li><p><strong>最基础</strong>的收集算法是“标记-清除”（Mark-Sweep）算法，此方法分为两个阶段：标记、清除。</p>
+<p> 标记所有要回收对象,标记完成后,统一回收所有被标记的对象</p>
+<p> 不足:一个是效率问题，标记和清除两个过程的效率都不高；另一个是空间问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存而不得不提前触发另一次垃圾收集动作。</p>
+</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2018/11/18/izj7PU.png" alt="izj7PU.png"></p>
+<ul>
+<li><strong>复制算法</strong>:它将可用内存按容量划分为大小相等的两块，每次只使用其中的一块。当这一块的内存用完了，就将还存活着的对象复制到另外一块上面，然后再把已使用过的内存空间一次清理掉。 </li>
+</ul>
+<p>  <strong>无内存碎片</strong>，只要移动堆顶指针，按顺序分配内存即可，实现简单，运行高效。缺点：实际可用内存缩小为了原来的一半。</p>
+<p>  大多数的对象(98%)存活时间很短,不需要1:1划分两个区域</p>
+<p>  1块较大的Eden和2快较小的Survivor空间,每次使用eden和一块survivor之后,将保存存活的对象复制到另外一块survivor区域里</p>
+<p>  survivor空间不够需要老年代进行分配担保​      </p>
+<p>  <strong>HotSpot虚拟机默认Eden和Survivor的大小比例是8:1:1；浪费10%。</strong></p>
+<p><img src="https://s1.ax1x.com/2018/11/18/izjb24.jpg" alt="复制算法"></p>
+<ul>
+<li><p><strong>标记-整理算法</strong></p>
+<p> 标记需要回收的对象,将存活对象移动到一段,然后将端边界以外的内存回收</p>
+<p> <img src="https://s1.ax1x.com/2018/11/18/izjo5T.md.png" alt="izjo5T.md.png"></p>
+</li>
+</ul>
+<ul>
+<li><p>*<em>分代收集算法(当前商业虚拟机采用的垃圾收集算法)   *</em></p>
+<pre><code>将堆分为新生代和老年代
+新生代每次都有少量对象存活,用复制算法,只需付出付出少量存活对象的成本
+老年代对象存活率高,用标记-清除-或者标记整理算法(没有额外空间进行分配担保)</code></pre></li>
+</ul>
+<h2 id="垃圾收集器-GC方式"><a href="#垃圾收集器-GC方式" class="headerlink" title="垃圾收集器-GC方式:"></a>垃圾收集器-GC方式:</h2><p>Minor GC：从年轻代空间（包括 Eden 和 Survivor 区域）回收内存被称为 Minor GC。每次 Minor GC 会清理年轻代的内存。</p>
+<p>Major GC 是清理老年代或者永久代。</p>
+<p>Full GC 是清理整个堆空间—包括年轻代和老年代或者永久代。</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">清理</th>
+<th align="center">线程</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">Major GC</td>
+<td align="center">老年代或者永久代</td>
+<td align="center">并发的处理而不用停掉</td>
+</tr>
+<tr>
+<td align="center">Full   GC</td>
+<td align="center">清理整个堆空间</td>
+<td align="center">停掉所有(stop-the-world)</td>
+</tr>
+</tbody></table>
+<h2 id="内存分配策略"><a href="#内存分配策略" class="headerlink" title="内存分配策略"></a>内存分配策略</h2><p>对象优先在Eden分配：大多数情况下，对象在新生代Eden区中分配。当Eden区没有足够大的连续空间进行分配时，虚拟机将发起一次Minor GC，此时对象会进如survivor区，当对象满足一些条件后会进入老年代。</p>
+<p>三种方式进入老年代：</p>
+<p>长期存活的对象将进入老年代：虚拟机给每个对象定义了一个对象年龄（Age）计数器。如果对象在Eden出生并经过第一次Minor GC后仍然存活，并且能被Survivor容纳的话，将被移动到Survivor空间中，并且对象年龄设为1。对象在Survivor区中每“熬过”一次Minor GC，年龄就增加1岁，当它的<strong>年龄增加到一定程度</strong>（默认为15岁），就将会被晋升到老年代中。对象晋升老年代的年龄阈值，可以通过参数-XX:MaxTenuringThreshold设置。</p>
+<p>如果在Survivor空间中相同年龄所有对象大小的总和大于Survivor空间的一半，年龄大于或等于该年龄的对象就可以直接进入老年代，无须等到MaxTenuringThreshold中要求的年龄。</p>
+<p>大对象:需要大量连续内存空间的Java对象，最典型的大对象就是那种很长的字符串以及数组</p>
+<p><strong>大对象直接进入老年代：</strong>虚拟机提供了一个-XX:PretenureSizeThreshold参数，令大于这个设置值的对象直接在老年代分配。这样做的目的是避免在Eden区及两个Survivor区之间发生大量的内存复制。</p>
+<p><strong>空间分配担保：</strong>在发生Minor GC之前，虚拟机会先检查老年代最大可用的连续空间是否大于新生代所有对象总空间，如果这个条件成立，那么Minor GC可以确保是安全的。</p>
+<p>如果不成立，则虚拟机会查看XX:HandlePromotionFailure设置值是否允许担保失败。</p>
+<p>如果允许，那么会继续检查老年代最大可用的连续空间是否大于历次晋升到老年代对象的平均大小，如果大于，将尝试着进行一次Minor GC，尽管这次Minor GC是有风险的；如果小于，或者HandlePromotionFailure设置不允许冒险，那这时也要改为进行一次Full GC。</p>
+<h2 id="垃圾收集器——收集器"><a href="#垃圾收集器——收集器" class="headerlink" title="垃圾收集器——收集器"></a>垃圾收集器——收集器</h2><p>收集器就是内存回收的具体实现。</p>
+<p>java虚拟机规范没有对收集器应该如何实现有任何规定，因为不同版本、不同厂商的虚拟机提供的垃圾收集器都可能会有很大的差异。</p>
+<p>目前讨论jdk1.7之后的hotspot虚拟机（这个版本正式提供了商用的G1收集器，之前都是实验状态）。</p>
+<h3 id="垃圾收集器——并行和并发"><a href="#垃圾收集器——并行和并发" class="headerlink" title="垃圾收集器——并行和并发"></a>垃圾收集器——并行和并发</h3><p>并行（Parallel）：指多条垃圾收集线程并行工作，但是此时：<strong>用户线程</strong>仍然处于<strong>线程等待</strong>状态。</p>
+<p>并发（Concurrent）：指用户线程和垃圾收集线程同时执行（但不一定是并行的，可能会交替执行），用户程序在<strong>继续运行</strong>，而垃圾收集程序运行于另一个cpu上。</p>
+<h3 id="垃圾收集器-Serial"><a href="#垃圾收集器-Serial" class="headerlink" title="垃圾收集器-Serial"></a>垃圾收集器-Serial</h3><p>Serial收集器是最基础、历史最悠久的新生代的收集器。</p>
+<p>特点：单线程、stop-the-world 、复制算法</p>
+<p>缺点：影响用户响应时间</p>
+<p>优点：回收时简单高效、对于限定单个cpu环境下，serial收集器由于没有线程交互的开销，专心做垃圾收集，可以获得最高的单线程收集效率。</p>
+<p>所以：serial 收集器 对于运行在client模式下的虚拟机来说，是一个很好的选择。</p>
+<p>SerialOld收集器是Serial的<strong>老年代收集器</strong>，采用“标记-整理”</p>
+<p><img src="https://s1.ax1x.com/2018/11/18/izjIaV.md.png" alt="izjIaV.md.png"></p>
+<h3 id="垃圾收集器-ParNew"><a href="#垃圾收集器-ParNew" class="headerlink" title="垃圾收集器-ParNew"></a>垃圾收集器-ParNew</h3><p>ParNew收集器其实是Serial的多线程版本，除了他是使用多条线程来进行垃圾回收之外和Serial是完全一样的。新生代收集器</p>
+<p>特点：多线程、stop-the-world</p>
+<p>缺点：单个cpu下，运行效果甚至没Serial好。</p>
+<p>优点点：回收时简单高效、对于限定多个cpu环境下，效果比serial好，相比其它多线程收集器它可以和CMS收集器配合使用。</p>
+<p>所以：parnew收集器是运行在server模式下的首选收集器。</p>
+<p><img src="https://s1.ax1x.com/2018/11/18/izjg2Q.md.jpg" alt="izjg2Q.md.jpg"></p>
+<h3 id="垃圾收集器-Parallel-Scanvenge"><a href="#垃圾收集器-Parallel-Scanvenge" class="headerlink" title="垃圾收集器-Parallel Scanvenge"></a>垃圾收集器-Parallel Scanvenge</h3><p>Parallel Scanvenge收集器是一个新生代收集器，采用复制算法。</p>
+<p>特点：收集新生代，复制算法，多线程，高吞吐、自适应</p>
+<p>1、与其它的收集器侧重垃圾回收时用户的停顿时间不同，它主要侧重与吞吐量，吞吐量=运行用户代码时间/(运行用户代码时间+垃圾收集时间)。</p>
+<p>停顿时间越短就越适合需要与用户交互的程序，高吞吐量则是可以高效率地利用cpu时间尽快完成任务。</p>
+<p>2、他有一个自适应开关(-XX:+UseAdaptiveSizePolicy)：打开后，用户只需要把基本的内存数据（堆最大，初始量）设置好，然后设置更关注最大停顿时间或者更关注吞吐量，收集器会把细节参数自动调节。</p>
+<p>Parallel Old 老年代收集器，采用标记-整理算法。</p>
+<p><img src="https://s1.ax1x.com/2018/11/18/izjWKs.jpg" alt="izjWKs.jpg"></p>
+<h3 id="垃圾收集器-CMS"><a href="#垃圾收集器-CMS" class="headerlink" title="垃圾收集器-CMS"></a>垃圾收集器-CMS</h3><p>CMS（concurrent mark sweep）收集器是一个以获取最短回收停顿时间为目标的老年代收集器。</p>
+<p>特点：并发收集、低停顿。</p>
+<p>基于 标记-清除算法实现，但是整个过程比较复杂一些。过程分为4步：</p>
+<ol>
+<li><p>初始标记：仅仅标记GCRoot能直接关联到的对象。速度很快，“stop the world”</p>
+</li>
+<li><p>并发标记：GCRoot Tracing。耗时长和用户线程同步。</p>
+</li>
+<li><p>重新标记：修正并发标记时，由于用户程序运行导致的标记变动。“stop the world”停顿稍长一些。</p>
+</li>
+<li><p>并发清除：耗时长，和用户线程同步。</p>
+</li>
+</ol>
+<p>缺点：吞吐量会变低、浮动垃圾无法处理、标记-清除的碎片（设置参数是 fullgc前开启碎片整理功能，gc停顿时间延长）。</p>
+<p><img src="https://s1.ax1x.com/2018/11/18/izjhbq.jpg" alt="izjhbq.jpg"></p>
+<h3 id="垃圾收集器-G1"><a href="#垃圾收集器-G1" class="headerlink" title="垃圾收集器-G1"></a>垃圾收集器-G1</h3><p>G1（Garbage-First）收集器是当今收集器领域最前沿成果之一。2004年sun发表第一篇G1论文，10年后才开发出G1的商用版本。</p>
+<p>hotspot开发团队赋予它的使命：未来替调CMS收集器。</p>
+<p>特点：</p>
+<ol>
+<li><p>并行与并发：利用多cpu缩短stop-the-world的时间，使用并发方式解决其它收集器需要停顿的gc动作。</p>
+</li>
+<li><p>分代收集：新老代收集区分对待。</p>
+</li>
+<li><p>空间整合：G1从整理看是基于标记-整理，但是局部看是基于复制算法实现的，不会产生碎片。</p>
+</li>
+<li><p>可预测的停顿：能够让使用者指定在M毫秒的时间片段上，消耗在垃圾回收的时间不得超过N毫秒。</p>
+</li>
+</ol>
+<p>过程：初始标记、并发标记、最终标记、筛选回放。前三个和CMS一致，筛选回放是根据用户设置的停顿目标来选择回收价值最高的进行回收。</p>
+<p><img src="https://s1.ax1x.com/2018/11/18/izj5V0.md.jpg" alt="izj5V0.md.jpg"></p>
+<h2 id="垃圾回收器比较"><a href="#垃圾回收器比较" class="headerlink" title="垃圾回收器比较"></a>垃圾回收器比较</h2><table>
+<thead>
+<tr>
+<th>GC器</th>
+<th>特点</th>
+<th>优点</th>
+<th>缺点</th>
+<th>应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Serial</td>
+<td>单线程、stop-the-world 、复制算法</td>
+<td>回收时简单高效、对于限定单个cpu环境下，serial收集器由于没有线程交互的开销，专心做垃圾收集，可以获得最高的单线程收集效率。</td>
+<td>stop the world给用户带来不良体验，如计算机每运行一段时间就暂停下来响应几分钟处理垃圾收收集。</td>
+<td>client模式下的默认新生代收集器。</td>
+</tr>
+<tr>
+<td><strong>ParNew**</strong>收集器*</td>
+<td>多线程、stop-the-world</td>
+<td>回收时简单高效、对于限定多个cpu环境下，效果比serial好，相比其它多线程收集器它可以和CMS收集器配合使用。</td>
+<td></td>
+<td>运行在Server模式下的VM首选新生代收集器。</td>
+</tr>
+<tr>
+<td><strong>Parallel Scavenge</strong></td>
+<td>收集新生代，复制算法，多线程，高吞吐、自适应</td>
+<td>更关注吞吐量，即吞吐量</td>
+<td>牺牲停顿时间，交互性差；</td>
+<td>适用于后台运算而不需要太多的交互的任务。</td>
+</tr>
+<tr>
+<td>CMS</td>
+<td>并发收集、低停顿。</td>
+<td>并发收集；低停顿。</td>
+<td>吞吐量会变低、浮动垃圾无法处理、标记-清除的碎片（设置参数是 fullgc前开启碎片整理功能，gc停顿时间延长）。</td>
+<td>在互联网站或者B/S系统的服务端上，<strong>重视服务的响应速度</strong>，希望系统停顿时间最短，给用户带来较好的体验。</td>
+</tr>
+<tr>
+<td>G1</td>
+<td></td>
+<td>1.并发与并行；2.分代收集；3.空间整合；4.可预测的停顿。</td>
+<td></td>
+<td>面向服务端应用。</td>
+</tr>
+</tbody></table>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2018年11月11日 - 16时17分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/" title="Java虚拟机------垃圾收集器">https://www.hphblog.cn/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Java虚拟机--------JVM常见参数
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java虚拟机------JVM内存区域</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引用"><span class="toc-number">1.</span> <span class="toc-text">引用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#强引用"><span class="toc-number">1.1.</span> <span class="toc-text">强引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#软引用"><span class="toc-number">1.2.</span> <span class="toc-text">软引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#弱引用"><span class="toc-number">1.3.</span> <span class="toc-text">弱引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#虚引用"><span class="toc-number">1.4.</span> <span class="toc-text">虚引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象的可达性分析"><span class="toc-number">2.</span> <span class="toc-text">对象的可达性分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引用计数法"><span class="toc-number">2.1.</span> <span class="toc-text">引用计数法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对象的生死"><span class="toc-number">2.2.</span> <span class="toc-text">对象的生死</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器-GC算法"><span class="toc-number">3.</span> <span class="toc-text">垃圾收集器-GC算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器-GC方式"><span class="toc-number">4.</span> <span class="toc-text">垃圾收集器-GC方式:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存分配策略"><span class="toc-number">5.</span> <span class="toc-text">内存分配策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾收集器——收集器"><span class="toc-number">6.</span> <span class="toc-text">垃圾收集器——收集器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾收集器——并行和并发"><span class="toc-number">6.1.</span> <span class="toc-text">垃圾收集器——并行和并发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾收集器-Serial"><span class="toc-number">6.2.</span> <span class="toc-text">垃圾收集器-Serial</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾收集器-ParNew"><span class="toc-number">6.3.</span> <span class="toc-text">垃圾收集器-ParNew</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾收集器-Parallel-Scanvenge"><span class="toc-number">6.4.</span> <span class="toc-text">垃圾收集器-Parallel Scanvenge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾收集器-CMS"><span class="toc-number">6.5.</span> <span class="toc-text">垃圾收集器-CMS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#垃圾收集器-G1"><span class="toc-number">6.6.</span> <span class="toc-text">垃圾收集器-G1</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#垃圾回收器比较"><span class="toc-number">7.</span> <span class="toc-text">垃圾回收器比较</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/" title="上一篇: Java虚拟机--------JVM常见参数">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/" title="下一篇: Java虚拟机------JVM内存区域">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

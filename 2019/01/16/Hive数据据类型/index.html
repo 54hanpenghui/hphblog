@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>Hive数据据类型 DDL DML | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Hive的基本数据类型  DDL  DML：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hive数据据类型 DDL DML">
+<meta property="og:url" content="https://www.hphblog.cn/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="Hive的基本数据类型  DDL  DML：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/16/kS6mx1.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/16/kShcAP.png">
+<meta property="article:published_time" content="2019-01-16T10:24:31.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:41.190Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="Hive">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/01/16/kS6mx1.png">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-Hive数据据类型" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/" class="article-date">
+      <time datetime="2019-01-16T10:24:31.000Z" itemprop="datePublished">2019-01-16</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Hive数据据类型 DDL DML
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hive/" rel="tag">Hive</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+         Hive的基本数据类型  DDL  DML：<Excerpt in index | 首页摘要><a id="more"></a>
+
+<h2 id="基本数据类型"><a href="#基本数据类型" class="headerlink" title="基本数据类型"></a>基本数据类型</h2><table>
+<thead>
+<tr>
+<th>Hive数据类型</th>
+<th>Java数据类型</th>
+<th>长度</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>TINYINT</td>
+<td>byte</td>
+<td>1byte有符号整数</td>
+<td>20</td>
+</tr>
+<tr>
+<td>SMALINT</td>
+<td>short</td>
+<td>2byte有符号整数</td>
+<td>20</td>
+</tr>
+<tr>
+<td>INT</td>
+<td>int</td>
+<td>4byte有符号整数</td>
+<td>20</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>long</td>
+<td>8byte有符号整数</td>
+<td>20</td>
+</tr>
+<tr>
+<td>BOOLEAN</td>
+<td>boolean</td>
+<td>布尔类型，true或者false</td>
+<td>TRUE  FALSE</td>
+</tr>
+<tr>
+<td>FLOAT</td>
+<td>float</td>
+<td>单精度浮点数</td>
+<td>3.14159</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>double</td>
+<td>双精度浮点数</td>
+<td>3.14159</td>
+</tr>
+<tr>
+<td>STRING</td>
+<td>string</td>
+<td>字符系列。可以指定字符集。可以使用单引号或者双引号。</td>
+<td>‘now is the time’ “for all good men”</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td></td>
+<td>时间类型</td>
+<td></td>
+</tr>
+<tr>
+<td>BINARY</td>
+<td></td>
+<td>字节数组</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>对于Hive而言String类型相当于数据库的varchar类型，该类型是一个可变的字符串，不过它不能声明其中最多能存储多少个字符，理论上它可以存储2GB的字符数。</p>
+<h3 id="集合数据类型"><a href="#集合数据类型" class="headerlink" title="集合数据类型"></a>集合数据类型</h3><table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>描述</th>
+<th>语法示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>STRUCT</td>
+<td>和c语言中的struct类似，都可以通过“点”符号访问元素内容。例如，如果某个列的数据类型是STRUCT{first STRING, last STRING},那么第1个元素可以通过字段.first来引用。</td>
+<td>struct()</td>
+</tr>
+<tr>
+<td>MAP</td>
+<td>MAP是一组键-值对元组集合，使用数组表示法可以访问数据。例如，如果某个列的数据类型是MAP，其中键-&gt;值对是’first’-&gt;’John’和’last’-&gt;’Doe’，那么可以通过字段名[‘last’]获取最后一个元素</td>
+<td>map()</td>
+</tr>
+<tr>
+<td>ARRAY</td>
+<td>数组是一组具有相同类型和名称的变量的集合。这些变量称为数组的元素，每个数组元素都有一个编号，编号从零开始。例如，数组值为[‘John’,   ‘Doe’]，那么第2个元素可以通过数组名[1]进行引用。</td>
+<td>Array()</td>
+</tr>
+</tbody></table>
+<p>Hive有三种复杂数据类型ARRAY、MAP 和 STRUCT。ARRAY和MAP与Java中的Array和Map类似，而STRUCT与C语言中的Struct类似，它封装了一个命名字段集合，复杂数据类型允许任意层次的嵌套。</p>
+<h3 id="类型转化"><a href="#类型转化" class="headerlink" title="类型转化"></a>类型转化</h3><p>Hive的原子数据类型是可以进行隐式转换的，类似于Java的类型转换，例如某表达式使用INT类型，TINYINT会自动转换为INT类型，但是Hive不会进行反向转化，例如，某表达式使用TINYINT类型，INT不会自动转换为TINYINT类型，它会返回错误，除非使用CAST操作。</p>
+<p>1．隐式类型转换规则如下</p>
+<p>（1）任何整数类型都可以隐式地转换为一个范围更广的类型，如TINYINT可以转换成INT，INT可以转换成BIGINT。</p>
+<p>（2）所有整数类型、FLOAT和STRING类型都可以隐式地转换成DOUBLE。</p>
+<p>（3）TINYINT、SMALLINT、INT都可以转换为FLOAT。</p>
+<p>（4）BOOLEAN类型不可以转换为任何其它的类型。</p>
+<p>2．可以使用CAST操作显示进行数据类型转换</p>
+<p>例如CAST(‘1’ AS INT)将把字符串’1’ 转换成整数1；如果强制类型转换失败，如执行CAST(‘X’ AS INT)，表达式返回空值 NULL。</p>
+<h2 id="DDL数据定义"><a href="#DDL数据定义" class="headerlink" title="DDL数据定义"></a>DDL数据定义</h2><h3 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; create database if not exists db_hive;      --最标准写法</span><br><span class="line"></span><br><span class="line">hive&gt; create database db_hive_HDFS location '/db_hive_hdfs.db';  --指定数据库在HDFS上存放的位置</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s2.ax1x.com/2019/01/16/kS6mx1.png" alt="kS6mx1.png"></p>
+<h3 id="查询数据库"><a href="#查询数据库" class="headerlink" title="查询数据库"></a>查询数据库</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; show databases;</span><br><span class="line">OK</span><br><span class="line">db_hive</span><br><span class="line">db_hive_hdfs</span><br><span class="line">default</span><br></pre></td></tr></table></figure>
+
+<p>查看数据库详情</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; desc database db_hive;</span><br><span class="line">OK</span><br><span class="line">db_hive         hdfs://datanode1:9000/user/hive/warehouse/db_hive.db    hadoop  USER</span><br><span class="line">Time taken: 0.043 seconds, Fetched: 1 row(s)</span><br><span class="line">hive&gt; desc db_hive_hdfs;</span><br><span class="line"></span><br><span class="line">hive&gt; desc database db_hive_hdfs;</span><br><span class="line">OK</span><br><span class="line">db_hive_hdfs            hdfs://datanode1:9000/db_hive_hdfs.db   hadoop  USER</span><br><span class="line">Time taken: 0.041 seconds, Fetched: 1 row(s)</span><br></pre></td></tr></table></figure>
+
+<p>切换当前数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">hive&gt;</span><span class="bash"> use db_hive;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="修改数据库"><a href="#修改数据库" class="headerlink" title="修改数据库"></a>修改数据库</h3><p>用户可以使用ALTER DATABASE命令为某个数据库的DBPROPERTIES设置键-值对属性值，来描述这个数据库的属性信息。数据库的其他元数据信息都是不可更改的，包括数据库名和数据库所在的目录位置。<strong>修改当前正在使用的数据库，要先退出使用</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; use default;</span><br><span class="line">OK</span><br><span class="line">Time taken: 0.038 seconds</span><br><span class="line"></span><br><span class="line">hive&gt;  alter database db_hive set dbproperties('createtime'='20190116') ;</span><br><span class="line">OK</span><br><span class="line">Time taken: 0.105 seconds</span><br><span class="line"></span><br><span class="line">hive&gt; desc database extended db_hive;</span><br><span class="line">OK</span><br><span class="line">db_hive         hdfs://datanode1:9000/user/hive/warehouse/db_hive.db    hadoop  USER    &#123;createtime=20190116&#125;</span><br><span class="line">Time taken: 0.064 seconds, Fetched: 1 row(s)</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除数据库"><a href="#删除数据库" class="headerlink" title="删除数据库"></a>删除数据库</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hive&gt; drop database db_hive_hdfs;					   --删除空数据库</span><br><span class="line">hive&gt; drop database if exists db_hive_hdfs;				--这么些删除不存在的不会报错</span><br><span class="line">hive&gt; drop database db_hive cascade;				    --如果数据库非空可以强制删除</span><br></pre></td></tr></table></figure>
+
+<h3 id="创建表"><a href="#创建表" class="headerlink" title="创建表"></a>创建表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> [<span class="keyword">EXTERNAL</span>] <span class="keyword">TABLE</span> [<span class="keyword">IF</span> <span class="keyword">NOT</span> <span class="keyword">EXISTS</span>] table_name </span><br><span class="line">[(col_name data_type [<span class="keyword">COMMENT</span> col_comment], ...)] </span><br><span class="line">[<span class="keyword">COMMENT</span> table_comment] </span><br><span class="line">[PARTITIONED <span class="keyword">BY</span> (col_name data_type [<span class="keyword">COMMENT</span> col_comment], ...)] </span><br><span class="line">[CLUSTERED <span class="keyword">BY</span> (col_name, col_name, ...) </span><br><span class="line">[SORTED <span class="keyword">BY</span> (col_name [<span class="keyword">ASC</span>|<span class="keyword">DESC</span>], ...)] <span class="keyword">INTO</span> num_buckets BUCKETS] </span><br><span class="line">[<span class="keyword">ROW</span> <span class="keyword">FORMAT</span> row_format] </span><br><span class="line">[<span class="keyword">STORED</span> <span class="keyword">AS</span> file_format] </span><br><span class="line">[LOCATION hdfs_path]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><font color=#0099ff size=2 face="黑体">CREATE  TABLE</font></td>
+<td><font color=#0099ff size=2 face="黑体">创建一个指定名字的表。如果表存在，抛出异常，用 IF NOT EXISTS忽略异常。</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">EXTERNA</font></td>
+<td><font color=#0099ff size=2 face="黑体">用户创建一个外部表，在建表的同时指定一个指向实际数据的路径（LOCATION），Hive创建内部表时，会将数据移动到数据仓库指向的路径；若创建外部表，仅记录数据所在的路径，不对数据的位置做任何改变。在删除表的时候，内部表的元数据和数据会被一起删除，而外部表只删除元数据，不删除数据。</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">PARTITIONED BY</font></td>
+<td><font color=#0099ff size=2 face="黑体">创建分区表</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">COMMENT</font></td>
+<td><font color=#0099ff size=2 face="黑体">为表和列添加注释。</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">CLUSTERED BY</font></td>
+<td><font color=#0099ff size=2 face="黑体">创建分桶表</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">SORTED BY</font></td>
+<td><font color=#0099ff size=2 face="黑体">不常用</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">ROW FORMAT</font></td>
+<td><font color=#0099ff size=2 face="黑体"> 用户在建表的时候可以自定义SerDe或者使用自带的SerDe。如果没有指定ROW FORMAT 或者ROW FORMAT<br/>DELIMITED，将会使用自带的SerDe。在建表的时候，用户还需要为表指定列，用户在指定表的列的同时也会指定自定义的SerDe，Hive通过SerDe确定表的具体的列的数据。 </font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">ROW FORMAT</font></td>
+<td><font color=#0099ff size=2 face="黑体">ROW FORMAT</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">STORED AS</font></td>
+<td><font color=#0099ff size=2 face="黑体">指定存储文件类型常用的存储文件类型：SEQUENCEFILE（二进制序列文件）、TEXTFILE（文本）、RCFILE（列式存储格式文件）</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">LOCATION</font></td>
+<td><font color=#0099ff size=2 face="黑体">指定表在HDFS上的存储位置。</font></td>
+</tr>
+<tr>
+<td><font color=#0099ff size=2 face="黑体">LIKE </font></td>
+<td><font color=#0099ff size=2 face="黑体">LIKE允许用户复制现有的表结构，但是不复制数据。</font></td>
+</tr>
+</tbody></table>
+<h3 id="管理表"><a href="#管理表" class="headerlink" title="管理表"></a>管理表</h3><p>默认创建的表都是管理表（内部表）。这种表，Hive会（或多或少地）控制着数据的生命周期。Hive默认情况下会将这些表的数据存储在由配置项hive.metastore.warehouse.dir(例如，/user/hive/warehouse)所定义的目录的子目录下。当我们删除一个管理表时，Hive也会删除这个表中数据。管理表不适合和其他工具共享数据。</p>
+<p>创建普通表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> student2(</span><br><span class="line"><span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="keyword">string</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span></span><br><span class="line"><span class="keyword">stored</span> <span class="keyword">as</span> textfile</span><br><span class="line">location <span class="string">'/user/hive/warehouse/student2'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>根据查询结果创建表（查询的结果会添加到新创建的表中）会进行mapreduce作业</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> student3 <span class="keyword">as</span> <span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<p>根据已经存在的表结构创建表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> student4 <span class="keyword">like</span> student;</span><br></pre></td></tr></table></figure>
+
+<p>查询表的详细类型</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">desc formatted student2;</span><br></pre></td></tr></table></figure>
+
+<h3 id="外部表"><a href="#外部表" class="headerlink" title="外部表"></a>外部表</h3><p>外部表Hive并非认为其完全拥有这份数据。删除该表并不会删除掉这份数据，表的元数据信息会被删除掉。</p>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>每天将收集到的网站日志定期流入HDFS文本文件。在外部表（原始日志表）的基础上做大量的统计分析，用到的中间表、结果表使用内部表存储，数据通过SELECT+INSERT进入内部表。</p>
+<h3 id="案例实操"><a href="#案例实操" class="headerlink" title="案例实操"></a>案例实操</h3><p>数据准备</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@datanode1 datas]$ vim dept.txt</span><br><span class="line"></span><br><span class="line">10      ACCOUNTING      1700</span><br><span class="line">20      RESEARCH        1800</span><br><span class="line">30      SALES   1900</span><br><span class="line">40      OPERATIONS      1700</span><br><span class="line">--------------------------------------------------------------------------------------------------</span><br><span class="line">[hadoop@datanode1 datas]$ vim emp.txt</span><br><span class="line">7369    SMITH   CLERK   7902    1980-12-17      800.00          20</span><br><span class="line">7499    ALLEN   SALESMAN        7698    1981-2-20       1600.00 300.00  30</span><br><span class="line">7521    WARD    SALESMAN        7698    1981-2-22       1250.00 500.00  30</span><br><span class="line">7566    JONES   MANAGER 7839    1981-4-2        2975.00         20</span><br><span class="line">7654    MARTIN  SALESMAN        7698    1981-9-28       1250.00 1400.00 30</span><br><span class="line">7698    BLAKE   MANAGER 7839    1981-5-1        2850.00         30</span><br><span class="line">7782    CLARK   MANAGER 7839    1981-6-9        2450.00         10</span><br><span class="line">7788    SCOTT   ANALYST 7566    1987-4-19       3000.00         20</span><br><span class="line">7839    KING    PRESIDENT               1981-11-17      5000.00         10</span><br><span class="line">7844    TURNER  SALESMAN        7698    1981-9-8        1500.00 0.00    30</span><br><span class="line">7876    ADAMS   CLERK   7788    1987-5-23       1100.00         20</span><br><span class="line">7900    JAMES   CLERK   7698    1981-12-3       950.00          30</span><br><span class="line">7902    FORD    ANALYST 7566    1981-12-3       3000.00         20</span><br><span class="line">7934    MILLER  CLERK   7782    1982-1-23       1300.00         10</span><br></pre></td></tr></table></figure>
+
+<p>创建表 </p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--部门表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">external</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> default.dept(</span><br><span class="line">deptno <span class="built_in">int</span>,</span><br><span class="line">dname <span class="keyword">string</span>,</span><br><span class="line">loc <span class="built_in">int</span></span><br><span class="line">)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--员工表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">external</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> default.emp(</span><br><span class="line">empno <span class="built_in">int</span>,</span><br><span class="line">ename <span class="keyword">string</span>,</span><br><span class="line">job <span class="keyword">string</span>,</span><br><span class="line">mgr <span class="built_in">int</span>,</span><br><span class="line">hiredate <span class="keyword">string</span>, </span><br><span class="line">sal <span class="keyword">double</span>, </span><br><span class="line">comm <span class="keyword">double</span>,</span><br><span class="line">deptno <span class="built_in">int</span>)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询表</span></span><br><span class="line">hive&gt; show tables;</span><br><span class="line">OK</span><br><span class="line">dept</span><br><span class="line">student</span><br><span class="line">student2</span><br><span class="line">student3</span><br><span class="line">student4</span><br><span class="line">Time taken: 0.04 seconds, Fetched: 5 row(s)</span><br><span class="line"></span><br><span class="line"><span class="comment">--加载数据</span></span><br><span class="line">hive&gt; load data local inpath '/opt/module/datas/dept.txt' into table default.dept;</span><br><span class="line">Loading data to table default.dept</span><br><span class="line">Table default.dept stats: [numFiles=1, totalSize=69]</span><br><span class="line">OK</span><br><span class="line">Time taken: 0.569 seconds</span><br><span class="line"></span><br><span class="line">hive&gt; load data local inpath '/opt/module/datas/emp.txt' into table default.emp;</span><br><span class="line">Loading data to table default.emp</span><br><span class="line">Table default.emp stats: [numFiles=1, totalSize=657]</span><br><span class="line">OK</span><br><span class="line">Time taken: 0.604 seconds</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询结果</span></span><br><span class="line">hive&gt; select * from emp;</span><br><span class="line">hive&gt; select * from dept;</span><br><span class="line"></span><br><span class="line"><span class="comment">--查看表格信息</span></span><br><span class="line">desc formatted dept;</span><br></pre></td></tr></table></figure>
+
+<h3 id="互相转换"><a href="#互相转换" class="headerlink" title="互相转换"></a>互相转换</h3><p>注意：<strong>只能用单引号，严格区分大小写，如果不是完全符合，那么只会添加kv 而不生效</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">--查询表类型</span></span><br><span class="line"> desc formatted student2;</span><br><span class="line"> Table Type:             MANAGED_TABLE</span><br><span class="line"><span class="comment">--修改内部表student2为外部表</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student2 <span class="keyword">set</span> tblproperties(<span class="string">'EXTERNAL'</span>=<span class="string">'TRUE'</span>);</span><br><span class="line"><span class="comment">--查询表的类型</span></span><br><span class="line">desc formatted student2;</span><br><span class="line">Table Type:             EXTERNAL_TABLE</span><br><span class="line"><span class="comment">--修改外部表student2为内部表</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student2 <span class="keyword">set</span> tblproperties(<span class="string">'EXTERNAL'</span>=<span class="string">'FALSE'</span>);</span><br><span class="line"><span class="comment">--查询表的类型</span></span><br><span class="line">desc formatted student2;</span><br><span class="line">Table Type:             MANAGED_TABLE</span><br></pre></td></tr></table></figure>
+
+<p>注意：<strong>注意：(‘EXTERNAL’=’TRUE’)和(‘EXTERNAL’=’FALSE’)为固定写法，区分大小写！</strong></p>
+<h2 id="分区表"><a href="#分区表" class="headerlink" title="分区表"></a>分区表</h2><p>分区表实际上就是对应一个HDFS文件系统上的独立的文件夹，该文件夹下是该分区所有的数据文件。<strong>Hive中的分区就是分目录</strong>，把一个大的数据集根据业务需要分割成小的数据集。在查询时通过WHERE子句中的表达式选择查询所需要的指定的分区，这样的查询效率会提高很多。</p>
+<h3 id="创建分区表"><a href="#创建分区表" class="headerlink" title="创建分区表"></a>创建分区表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept_partition(</span><br><span class="line">deptno <span class="built_in">int</span>, dname <span class="keyword">string</span>, loc <span class="keyword">string</span></span><br><span class="line">)</span><br><span class="line">partitioned <span class="keyword">by</span> (<span class="keyword">month</span> <span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/opt/module/datas/dept.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> default.dept_partition <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201901'</span>);</span><br><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/opt/module/datas/dept.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> default.dept_partition <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201902'</span>);</span><br><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/opt/module/datas/dept.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> default.dept_partition <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201903'</span>);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s2.ax1x.com/2019/01/16/kShcAP.png" alt="kShcAP.png"></p>
+<h3 id="查询分区表"><a href="#查询分区表" class="headerlink" title="查询分区表"></a>查询分区表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--单分区查询</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dept_partition <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201901'</span>;</span><br><span class="line"><span class="comment">-- 多分区联合查询  union（排序）    or   in 三种方式</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dept_partition <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201901'</span></span><br><span class="line">              <span class="keyword">union</span></span><br><span class="line">              <span class="keyword">select</span> * <span class="keyword">from</span> dept_partition <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201902'</span></span><br><span class="line">              <span class="keyword">union</span></span><br><span class="line">              <span class="keyword">select</span> * <span class="keyword">from</span> dept_partition <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201903'</span>;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">-------------------------------------------------------------------------------------------------</span></span><br><span class="line">Hadoop job information for Stage-2: number of mappers: 2; number of reducers: 1</span><br><span class="line">2019-01-16 21:02:28,578 Stage-2 map = 0%,  reduce = 0%</span><br><span class="line">2019-01-16 21:02:48,169 Stage-2 map = 50%,  reduce = 0%, Cumulative CPU 2.29 sec</span><br><span class="line">2019-01-16 21:02:49,219 Stage-2 map = 100%,  reduce = 0%, Cumulative CPU 5.17 sec</span><br><span class="line">2019-01-16 21:02:58,782 Stage-2 map = 100%,  reduce = 100%, Cumulative CPU 7.58 sec</span><br><span class="line">MapReduce Total cumulative CPU time: 7 seconds 580 msec</span><br><span class="line">Ended Job = job_1547632574371_0003</span><br><span class="line">MapReduce Jobs Launched:</span><br><span class="line">Stage-Stage-1: Map: 2  Reduce: 1   Cumulative CPU: 7.82 sec   HDFS Read: 15318 HDFS Write: 410 SUCCESS</span><br><span class="line">Stage-Stage-2: Map: 2  Reduce: 1   Cumulative CPU: 7.58 sec   HDFS Read: 15080 HDFS Write: 291 SUCCESS</span><br><span class="line">Total MapReduce CPU Time Spent: 15 seconds 400 msec</span><br><span class="line">OK</span><br><span class="line">10      ACCOUNTING      1700    201901</span><br><span class="line">10      ACCOUNTING      1700    201902</span><br><span class="line">10      ACCOUNTING      1700    201903</span><br><span class="line">20      RESEARCH        1800    201901</span><br><span class="line">20      RESEARCH        1800    201902</span><br><span class="line">20      RESEARCH        1800    201903</span><br><span class="line">30      SALES   1900    201901</span><br><span class="line">30      SALES   1900    201902</span><br><span class="line">30      SALES   1900    201903</span><br><span class="line">40      OPERATIONS      1700    201901</span><br><span class="line">40      OPERATIONS      1700    201902</span><br><span class="line">40      OPERATIONS      1700    201903</span><br><span class="line">Time taken: 100.192 seconds, Fetched: 12 row(s)</span><br></pre></td></tr></table></figure>
+
+<h3 id="增加分区"><a href="#增加分区" class="headerlink" title="增加分区"></a>增加分区</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--添加单个分区</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> dept_partition <span class="keyword">add</span> <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201904'</span>) ;</span><br><span class="line"><span class="comment">--增加分区  用空格分开</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> dept_partition <span class="keyword">drop</span> <span class="keyword">partition</span> (<span class="keyword">month</span>=<span class="string">'201802'</span>)  <span class="keyword">partition</span> (<span class="keyword">month</span>=<span class="string">'201803'</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除分区"><a href="#删除分区" class="headerlink" title="删除分区"></a>删除分区</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--删除单个分区</span></span><br><span class="line"> <span class="keyword">alter</span> <span class="keyword">table</span> dept_partition <span class="keyword">drop</span> <span class="keyword">partition</span> (<span class="keyword">month</span>=<span class="string">'201801'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="comment">--同时删除多个分区  用逗号分开</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> dept_partition <span class="keyword">drop</span> <span class="keyword">partition</span> (<span class="keyword">month</span>=<span class="string">'201802'</span>), <span class="keyword">partition</span> (<span class="keyword">month</span>=<span class="string">'201803'</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看分区"><a href="#查看分区" class="headerlink" title="查看分区"></a>查看分区</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- show partitions dept_partition;</span></span><br><span class="line">hive&gt; show partitions dept_partition;</span><br><span class="line">OK</span><br><span class="line">month=201801</span><br><span class="line">month=201901</span><br><span class="line">month=201902</span><br><span class="line">month=201903</span><br><span class="line">month=201904</span><br><span class="line">Time taken: 0.123 seconds, Fetched: 5 row(s)</span><br><span class="line"></span><br><span class="line"><span class="comment">--查看分区表结构</span></span><br><span class="line">hive&gt; desc formatted dept_partition;</span><br><span class="line">OK</span><br><span class="line"><span class="comment"># col_name              data_type               comment</span></span><br><span class="line"></span><br><span class="line">deptno                  int</span><br><span class="line">dname                   string</span><br><span class="line">loc                     string</span><br><span class="line"></span><br><span class="line"><span class="comment"># Partition Information</span></span><br><span class="line"><span class="comment"># col_name              data_type               comment</span></span><br><span class="line"></span><br><span class="line">month                   string</span><br></pre></td></tr></table></figure>
+
+<h3 id="分区表注意事项"><a href="#分区表注意事项" class="headerlink" title="分区表注意事项"></a>分区表注意事项</h3><h4 id="二级分区表"><a href="#二级分区表" class="headerlink" title="二级分区表"></a>二级分区表</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--创建二级分区表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept_partition2(deptno <span class="built_in">int</span>, dname <span class="keyword">string</span>, loc <span class="keyword">string</span> )</span><br><span class="line">partitioned <span class="keyword">by</span> (<span class="keyword">month</span> <span class="keyword">string</span>, <span class="keyword">day</span> <span class="keyword">string</span>)</span><br><span class="line"><span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--加载数据到二级分区表</span></span><br><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/opt/module/datas/dept.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> default.dept_partition2 <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201812'</span>, <span class="keyword">day</span>=<span class="string">'31'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询分区数据</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dept_partition2 <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201812'</span> <span class="keyword">and</span> <span class="keyword">day</span>=<span class="string">'31'</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数据关联"><a href="#数据关联" class="headerlink" title="数据关联"></a>数据关联</h4><p>1.上传数据后修复</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">dfs -mkdir -p  /user/hive/warehouse/dept_partition2/month=201812/day=26;</span><br><span class="line">dfs -put /opt/module/datas/dept.txt  /user/hive/warehouse/dept_partition2/month=201812/day=26;</span><br><span class="line"></span><br><span class="line"><span class="comment">--修复命令</span></span><br><span class="line">hive&gt; msck repair table dept_partition2;</span><br><span class="line">OK</span><br><span class="line">Partitions not in metastore:    dept_partition2:month=201812/day=26</span><br><span class="line"><span class="keyword">Repair</span>: Added <span class="keyword">partition</span> <span class="keyword">to</span> metastore dept_partition2:<span class="keyword">month</span>=<span class="number">201812</span>/<span class="keyword">day</span>=<span class="number">26</span></span><br><span class="line"><span class="built_in">Time</span> taken: <span class="number">0.294</span> <span class="keyword">seconds</span>, Fetched: <span class="number">2</span> <span class="keyword">row</span>(s)</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询  如果没有执行修复命令  刚开始是查询不到的</span></span><br><span class="line">hive&gt; <span class="keyword">select</span> * <span class="keyword">from</span> dept_partition2 <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201812'</span> <span class="keyword">and</span> <span class="keyword">day</span>=<span class="string">'26'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>2.上传数据后修复</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--上传数据</span></span><br><span class="line">dfs -mkdir -p  /user/hive/warehouse/dept_partition2/month=201809/day=11;</span><br><span class="line">dfs -put /opt/module/datas/dept.txt  /user/hive/warehouse/dept_partition2/month=201809/day=11;</span><br><span class="line"></span><br><span class="line"><span class="comment">--执行添加分区</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> dept_partition2 <span class="keyword">add</span> <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201809'</span>,<span class="keyword">day</span>=<span class="string">'11'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询数据</span></span><br><span class="line"> <span class="keyword">select</span> * <span class="keyword">from</span> dept_partition2 <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201809'</span> <span class="keyword">and</span> <span class="keyword">day</span>=<span class="string">'11'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>3.上传数据后load数据到分区</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--创建目录</span></span><br><span class="line">dfs -mkdir -p  /user/hive/warehouse/dept_partition2/month=201810/day=25;</span><br><span class="line"></span><br><span class="line"><span class="comment">--上传数据</span></span><br><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/opt/module/datas/dept.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span>  dept_partition2 <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201810'</span>,<span class="keyword">day</span>=<span class="string">'25'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询数据</span></span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> dept_partition2 <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201810'</span> <span class="keyword">and</span> <span class="keyword">day</span>=<span class="string">'25'</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--语法</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">RENAME</span> <span class="keyword">TO</span> new_table_name</span><br><span class="line"></span><br><span class="line"><span class="comment">--实例</span></span><br><span class="line">hive&gt; <span class="keyword">alter</span> <span class="keyword">table</span> dept_partition2 <span class="keyword">rename</span> <span class="keyword">to</span> dept_partition_rename;</span><br></pre></td></tr></table></figure>
+
+<h4 id="增加-修改-替换列信息"><a href="#增加-修改-替换列信息" class="headerlink" title="增加/修改/替换列信息"></a>增加/修改/替换列信息</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--更新列</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">CHANGE</span> [<span class="keyword">COLUMN</span>] col_old_name col_new_name column_type [<span class="keyword">COMMENT</span> col_comment] [<span class="keyword">FIRST</span>|<span class="keyword">AFTER</span> column_name]</span><br><span class="line"></span><br><span class="line"><span class="comment">--增加和替换列</span></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">ADD</span>|<span class="keyword">REPLACE</span> <span class="keyword">COLUMNS</span> (col_name data_type [<span class="keyword">COMMENT</span> col_comment], ...)</span><br></pre></td></tr></table></figure>
+
+<p><strong>注：ADD是代表新增一字段，字段位置在所有列后面(partition列前)，REPLACE则是表示替换表中所有字段。</strong></p>
+<p>实际案例</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--查询表结构</span></span><br><span class="line">desc dept_partition;</span><br><span class="line"></span><br><span class="line"><span class="comment">--添加列</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> dept_partition <span class="keyword">add</span> <span class="keyword">columns</span>(deptdesc <span class="keyword">string</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询表结构</span></span><br><span class="line">desc dept_partition;</span><br><span class="line"></span><br><span class="line"><span class="comment">--更新列</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> dept_partition <span class="keyword">change</span> <span class="keyword">column</span> deptdesc <span class="keyword">desc</span> <span class="built_in">int</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询表结构</span></span><br><span class="line">desc dept_partition;</span><br><span class="line"></span><br><span class="line"><span class="comment">--替换列</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> dept_partition <span class="keyword">replace</span> <span class="keyword">columns</span>(deptno <span class="keyword">string</span>, dname,<span class="keyword">string</span>, loc <span class="keyword">string</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">--替换列</span></span><br><span class="line"> desc dept_partition;</span><br></pre></td></tr></table></figure>
+
+<h4 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--语法</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> 表名;</span><br><span class="line"></span><br><span class="line"><span class="comment">--实例</span></span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> dept_partition;</span><br></pre></td></tr></table></figure>
+
+<h3 id="DML数据操作"><a href="#DML数据操作" class="headerlink" title="DML数据操作"></a>DML数据操作</h3><h4 id="向表中装载数据（Load）"><a href="#向表中装载数据（Load）" class="headerlink" title="向表中装载数据（Load）"></a>向表中装载数据（Load）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> [<span class="keyword">local</span>] inpath <span class="string">'/opt/module/datas/student.txt'</span> [overwrite] <span class="keyword">into</span> <span class="keyword">table</span> student [<span class="keyword">partition</span> (partcol1=val1,…)];</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>load data</td>
+<td>表示加载数据</td>
+</tr>
+<tr>
+<td>local</td>
+<td>从本地加载数据到hive表（复制）；否则从HDFS加载数据到hive表（移动）</td>
+</tr>
+<tr>
+<td>inpath</td>
+<td>表示加载数据的路径</td>
+</tr>
+<tr>
+<td>overwrite into</td>
+<td>表示覆盖表中已有数据，否则表示追加</td>
+</tr>
+<tr>
+<td>into table</td>
+<td>表示加载到哪张表</td>
+</tr>
+<tr>
+<td>student</td>
+<td>表示具体的表</td>
+</tr>
+<tr>
+<td>partition</td>
+<td>表示上传到指定分区</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--创建表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> student(<span class="keyword">id</span> <span class="keyword">string</span>, <span class="keyword">name</span> <span class="keyword">string</span>) <span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--加载本地文件到hive</span></span><br><span class="line"> <span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">local</span> inpath <span class="string">'/opt/module/datas/student.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> default.student;</span><br><span class="line"></span><br><span class="line">********************************* 加载HDFS文件到hive *********************************</span><br><span class="line"><span class="comment">--上传文件到HDFS</span></span><br><span class="line">hive&gt; dfs -put /opt/module/datas/student.txt /user/hadoop/hive;</span><br><span class="line"></span><br><span class="line"><span class="comment">--加载HDFS上数据</span></span><br><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> inpath <span class="string">'/user/hadoop/hive/student.txt'</span> <span class="keyword">into</span> <span class="keyword">table</span> default.student;</span><br><span class="line"></span><br><span class="line">********************************* 加载数据覆盖表中已有的数据 *********************************</span><br><span class="line"></span><br><span class="line"><span class="comment">--加载数据覆盖表中已有的</span></span><br><span class="line"><span class="keyword">load</span> <span class="keyword">data</span> inpath <span class="string">'/user/hadoop/hive/student.txt'</span> overwrite <span class="keyword">into</span> <span class="keyword">table</span> default.student;</span><br></pre></td></tr></table></figure>
+
+<h4 id="通过查询语句向表中插入数据（Insert）"><a href="#通过查询语句向表中插入数据（Insert）" class="headerlink" title="通过查询语句向表中插入数据（Insert）"></a>通过查询语句向表中插入数据（Insert）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">--创建一张分区表</span></span><br><span class="line"> <span class="keyword">create</span> <span class="keyword">table</span> student(<span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="keyword">string</span>) partitioned <span class="keyword">by</span> (<span class="keyword">month</span> <span class="keyword">string</span>) <span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span>;</span><br><span class="line"> </span><br><span class="line"> <span class="comment">--基本插入数据</span></span><br><span class="line"> <span class="keyword">insert</span> <span class="keyword">into</span> <span class="keyword">table</span>  student <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201901'</span>) <span class="keyword">values</span>(<span class="number">1</span>,<span class="string">'Hive'</span>);</span><br><span class="line"> </span><br><span class="line"> <span class="comment">--基本模式插入（根据单张表查询结果）</span></span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">table</span> student <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201812'</span>) <span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">from</span> student <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201901'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--多插入模式（根据多张表查询结果）</span></span><br><span class="line">from student</span><br><span class="line">              <span class="keyword">insert</span> overwrite <span class="keyword">table</span> student <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201902'</span>)</span><br><span class="line">              <span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201901'</span></span><br><span class="line">              <span class="keyword">insert</span> overwrite <span class="keyword">table</span> student <span class="keyword">partition</span>(<span class="keyword">month</span>=<span class="string">'201903'</span>)</span><br><span class="line">              <span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">where</span> <span class="keyword">month</span>=<span class="string">'201901'</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="查询语句中创建表并加载数据（As-Select）"><a href="#查询语句中创建表并加载数据（As-Select）" class="headerlink" title="查询语句中创建表并加载数据（As Select）"></a>查询语句中创建表并加载数据（As Select）</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--创建表，并指定在hdfs上的位置</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> student5(</span><br><span class="line">              <span class="keyword">id</span> <span class="built_in">int</span>, <span class="keyword">name</span> <span class="keyword">string</span></span><br><span class="line">              )</span><br><span class="line">              <span class="keyword">row</span> <span class="keyword">format</span> <span class="keyword">delimited</span> <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">'\t'</span></span><br><span class="line">              location <span class="string">'/user/hive/warehouse/student5'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">--上传数据到hdfs上</span></span><br><span class="line">dfs -put /opt/module/datas/student.txt /user/hive/warehouse/student5;</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询</span></span><br><span class="line"> <span class="keyword">select</span> * <span class="keyword">from</span> student5;</span><br><span class="line"> hive&gt; select * from student5;</span><br><span class="line">OK</span><br><span class="line">1       hadoop</span><br><span class="line">2       spark</span><br><span class="line">3       flink</span><br><span class="line">4       oozie</span><br><span class="line">5       java</span><br><span class="line">6       python</span><br><span class="line">7       MachineLearning</span><br><span class="line">8       Scala</span><br><span class="line">9       Hive</span><br><span class="line">Time taken: 0.082 seconds, Fetched: 9 row(s)</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">--导出数据</span></span><br><span class="line">[hadoop@datanode1 hive]$  bin/hive -e "EXPORT TABLE student    TO '/export/hive/student';"</span><br><span class="line"></span><br><span class="line"><span class="comment">--查看表</span></span><br><span class="line">hive&gt; show tables;</span><br><span class="line">OK</span><br><span class="line">dept</span><br><span class="line">dept_partition</span><br><span class="line">dept_partition_rename</span><br><span class="line">emp</span><br><span class="line">student</span><br><span class="line">student3</span><br><span class="line">student4</span><br><span class="line">student5</span><br><span class="line">Time taken: 0.019 seconds, Fetched: 8 row(s)</span><br><span class="line"></span><br><span class="line"><span class="comment">--导入数据</span></span><br><span class="line">import table student_import partition(month='201901') from '/export/hive/student';</span><br><span class="line"></span><br><span class="line"><span class="comment">--查看表</span></span><br><span class="line">hive&gt; show tables;</span><br><span class="line">OK</span><br><span class="line">dept</span><br><span class="line">dept_partition</span><br><span class="line">dept_partition_rename</span><br><span class="line">emp</span><br><span class="line">student</span><br><span class="line">student3</span><br><span class="line">student4</span><br><span class="line">student5</span><br><span class="line">student_import</span><br><span class="line">Time taken: 0.019 seconds, Fetched: 9 row(s)</span><br><span class="line"></span><br><span class="line"><span class="comment">--查询数据</span></span><br><span class="line">hive&gt; select * from student2;</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="Insert导出"><a href="#Insert导出" class="headerlink" title="Insert导出"></a>Insert导出</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">--将查询的结果导出到本地</span></span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">local</span> <span class="keyword">directory</span> <span class="string">'/opt/module/datas/export/student'</span>  <span class="keyword">select</span> * <span class="keyword">from</span> student;</span><br><span class="line"></span><br><span class="line"><span class="comment">--将查询的结果格式化导出到本地</span></span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">local</span> <span class="keyword">directory</span> <span class="string">'/opt/module/datas/export/student1'</span></span><br><span class="line"><span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span>    <span class="keyword">select</span> * <span class="keyword">from</span> student;</span><br><span class="line"></span><br><span class="line"><span class="comment">--将查询的结果导出到HDFS上(没有local)</span></span><br><span class="line"><span class="keyword">insert</span> overwrite <span class="keyword">directory</span> <span class="string">'/export/hive/student2'</span> <span class="keyword">ROW</span> <span class="keyword">FORMAT</span> <span class="keyword">DELIMITED</span> <span class="keyword">FIELDS</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\t'</span> </span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student;</span><br></pre></td></tr></table></figure>
+
+<h4 id="命令导出"><a href="#命令导出" class="headerlink" title="命令导出"></a>命令导出</h4><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- Hadoop命令导出到本地</span></span><br><span class="line"></span><br><span class="line">dfs -get /user/hive/warehouse/student/month=201901/000000_0  /opt/module/datas/export/student3.txt;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- Hive Shell 命令导出</span></span><br><span class="line"><span class="comment">--基本语法：（hive -f/-e 执行语句或者脚本 &gt; file）</span></span><br><span class="line">[hadoop@datanode1 hive]$ bin/hive -e 'select * from default.student;' &gt; /opt/module/datas/export/student4.txt;</span><br><span class="line"></span><br><span class="line"><span class="comment">--Export导出到HDFS上</span></span><br><span class="line">hive&gt; export table default.student to '/export/hive/student';</span><br></pre></td></tr></table></figure>
+
+<h4 id="Sqoop导出"><a href="#Sqoop导出" class="headerlink" title="Sqoop导出"></a>Sqoop导出</h4><p><a href="http://hphblog.cn/2019/01/08/Sqoop/" target="_blank" rel="noopener">Sqoop参考</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2019年01月16日 - 18时24分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/" title="Hive数据据类型 DDL DML">https://www.hphblog.cn/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Hive查询
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">KafkaAPI实战</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本数据类型"><span class="toc-number">1.</span> <span class="toc-text">基本数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#集合数据类型"><span class="toc-number">1.1.</span> <span class="toc-text">集合数据类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#类型转化"><span class="toc-number">1.2.</span> <span class="toc-text">类型转化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DDL数据定义"><span class="toc-number">2.</span> <span class="toc-text">DDL数据定义</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建数据库"><span class="toc-number">2.1.</span> <span class="toc-text">创建数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询数据库"><span class="toc-number">2.2.</span> <span class="toc-text">查询数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改数据库"><span class="toc-number">2.3.</span> <span class="toc-text">修改数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除数据库"><span class="toc-number">2.4.</span> <span class="toc-text">删除数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建表"><span class="toc-number">2.5.</span> <span class="toc-text">创建表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#管理表"><span class="toc-number">2.6.</span> <span class="toc-text">管理表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#外部表"><span class="toc-number">2.7.</span> <span class="toc-text">外部表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#应用场景"><span class="toc-number">2.8.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#案例实操"><span class="toc-number">2.9.</span> <span class="toc-text">案例实操</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#互相转换"><span class="toc-number">2.10.</span> <span class="toc-text">互相转换</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分区表"><span class="toc-number">3.</span> <span class="toc-text">分区表</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建分区表"><span class="toc-number">3.1.</span> <span class="toc-text">创建分区表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查询分区表"><span class="toc-number">3.2.</span> <span class="toc-text">查询分区表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#增加分区"><span class="toc-number">3.3.</span> <span class="toc-text">增加分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除分区"><span class="toc-number">3.4.</span> <span class="toc-text">删除分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看分区"><span class="toc-number">3.5.</span> <span class="toc-text">查看分区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分区表注意事项"><span class="toc-number">3.6.</span> <span class="toc-text">分区表注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#二级分区表"><span class="toc-number">3.6.1.</span> <span class="toc-text">二级分区表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据关联"><span class="toc-number">3.6.2.</span> <span class="toc-text">数据关联</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改表"><span class="toc-number">3.6.3.</span> <span class="toc-text">修改表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#增加-修改-替换列信息"><span class="toc-number">3.6.4.</span> <span class="toc-text">增加&#x2F;修改&#x2F;替换列信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#删除表"><span class="toc-number">3.6.5.</span> <span class="toc-text">删除表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DML数据操作"><span class="toc-number">3.7.</span> <span class="toc-text">DML数据操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#向表中装载数据（Load）"><span class="toc-number">3.7.1.</span> <span class="toc-text">向表中装载数据（Load）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#通过查询语句向表中插入数据（Insert）"><span class="toc-number">3.7.2.</span> <span class="toc-text">通过查询语句向表中插入数据（Insert）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查询语句中创建表并加载数据（As-Select）"><span class="toc-number">3.7.3.</span> <span class="toc-text">查询语句中创建表并加载数据（As Select）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Insert导出"><span class="toc-number">3.7.4.</span> <span class="toc-text">Insert导出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#命令导出"><span class="toc-number">3.7.5.</span> <span class="toc-text">命令导出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Sqoop导出"><span class="toc-number">3.7.6.</span> <span class="toc-text">Sqoop导出</span></a></li></ol></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/" title="上一篇: Hive查询">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/" title="下一篇: KafkaAPI实战">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

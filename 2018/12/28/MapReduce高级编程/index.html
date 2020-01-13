@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>MapReduce高级编程 | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="MapReduce 计数器、最值：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce高级编程">
+<meta property="og:url" content="https://www.hphblog.cn/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="MapReduce 计数器、最值：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/28/FWk6ln.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/28/FWk5Y4.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/29/FfaTAK.png">
+<meta property="article:published_time" content="2018-12-28T02:08:07.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:35.536Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="MapReduce">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/12/28/FWk6ln.png">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-MapReduce高级编程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/" class="article-date">
+      <time datetime="2018-12-28T02:08:07.000Z" itemprop="datePublished">2018-12-28</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MapReduce高级编程
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MapReduce/" rel="tag">MapReduce</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+         MapReduce 计数器、最值：<Excerpt in index | 首页摘要><a id="more"></a> 
+
+<p>计数器</p>
+<p>数据集在进行MapReduce运算过程中，许多时候，用户希望了解待分析的数据的运行的运行情况。Hadoop内置的计数器功能收集作业的主要统计信息，可以帮助用户理解程序的运行情况，辅助用户诊断故障。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">SLF4J: Actual binding is of type [org.slf4j.impl.Log4jLoggerFactory]</span><br><span class="line">18&#x2F;12&#x2F;28 10:37:46 INFO client.RMProxy: Connecting to ResourceManager at datanode3&#x2F;192.168.1.103:8032</span><br><span class="line">18&#x2F;12&#x2F;28 10:37:48 WARN mapreduce.JobResourceUploader: Hadoop command-line option parsing not performed. Implement the Tool interface and execute your application with ToolRunner to remedy this.</span><br><span class="line">18&#x2F;12&#x2F;28 10:37:50 INFO input.FileInputFormat: Total input paths to process : 2</span><br><span class="line">18&#x2F;12&#x2F;28 10:37:50 INFO mapreduce.JobSubmitter: number of splits:2</span><br><span class="line">18&#x2F;12&#x2F;28 10:37:51 INFO mapreduce.JobSubmitter: Submitting tokens for job: job_1545964109134_0001</span><br><span class="line">18&#x2F;12&#x2F;28 10:37:53 INFO impl.YarnClientImpl: Submitted application application_1545964109134_0001</span><br><span class="line">18&#x2F;12&#x2F;28 10:37:54 INFO mapreduce.Job: The url to track the job: http:&#x2F;&#x2F;datanode3:8088&#x2F;proxy&#x2F;application_1545964109134_0001&#x2F;</span><br><span class="line">18&#x2F;12&#x2F;28 10:37:54 INFO mapreduce.Job: Running job: job_1545964109134_0001</span><br><span class="line">18&#x2F;12&#x2F;28 10:38:50 INFO mapreduce.Job: Job job_1545964109134_0001 running in uber mode : false</span><br><span class="line">18&#x2F;12&#x2F;28 10:38:50 INFO mapreduce.Job:  map 0% reduce 0%</span><br><span class="line">18&#x2F;12&#x2F;28 10:39:28 INFO mapreduce.Job:  map 100% reduce 0%</span><br><span class="line">18&#x2F;12&#x2F;28 10:39:48 INFO mapreduce.Job:  map 100% reduce 100%</span><br><span class="line">18&#x2F;12&#x2F;28 10:39:50 INFO mapreduce.Job: Job job_1545964109134_0001 completed successfully</span><br><span class="line">18&#x2F;12&#x2F;28 10:39:51 INFO mapreduce.Job: Counters: 49</span><br><span class="line">        File System Counters</span><br><span class="line">                FILE: Number of bytes read&#x3D;78</span><br><span class="line">                FILE: Number of bytes written&#x3D;353015</span><br><span class="line">                FILE: Number of read operations&#x3D;0</span><br><span class="line">                FILE: Number of large read operations&#x3D;0</span><br><span class="line">                FILE: Number of write operations&#x3D;0</span><br><span class="line">                HDFS: Number of bytes read&#x3D;258</span><br><span class="line">                HDFS: Number of bytes written&#x3D;31</span><br><span class="line">                HDFS: Number of read operations&#x3D;9</span><br><span class="line">                HDFS: Number of large read operations&#x3D;0</span><br><span class="line">                HDFS: Number of write operations&#x3D;2</span><br><span class="line">        Job Counters</span><br><span class="line">                Launched map tasks&#x3D;2</span><br><span class="line">                Launched reduce tasks&#x3D;1</span><br><span class="line">                Data-local map tasks&#x3D;2</span><br><span class="line">                Total time spent by all maps in occupied slots (ms)&#x3D;67297</span><br><span class="line">                Total time spent by all reduces in occupied slots (ms)&#x3D;16699</span><br><span class="line">                Total time spent by all map tasks (ms)&#x3D;67297</span><br><span class="line">                Total time spent by all reduce tasks (ms)&#x3D;16699</span><br><span class="line">                Total vcore-milliseconds taken by all map tasks&#x3D;67297</span><br><span class="line">                Total vcore-milliseconds taken by all reduce tasks&#x3D;16699</span><br><span class="line">                Total megabyte-milliseconds taken by all map tasks&#x3D;68912128</span><br><span class="line">                Total megabyte-milliseconds taken by all reduce tasks&#x3D;17099776</span><br><span class="line">        Map-Reduce Framework</span><br><span class="line">                Map input records&#x3D;8</span><br><span class="line">                Map output records&#x3D;8</span><br><span class="line">                Map output bytes&#x3D;78</span><br><span class="line">                Map output materialized bytes&#x3D;84</span><br><span class="line">                Input split bytes&#x3D;212</span><br><span class="line">                Combine input records&#x3D;8</span><br><span class="line">                Combine output records&#x3D;6</span><br><span class="line">                Reduce input groups&#x3D;4</span><br><span class="line">                Reduce shuffle bytes&#x3D;84</span><br><span class="line">                Reduce input records&#x3D;6</span><br><span class="line">                Reduce output records&#x3D;4</span><br><span class="line">                Spilled Records&#x3D;12</span><br><span class="line">                Shuffled Maps &#x3D;2</span><br><span class="line">                Failed Shuffles&#x3D;0</span><br><span class="line">                Merged Map outputs&#x3D;2</span><br><span class="line">                GC time elapsed (ms)&#x3D;3303</span><br><span class="line">                CPU time spent (ms)&#x3D;8060</span><br><span class="line">                Physical memory (bytes) snapshot&#x3D;470183936</span><br><span class="line">                Virtual memory (bytes) snapshot&#x3D;6182424576</span><br><span class="line">                Total committed heap usage (bytes)&#x3D;261361664</span><br><span class="line">        Shuffle Errors</span><br><span class="line">                BAD_ID&#x3D;0</span><br><span class="line">                CONNECTION&#x3D;0</span><br><span class="line">                IO_ERROR&#x3D;0</span><br><span class="line">                WRONG_LENGTH&#x3D;0</span><br><span class="line">                WRONG_MAP&#x3D;0</span><br><span class="line">                WRONG_REDUCE&#x3D;0</span><br><span class="line">        File Input Format Counters</span><br><span class="line">                Bytes Read&#x3D;46</span><br><span class="line">        File Output Format Counters</span><br><span class="line">                Bytes Written&#x3D;31</span><br></pre></td></tr></table></figure>
+
+<p>这些记录了该程序运行过程的的一些信息的计数，如Map input records=8，表示Map有8条记录。可以看出来这些内置计数器可以被分为若干个组，即对于大多数的计数器来说，Hadoop使用的组件分为若干类。 </p>
+<h3 id="计数器列表"><a href="#计数器列表" class="headerlink" title="计数器列表"></a>计数器列表</h3><table>
+<thead>
+<tr>
+<th>组别</th>
+<th>名称/类别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>MapReduce任务计数器（Map-Reduce Framework）</td>
+<td>org.apache.hadoop.mapreduce.TaskCounter</td>
+</tr>
+<tr>
+<td>文件系统计数器（File System Counters）</td>
+<td>org.apache.hadoop.mapreduce.FiIeSystemCounter</td>
+</tr>
+<tr>
+<td>输入文件任务计数器（File Input Format Counters）</td>
+<td>org.apache.hadoop.mapreduce.lib.input.FilelnputFormatCounter</td>
+</tr>
+<tr>
+<td>输出文件计数器（File Output Format Counters）</td>
+<td>org.apache.hadoop.mapreduce.lib.output.FileOutputFormatCounter</td>
+</tr>
+<tr>
+<td>作业计数器（Job Counters）</td>
+<td>org.apache.hadoop.mapreduce.JobCounter</td>
+</tr>
+</tbody></table>
+<p>大部分的Hadoop都有相应的计数器，可以对其进行追踪，方便处理运行中出现的问题，这些信息从应用角度又分为任务计数器和作业计数器：</p>
+<h4 id="任务计数器"><a href="#任务计数器" class="headerlink" title="任务计数器"></a>任务计数器</h4><h5 id="内置MapReduce任务计数器"><a href="#内置MapReduce任务计数器" class="headerlink" title="内置MapReduce任务计数器"></a>内置MapReduce任务计数器</h5><table>
+<thead>
+<tr>
+<th>计数器名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>map输人的记录数(MAP_INPUT_RECORDS）</td>
+<td>作业中所有map已处理的输人记录数。每次RecordReader读到一条记录并将其传给map的map()函数时，该计数器的值递增</td>
+</tr>
+<tr>
+<td>分片（split）的原始字节数(SPLIT_RAW_BYTES)</td>
+<td>由map读取的输人分片对象的字节数。这些对象描述分片元数据（文件的位移和长度），而不是分片的数据自身，因此总规模是小的</td>
+</tr>
+<tr>
+<td>map输出的记录数(MAP_OUTPUT_RECORDS)</td>
+<td>作业中所有map产生的map输出记录数。每次某一个map 的OutputCollector调用collect()方法时，该计数器的值增加</td>
+</tr>
+<tr>
+<td>map输出的字节数(MAP_OUTPUT_BYTES)</td>
+<td>作业中所有map产生的耒经压缩的输出数据的字节数·每次某一个map的OutputCollector调用collect()方法时，该计数器的值增加</td>
+</tr>
+<tr>
+<td>map输出的物化字节数（MAP_OUTPUT_MATERIALIZED_BYTES)</td>
+<td>map输出后确实写到磁盘上的字节数；若map输出压缩功能被启用，则会在计数器值上反映出来</td>
+</tr>
+<tr>
+<td>combine输人的记录数(COMBINE_INPUT_RECORDS)</td>
+<td>作业中所有combiner(如果有）已处理的输人记录数。combiner的迭代器每次读一个值，该计数器的值增加。注意：本计数器代表combiner已经处理的值的个数，并非不同的键组数（后者并无实所意文，因为对于combiner而言，并不要求每个键对应一个组。</td>
+</tr>
+<tr>
+<td>combine输出的记录数(COMBINE_OUTPUT_RECORDS)</td>
+<td>作业中所有combiner（如果有）已产生的输出记录数。每当一个combiner的OutputCollector调用collect()方法时，该计数器的值增加</td>
+</tr>
+<tr>
+<td>reduce输人的组（REDUCE_INPUT_GROUPS）</td>
+<td>作业中所有reducer已经处理的不同的码分组的个数。每当某一个reducer的reduce()被调用时，该计数器的值增加。</td>
+</tr>
+<tr>
+<td>reduce输人的记录数（REDUCE_INPUT_RECORDS)</td>
+<td>作业中所有reducer已经处理的输人记录的个数。每当某个reducer的迭代器读一个值时，该计数器的值增加。如果所有reducer已经处理数完所有输人，則该计数器的值与计数器”map输出的记录”的值相同。</td>
+</tr>
+<tr>
+<td>reduce输出的记录数（REDUCE_OUTPUT_RECORDS）</td>
+<td>作业中所有map已经产生的reduce输出记录数。每当某个reducer的OutputCollector调用collect()方法时，该计数器的值增加。</td>
+</tr>
+<tr>
+<td>reduce经过shuffle的字节数(REDUCE_SHUFFLE_BYTES)</td>
+<td>由shuffle复制到reducer的map输出的字节数。</td>
+</tr>
+<tr>
+<td>溢出的记录数(SPILLED_RECORDS)</td>
+<td>作业中所有map和reduce任务溢出到磁盘的记录数</td>
+</tr>
+<tr>
+<td>CPU毫秒(CPU_MILLISECONDS)</td>
+<td>一个任务的总CPU时间，以毫秒为单位，可由/proc/cpuinfo获取</td>
+</tr>
+<tr>
+<td>物理内存字节数（PHYSICAL_MEMORY_BYTES）</td>
+<td>一个任务所用的物理内存，以字节数为单位，可由/proc/meminfo获取</td>
+</tr>
+<tr>
+<td>虚拟内存字节数(VIRTUAL_MEMORY_BYTES）</td>
+<td>一个任务所用虚拟内存的字节数，由/proc/meminfo获取</td>
+</tr>
+<tr>
+<td>有效的堆字节数(COMMITTED_HEAP_BYTES)</td>
+<td>在JVM中的总有效内存最（以字节为单位），可由Runtime. getRuntime().totalMemory()获取</td>
+</tr>
+<tr>
+<td>GC运行时间毫秒数(GC_TIME_MILLIS)</td>
+<td>在任务执行过程中，垃圾收集器(garbage collection）花费的时间（以毫秒为单位），可由GarbageCollector MXBean. getCollectionTime()获取</td>
+</tr>
+<tr>
+<td>由shuffle传输的map输出数(SHUFFLED_MAPS)</td>
+<td>由shume传输到reducer的map输出文件数。</td>
+</tr>
+<tr>
+<td>失敗的shuffle数(FAILED_SHUFFLE)</td>
+<td>shuffle过程中，发生map输出拷贝错误的次数</td>
+</tr>
+<tr>
+<td>被合并的map输出数（MERGED_MAP_OUTPUTS）</td>
+<td>shuffle过程中，在reduce端合并的map输出文件数</td>
+</tr>
+</tbody></table>
+<h5 id="内置文件系统任务计数器"><a href="#内置文件系统任务计数器" class="headerlink" title="内置文件系统任务计数器"></a>内置文件系统任务计数器</h5><table>
+<thead>
+<tr>
+<th>计数器名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件系统的读字节数（BYTES_READ）</td>
+<td>由map任务和reduce任务在各个文件系统中读取的字节数，各个文件系统分别对应一个计数器，文件系统可以是local、 HDFS、S3等</td>
+</tr>
+<tr>
+<td>文件系统的写字节数(BYTES_WRITTEN）</td>
+<td>由map任务和reduce任务在各个文件系统中写的字节数</td>
+</tr>
+<tr>
+<td>文件系统读操作的数量(READ_OPS)</td>
+<td>由map任务和reduce任务在各个文件系统中进行的读操作的数量（例如，open操作，filestatus操作）</td>
+</tr>
+<tr>
+<td>文件系统大规模读操作的数量(LARGE_READ_OPS)</td>
+<td>由map和reduce任务在各个文件系统中进行的大规模读操作（例如，对于一个大容量目录进行list操作）的数量</td>
+</tr>
+<tr>
+<td>文件系统写操作的数量(WRITE_OPS)</td>
+<td>由map任务和reduce任务在各个文件系统中进行的写操作的数量（例如，create操作，append操作）</td>
+</tr>
+</tbody></table>
+<h5 id="内置的输入文件任务计数器"><a href="#内置的输入文件任务计数器" class="headerlink" title="内置的输入文件任务计数器"></a>内置的输入文件任务计数器</h5><table>
+<thead>
+<tr>
+<th>计数器名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读取的字节数(BYTES_READ)</td>
+<td>由map任务通过FilelnputFormat读取的字节数</td>
+</tr>
+</tbody></table>
+<h5 id="内置输出文件任务计数器"><a href="#内置输出文件任务计数器" class="headerlink" title="内置输出文件任务计数器"></a>内置输出文件任务计数器</h5><table>
+<thead>
+<tr>
+<th>计数器名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>写的字节数(BYTES_WRITTEN)</td>
+<td>由map任务（针对仅含map的作业）或者reduce任务通过FileOutputFormat写的字节数</td>
+</tr>
+</tbody></table>
+<h4 id="作业计数器"><a href="#作业计数器" class="headerlink" title="作业计数器"></a>作业计数器</h4><h5 id="内置的作业计数器"><a href="#内置的作业计数器" class="headerlink" title="内置的作业计数器"></a>内置的作业计数器</h5><table>
+<thead>
+<tr>
+<th>计数器名称</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>启用的map任务数（TOTAL_LAUNCHED_MAPS）</td>
+<td>启动的map任务数，包括以“推测执行”方式启动的任务。</td>
+</tr>
+<tr>
+<td>启用的reduce任务数(TOTAL_LAUNCHED_REDUCES)</td>
+<td>启动的reduce任务数，包括以“推测执行”方式启动的任务。</td>
+</tr>
+<tr>
+<td>启用的uber任务数(TOTAL_LAIÆHED_UBERTASKS)</td>
+<td>启用的uber任务数。</td>
+</tr>
+<tr>
+<td>uber任务中的map数(NUM_UBER_SUBMAPS)</td>
+<td>在uber任务中的map数。</td>
+</tr>
+<tr>
+<td>Uber任务中的reduce数(NUM_UBER_SUBREDUCES)</td>
+<td>在任务中的reduce数。</td>
+</tr>
+<tr>
+<td>失败的map任务数（NUM_FAILED_MAPS）</td>
+<td>失败的map任务数。</td>
+</tr>
+<tr>
+<td>失败的reduce任务数(NUM_FAILED_REDUCES)</td>
+<td>失败的reduce任务数</td>
+</tr>
+<tr>
+<td>失败的uber任务数(NIN_FAILED_UBERTASKS)</td>
+<td>失败的uber任务数。</td>
+</tr>
+<tr>
+<td>被中止的map任务数（NUM_KILLED_MAPS）</td>
+<td>被中止的map任务数。</td>
+</tr>
+<tr>
+<td>被中止的reduce任务数(NW_KILLED_REDUCES)</td>
+<td>被中止的reduce任务数。</td>
+</tr>
+<tr>
+<td>数据本地化的map任务数（DATA_LOCAL_MAPS）</td>
+<td>与输人数据在同一节点上的map任务数。</td>
+</tr>
+<tr>
+<td>机架本地化的map任务数（RACK_LOCAL_MAPS)</td>
+<td>与输人数据在同一机架范围内但不在同一节点上的map任务数。</td>
+</tr>
+<tr>
+<td>其他本地化的map任务数（OTHER_LOCAL_MAPS）</td>
+<td>与输人数据不在同一机架范围内的map任务数。由于机架之间的带宽资源相对较少，Hadoop会尽量让map任务靠近输人数据执行，因此该计数器值一般比较小。</td>
+</tr>
+<tr>
+<td>map任务的总运行时间(MILLIS_MAPS)</td>
+<td>map任务的总运行时间，单位毫秒。包括以推测执行方式启动的任务。可参见相关的度量内核和内存使用的计数器(VCORES_MILLIS_MAPS和MB_MILLIS_MAPS）</td>
+</tr>
+<tr>
+<td>reduce任务的总运行时间(MILLIS_REDUCES)</td>
+<td>reduce任务的总运行时间，单位毫秒。包括以推滌执行方式启动的任务。可参见相关的度量内核和内存使用的计数器(VQES_MILLIS_REARES和t*B_MILLIS_REUKES)</td>
+</tr>
+</tbody></table>
+<h4 id="自定义计数器"><a href="#自定义计数器" class="headerlink" title="自定义计数器"></a>自定义计数器</h4><p>虽然Hadoop内置的计数器比较全面，给作业运行过程的监控带了方便，但是对于那一些业务中的特定要求(统计过程中对某种情况发生进行计数统计)MapReduce还是提供了用户编写自定义计数器的方法。</p>
+<h5 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h5><ol>
+<li>定义一个Java的枚举类型(enum)，用于记录计数器分组，其枚举类型的名称即为分组的名称，枚举类型的字段就是计数器名称。</li>
+<li>通过Context类的实例调用getCounter方法进行increment(long incr)方法，进行计数的添加。</li>
+</ol>
+<h5 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h5><h6 id="ReportTest"><a href="#ReportTest" class="headerlink" title="ReportTest"></a>ReportTest</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> ReportTest &#123;                <span class="comment">//定义枚举</span></span><br><span class="line">    ErroWord, GoodWord, ReduceReport	<span class="comment">//写入要记录的计数器名称</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="Mapper类"><a href="#Mapper类" class="headerlink" title="Mapper类"></a>Mapper类</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.LongWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TxtMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">LongWritable</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(LongWritable key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">        String[] words = value.toString().split(<span class="string">" "</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (String word : words) &#123;</span><br><span class="line">            <span class="keyword">if</span> (word.equals(<span class="string">"GoodWord"</span>)) &#123;</span><br><span class="line">                context.setStatus(<span class="string">"GoodWord is coming"</span>);</span><br><span class="line">                context.getCounter(ReportTest.GoodWord).increment(<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (word.equals(<span class="string">"ErroWord"</span>)) &#123;</span><br><span class="line">                context.setStatus(<span class="string">"BadWord is coming!"</span>);</span><br><span class="line">                context.getCounter(ReportTest.ErroWord).increment(<span class="number">1</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                context.write(<span class="keyword">new</span> Text(word), <span class="keyword">new</span> IntWritable(<span class="number">1</span>));</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="Reducer类"><a href="#Reducer类" class="headerlink" title="Reducer类"></a>Reducer类</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TxtReducer</span> <span class="keyword">extends</span> <span class="title">Reducer</span>&lt;<span class="title">Text</span>, <span class="title">IntWritable</span>, <span class="title">Text</span>, <span class="title">IntWritable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">reduce</span><span class="params">(Text key, Iterable&lt;IntWritable&gt; values, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        Iterator&lt;IntWritable&gt; it = values.iterator();</span><br><span class="line">        <span class="keyword">while</span> (it.hasNext()) &#123;</span><br><span class="line">            IntWritable value = it.next();</span><br><span class="line">            sum += value.get();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (key.toString().equals(<span class="string">"hello"</span>)) &#123;</span><br><span class="line">            context.setStatus(<span class="string">"BadKey is comming!"</span>);</span><br><span class="line">            context.getCounter(ReportTest.ReduceReport).increment(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        context.write(key, <span class="keyword">new</span> IntWritable(sum));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h6 id="ToolRunnerJS"><a href="#ToolRunnerJS" class="headerlink" title="ToolRunnerJS"></a>ToolRunnerJS</h6><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configured;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.IntWritable;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Counters;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.TextInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.util.Tool;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ToolRunnerJS</span> <span class="keyword">extends</span> <span class="title">Configured</span> <span class="keyword">implements</span> <span class="title">Tool</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ToolRunnerJS tool = <span class="keyword">new</span> ToolRunnerJS();</span><br><span class="line">        tool.run(<span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">run</span><span class="params">(String[] args0)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        <span class="comment">//Configuration:MapReduce的类,向Hadoop框架描述MapReduce执行工作</span></span><br><span class="line">        Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">        String output = <span class="string">"jishuqi1"</span>;</span><br><span class="line"></span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line">        job.setJarByClass(ToolRunnerJS<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        job.setJobName(<span class="string">"jishu"</span>);               <span class="comment">//设置Job名称</span></span><br><span class="line"></span><br><span class="line">        job.setOutputKeyClass(Text<span class="class">.<span class="keyword">class</span>)</span>; <span class="comment">//设置Job输出数据 K</span></span><br><span class="line">        job.setOutputValueClass(IntWritable<span class="class">.<span class="keyword">class</span>)</span>; <span class="comment">//设置Job输出数据 V</span></span><br><span class="line"></span><br><span class="line">        job.setMapperClass(TxtMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        job.setReducerClass(TxtReducer<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">        job.setInputFormatClass(TextInputFormat<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        job.setOutputFormatClass(TextOutputFormat<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">        FileInputFormat.addInputPath(job, <span class="keyword">new</span> Path(<span class="string">"/input/counter/*"</span>)); <span class="comment">//为 Job设置输入路径</span></span><br><span class="line">        FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(<span class="string">"/output/counter_result"</span>)); <span class="comment">//为Job设置输出路径</span></span><br><span class="line"></span><br><span class="line">        job.waitForCompletion(<span class="keyword">true</span>);</span><br><span class="line">        Counters counters = job.getCounters();</span><br><span class="line">        System.out.println(<span class="string">"Counter getGroupNames:"</span>+counters.getGroupNames());</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h4><p><img src="https://s1.ax1x.com/2018/12/28/FWk6ln.png" alt="FWk6ln.png"></p>
+<p>通过Web界面也可以查看但是需要设置设置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	       <span class="tag">&lt;<span class="name">value</span>&gt;</span>datanode1:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">description</span>&gt;</span>MapReduce  JobHistory Server IPC host:port<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>datanode1:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">description</span>&gt;</span>MapReduce JobHistory Server Web UI host:port<span class="tag">&lt;/<span class="name">description</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>启动服务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mr-jobhistory-daemon.sh start historyserver</span><br></pre></td></tr></table></figure>
+
+<p>web界面查看</p>
+<p><img src="https://s1.ax1x.com/2018/12/28/FWk5Y4.png" alt="FWk5Y4.png"></p>
+<h2 id="最值"><a href="#最值" class="headerlink" title="最值"></a>最值</h2><p>最大值、最小值、平均值、均方差、众数、中位数等都是统计学中经典的数值统计，也是常用的统计属性字段，如果想知道最大的10个数，最小的10个数，这涉及到Top N/Bottom N 问题。</p>
+<h3 id="单一最值"><a href="#单一最值" class="headerlink" title="单一最值"></a>单一最值</h3><p>常用的统计属性的字段在MapReduce的求解过程中，由一个大任务分解成若干个Mapper任务，最后会进行Reducer合并，比传统计算求解略显复杂，在MaoReduce框架中，会以Key进行分区、分组、排序的操作，在进行这些数值的操作时哦，只要设定合理的key，整个问题也就简单化了。使用Combiner可以减少Shuffle到Reduce端中间的K V的数目，减轻网络和IO的目的。</p>
+<h4 id="求解最大值最小值"><a href="#求解最大值最小值" class="headerlink" title="求解最大值最小值"></a>求解最大值最小值</h4><p>数据</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">2017-10 300</span><br><span class="line">2017-10 100</span><br><span class="line">2017-10 200</span><br><span class="line">2017-11 320</span><br><span class="line">2017-11 200</span><br><span class="line">2017-11 280</span><br><span class="line">2017-12 290</span><br><span class="line">2017-12 270</span><br></pre></td></tr></table></figure>
+
+<h4 id="MinMaxWritable"><a href="#MinMaxWritable" class="headerlink" title="MinMaxWritable"></a>MinMaxWritable</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Writable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.DataInput;</span><br><span class="line"><span class="keyword">import</span> java.io.DataOutput;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MinMaxWritable</span> <span class="keyword">implements</span> <span class="title">Writable</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> min;<span class="comment">//记录最大值</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> max;<span class="comment">//记录最小值</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> min;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMin</span><span class="params">(<span class="keyword">int</span> min)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.min = min;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMax</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> min + <span class="string">"\t"</span> + max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMax</span><span class="params">(<span class="keyword">int</span> max)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.max = max;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">(DataOutput out)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        out.writeInt(max);</span><br><span class="line">        out.writeInt(min);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readFields</span><span class="params">(DataInput in)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        min = in.readInt();</span><br><span class="line">        max = in.readInt();</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="MinMaxMapper"><a href="#MinMaxMapper" class="headerlink" title="MinMaxMapper"></a>MinMaxMapper</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Mapper;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MinMaxMapper</span> <span class="keyword">extends</span> <span class="title">Mapper</span>&lt;<span class="title">Object</span>, <span class="title">Text</span>, <span class="title">Text</span>, <span class="title">MinMaxWritable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MinMaxWritable outTuple = <span class="keyword">new</span> MinMaxWritable();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">map</span><span class="params">(Object key, Text value, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">        String[] words = value.toString().split(<span class="string">" "</span>);</span><br><span class="line">        String data = words[<span class="number">0</span>]; <span class="comment">//定义记录的日期的自定义变量data</span></span><br><span class="line">        <span class="keyword">if</span> (data == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span>;  <span class="comment">//如果该日期为空，返回</span></span><br><span class="line">        &#125;</span><br><span class="line">        outTuple.setMin(Integer.parseInt(words[<span class="number">1</span>]));</span><br><span class="line">        outTuple.setMax(Integer.parseInt(words[<span class="number">1</span>]));</span><br><span class="line">        context.write(<span class="keyword">new</span> Text(data), outTuple);  <span class="comment">//将结果写入到context</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="MinMaxReducer"><a href="#MinMaxReducer" class="headerlink" title="MinMaxReducer"></a>MinMaxReducer</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Reducer;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MinMaxReducer</span> <span class="keyword">extends</span> <span class="title">Reducer</span>&lt;<span class="title">Text</span>, <span class="title">MinMaxWritable</span>, <span class="title">Text</span>, <span class="title">MinMaxWritable</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> MinMaxWritable result = <span class="keyword">new</span> MinMaxWritable();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">reduce</span><span class="params">(Text key, Iterable&lt;MinMaxWritable&gt; values, Context context)</span> <span class="keyword">throws</span> IOException, InterruptedException </span>&#123;</span><br><span class="line">        result.setMax(<span class="number">0</span>);</span><br><span class="line">        result.setMin(<span class="number">0</span>);</span><br><span class="line">        <span class="comment">//按照key迭代输出value的值</span></span><br><span class="line">        <span class="keyword">for</span> (MinMaxWritable value : values) &#123;</span><br><span class="line">            <span class="comment">//最小值放入结果集</span></span><br><span class="line">            <span class="keyword">if</span> (result.getMin() == <span class="number">0</span> || value.getMin() &lt; result.getMin()) &#123;</span><br><span class="line">                result.setMin(value.getMin());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//最大值放入结果集</span></span><br><span class="line">            <span class="keyword">if</span> (result.getMax() == <span class="number">0</span> || value.getMax() &gt; result.getMax()) &#123;</span><br><span class="line">                result.setMax(value.getMax());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        context.write(key, result);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="MinMaxJob"><a href="#MinMaxJob" class="headerlink" title="MinMaxJob"></a>MinMaxJob</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.hadoop.conf.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.fs.Path;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.io.Text;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.Job;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.input.FileInputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;</span><br><span class="line"><span class="keyword">import</span> org.apache.hadoop.util.GenericOptionsParser;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MinMaxJob</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Configuration conf = <span class="keyword">new</span> Configuration();</span><br><span class="line">        String[] otherArgs = <span class="keyword">new</span> GenericOptionsParser(conf, args).getRemainingArgs();</span><br><span class="line">        <span class="keyword">if</span> (otherArgs.length != <span class="number">2</span>) &#123;</span><br><span class="line">            System.err.println(<span class="string">"Usage:MinMaxMapper&lt;in&gt;&lt;out&gt;"</span>);</span><br><span class="line">            System.exit(<span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        Job job = Job.getInstance(conf);</span><br><span class="line">        job.setJarByClass(MinMaxJob<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        job.setMapperClass(MinMaxMapper<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        <span class="comment">//启用Combiner 减少网络传输的数据量 </span></span><br><span class="line">        job.setCombinerClass(MinMaxReducer<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        job.setReducerClass(MinMaxReducer<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">        job.setOutputKeyClass(Text<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">        job.setOutputValueClass(MinMaxWritable<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">        FileInputFormat.addInputPath(job, <span class="keyword">new</span> Path(args[<span class="number">0</span>]));</span><br><span class="line">        FileOutputFormat.setOutputPath(job, <span class="keyword">new</span> Path(args[<span class="number">1</span>]));</span><br><span class="line">        System.exit(job.waitForCompletion(<span class="keyword">true</span>) ? <span class="number">0</span> : <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="计算过程"><a href="#计算过程" class="headerlink" title="计算过程"></a>计算过程</h4><p><img src="https://s1.ax1x.com/2018/12/29/FfaTAK.png" alt="FfaTAK.png"></p>
+<p>在一个MapReduce计算的过程中，Mapper任务相对于Reduce任务是大量的，因此少量的Reducer处理大量数据的并不明智，所以通过在Shuffle阶段引入Combiner，并把Reducer作为它的计算类，大大减少了Reducer端数据的输入，整个计算过程变得合理可靠。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2018年12月28日 - 10时08分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/" title="MapReduce高级编程">https://www.hphblog.cn/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          MapReduce高级编程2
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">MapReduce源码刨析</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#计数器列表"><span class="toc-number">1.</span> <span class="toc-text">计数器列表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#任务计数器"><span class="toc-number">1.1.</span> <span class="toc-text">任务计数器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#内置MapReduce任务计数器"><span class="toc-number">1.1.1.</span> <span class="toc-text">内置MapReduce任务计数器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#内置文件系统任务计数器"><span class="toc-number">1.1.2.</span> <span class="toc-text">内置文件系统任务计数器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#内置的输入文件任务计数器"><span class="toc-number">1.1.3.</span> <span class="toc-text">内置的输入文件任务计数器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#内置输出文件任务计数器"><span class="toc-number">1.1.4.</span> <span class="toc-text">内置输出文件任务计数器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#作业计数器"><span class="toc-number">1.2.</span> <span class="toc-text">作业计数器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#内置的作业计数器"><span class="toc-number">1.2.1.</span> <span class="toc-text">内置的作业计数器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#自定义计数器"><span class="toc-number">1.3.</span> <span class="toc-text">自定义计数器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#过程"><span class="toc-number">1.3.1.</span> <span class="toc-text">过程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#案例"><span class="toc-number">1.3.2.</span> <span class="toc-text">案例</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#ReportTest"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">ReportTest</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Mapper类"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">Mapper类</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Reducer类"><span class="toc-number">1.3.2.3.</span> <span class="toc-text">Reducer类</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#ToolRunnerJS"><span class="toc-number">1.3.2.4.</span> <span class="toc-text">ToolRunnerJS</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#查看"><span class="toc-number">1.4.</span> <span class="toc-text">查看</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最值"><span class="toc-number"></span> <span class="toc-text">最值</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单一最值"><span class="toc-number">1.</span> <span class="toc-text">单一最值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#求解最大值最小值"><span class="toc-number">1.1.</span> <span class="toc-text">求解最大值最小值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MinMaxWritable"><span class="toc-number">1.2.</span> <span class="toc-text">MinMaxWritable</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MinMaxMapper"><span class="toc-number">1.3.</span> <span class="toc-text">MinMaxMapper</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MinMaxReducer"><span class="toc-number">1.4.</span> <span class="toc-text">MinMaxReducer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#MinMaxJob"><span class="toc-number">1.5.</span> <span class="toc-text">MinMaxJob</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#计算过程"><span class="toc-number">1.6.</span> <span class="toc-text">计算过程</span></a></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/" title="上一篇: MapReduce高级编程2">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/" title="下一篇: MapReduce源码刨析">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

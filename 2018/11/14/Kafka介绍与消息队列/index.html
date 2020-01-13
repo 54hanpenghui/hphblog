@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>Kafka与消息队列 | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="消息队列的好处：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka与消息队列">
+<meta property="og:url" content="https://www.hphblog.cn/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="消息队列的好处：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izvOfS.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/FSSEL9.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/11/18/izv4QH.jpg">
+<meta property="article:published_time" content="2018-11-14T05:04:22.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:37.447Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="Kafka">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/11/18/izvOfS.jpg">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-Kafka介绍与消息队列" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" class="article-date">
+      <time datetime="2018-11-14T05:04:22.000Z" itemprop="datePublished">2018-11-14</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Kafka与消息队列
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Kafka/" rel="tag">Kafka</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+         消息队列的好处：<Excerpt in index | 首页摘要><a id="more"></a>
+
+<h2 id="消息队列（Message-Queue）"><a href="#消息队列（Message-Queue）" class="headerlink" title="消息队列（Message Queue）"></a>消息队列（Message Queue）</h2><p>消息: 网络中的两台计算机或者两个通讯设备之间传递的数据。例如说：文本、音乐、视频等内容。</p>
+<p>队列：一种特殊的线性表（数据元素首尾相接），特殊之处在于只允许在首部删除元素和在尾部追加元素。入队、出队。</p>
+<p>消息队列：顾名思义，消息+队列，保存消息的队列。消息的传输过程中的容器；主要提供生产、消费接口供外部调用做数据的存储和获取。</p>
+<h2 id="消息队列分类"><a href="#消息队列分类" class="headerlink" title="消息队列分类"></a>消息队列分类</h2><p>MQ分类：点对点（P2P）、发布订阅（Pub/Sub）</p>
+<p>共同点：消息生产者生产消息发送到queue中，然后消息消费者从queue中读取并且消费消息。</p>
+<p>不同点：    P2P模型包含：消息队列(Queue)、发送者(Sender)、接收者(Receiver)一个生产者生产的消息只有一个消费者(Consumer)（即一旦被消费，消息就不在消息队列中）。打电话。</p>
+<p>Pub/Sub包含：消息队列(Queue)、主题（Topic）、发布者（Publisher）、订阅者（Subscriber）</p>
+<p>每个消息可以有多个消费者，彼此互不影响。比如我发布一个微博：关注我的人都能够看到。</p>
+<h2 id="消息队列模式"><a href="#消息队列模式" class="headerlink" title="消息队列模式"></a>消息队列模式</h2><ol>
+<li>点对点模式（一对一，消费者主动拉取数据，消息收到后消息清除）</li>
+</ol>
+<p>点对点模型通常是一个基于拉取或者轮询的消息传送模型，这种模型从队列中请求信息，而不是将消息推送到客户端。这个模型的特点是发送到队列的消息被一个且只有一个接收者接收处理，即使有多个消息监听者也是如此。</p>
+<ol>
+<li>发布/订阅模式（一对多，数据生产后，推送给所有订阅者）</li>
+</ol>
+<p>发布订阅模型则是一个基于推送的消息传送模型。发布订阅模型可以有多种不同的订阅者，临时订阅者只在主动监听主题时才接收消息，而持久订阅者则监听主题的所有消息，即使当前订阅者不可用，处于离线状态。</p>
+<h2 id="消息队列的实现原理"><a href="#消息队列的实现原理" class="headerlink" title="消息队列的实现原理"></a>消息队列的实现原理</h2><p><img src="https://s1.ax1x.com/2018/11/18/izvOfS.jpg" alt="消息队列的实现原理"></p>
+<h2 id="消息队列的好处"><a href="#消息队列的好处" class="headerlink" title="消息队列的好处"></a>消息队列的好处</h2><ul>
+<li>解耦：允许你独立的扩展或修改两边的处理过程，只要确保它们遵守同样的接口约束。</li>
+<li>冗余：消息队列把数据进行持久化直到它们已经被完全处理，通过这一方式规避了数据丢失风险。许多消息队列所采用的”插入-获取-删除”范式中，在把一个消息从队列中删除之前，需要你的处理系统明确的指出该消息已经被处理完毕，从而确保你的数据被安全的保存直到你使用完毕。</li>
+<li>扩展性：因为消息队列解耦了你的处理过程，所以增大消息入队和处理的频率是很容易的，只要另外增加处理过程即可。</li>
+<li>灵活性 &amp; 峰值处理能力： 在访问量剧增的情况下，应用仍然需要继续发挥作用，但是这样的突发流量并不常见。如果为以能处理这类峰值访问为标准来投入资源随时待命无疑是巨大的浪费。使用消息队列能够使关键组件顶住突发的访问压力，而不会因为突发的超负荷的请求而完全崩溃。</li>
+<li>可恢复性：系统的一部分组件失效时，不会影响到整个系统。消息队列降低了进程间的耦合度，所以即使一个处理消息的进程挂掉，加入队列中的消息仍然可以在系统恢复后被处理。</li>
+<li>顺序保证：在大多使用场景下，数据处理的顺序都很重要。大部分消息队列本来就是排序的，并且能保证数据会按照特定的顺序来处理。（Kafka保证一个Partition内的消息的有序性）</li>
+<li>缓冲：有助于控制和优化数据流经过系统的速度，解决生产消息和消费消息的处理速度不一致的情况。</li>
+<li>异步通信：很多时候，用户不想也不需要立即处理消息。消息队列提供了异步处理机制，允许用户把一个消息放入队列，但并不立即处理它。想向队列中放入多少消息就放多少，然后在需要的时候再去处理它们。</li>
+</ul>
+<p><strong>Kafka</strong></p>
+<p>Kafka是由Apache软件基金会开发的一个开源流处理平台，由Scala和Java编写。Kafka是一种高吞吐量的分布式发布订阅消息系统，它可以处理消费者规模的网站中的所有动作流数据。 这种动作（网页浏览，搜索和其他用户的行动）是在现代网络上的许多社会功能的一个关键因素。 这些数据通常是由于吞吐量的要求而通过处理日志和日志聚合来解决。 对于像Hadoop的一样的日志数据和离线分析系统，但又要求实时处理的限制，这是一个可行的解决方案。Kafka的目的是通过Hadoop的并行加载机制来统一线上和离线的消息处理，也是为了通过集群来提供实时的消息。</p>
+<p><img src="https://s1.ax1x.com/2018/11/18/FSSEL9.png" alt="Kafka架构图"></p>
+<p>Producer ：消息生产者，就是向kafka broker发消息的客户端；</p>
+<ol>
+<li>Consumer ：消息消费者，向kafka broker取消息的客户端；</li>
+<li>Topic ：可以理解为一个队列</li>
+<li>Consumer Group （CG）：这是kafka用来实现一个topic消息的广播（发给所有的consumer）和单播（发给任意一个consumer）的手段。一个topic可以有多个CG。topic的消息会复制（不是真的复制，是概念上的）到所有的CG，但每个partion只会把消息发给该CG中的一个consumer。如果需要实现广播，只要每个consumer有一个独立的CG就可以了。要实现单播只要所有的consumer在同一个CG。用CG还可以将consumer进行自由的分组而不需要多次发送消息到不同的topic；</li>
+<li>Broker ：一台kafka服务器就是一个broker。一个集群由多个broker组成。一个broker可以容纳多个topic；</li>
+<li>Partition：为了实现扩展性，一个非常大的topic可以分布到多个broker（即服务器）上，一个topic可以分为多个partition，每个partition是一个有序的队列。partition中的每条消息都会被分配一个有序的id（offset）。kafka只保证按一个partition中的顺序将消息发给consumer，不保证一个topic的整体（多个partition间）的顺序；</li>
+<li>Offset：kafka的存储文件都是按照offset.kafka来命名，用offset做名字的好处是方便查找。例如你想找位于2049的位置，只要找到2048.kafka的文件即可。当然the first offset就是00000000000.kafka。</li>
+</ol>
+<h2 id="Kafka-和其他消息队列的比较"><a href="#Kafka-和其他消息队列的比较" class="headerlink" title="Kafka 和其他消息队列的比较"></a>Kafka 和其他消息队列的比较</h2><p><img src="https://s1.ax1x.com/2018/11/18/izv4QH.jpg" alt=""></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2018年11月14日 - 13时04分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/" title="Kafka与消息队列">https://www.hphblog.cn/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Kafka命令操作
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Kafka和的安装与配置</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列（Message-Queue）"><span class="toc-number">1.</span> <span class="toc-text">消息队列（Message Queue）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列分类"><span class="toc-number">2.</span> <span class="toc-text">消息队列分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列模式"><span class="toc-number">3.</span> <span class="toc-text">消息队列模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列的实现原理"><span class="toc-number">4.</span> <span class="toc-text">消息队列的实现原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#消息队列的好处"><span class="toc-number">5.</span> <span class="toc-text">消息队列的好处</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Kafka-和其他消息队列的比较"><span class="toc-number">6.</span> <span class="toc-text">Kafka 和其他消息队列的比较</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/" title="上一篇: Kafka命令操作">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="下一篇: Kafka和的安装与配置">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

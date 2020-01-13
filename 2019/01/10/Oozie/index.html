@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>Oozie | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Oozie的安装和任务调度：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oozie">
+<meta property="og:url" content="https://www.hphblog.cn/2019/01/10/Oozie/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="Oozie的安装和任务调度：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/10/FOQD2T.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/10/FOlpQS.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/17/F0EkqI.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/17/F0mrcD.md.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/10/FOxtXD.png">
+<meta property="article:published_time" content="2019-01-10T01:39:09.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:30.409Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="Oozie">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/01/10/FOQD2T.png">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-Oozie" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2019/01/10/Oozie/" class="article-date">
+      <time datetime="2019-01-10T01:39:09.000Z" itemprop="datePublished">2019-01-10</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Oozie
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Oozie/" rel="tag">Oozie</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+         Oozie的安装和任务调度：<Excerpt in index | 首页摘要><a id="more"></a>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Oozie英文翻译为：驯象人。一个基于工作流引擎的开源框架，由Cloudera公司贡献给Apache，提供对Hadoop<br>Mapreduce、Pig Jobs的任务调度与协调。Oozie需要部署到Java Servlet容器中运行。主要用于定时调度任务，多任务可以按照执行的逻辑顺序调度。</p>
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>Oozie是一个管理Hdoop作业（job）的工作流程调度管理系统<br>Oozie的工作流是一系列动作的直接周期图（DAG）<br>Oozie协调作业就是通过时间（频率）和有效数据触发当前的Oozie工作流程<br>Oozie是Yahoo针对Apache Hadoop开发的一个开源工作流引擎。用于管理和协调运行在Hadoop平台上（包括：HDFS、Pig和MapReduce）的Jobs。Oozie是专为雅虎的全球大规模复杂工作流程和数据管道而设计<br>Oozie围绕两个核心：工作流和协调器，前者定义任务的拓扑和执行逻辑，后者负责工作流的依赖和触发</p>
+<h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2><ol>
+<li><p>Workflow：顺序执行流程节点，支持fork（分支多个节点），join（合并多个节点为一个）</p>
+</li>
+<li><p>Coordinator：定时触发workflow</p>
+</li>
+<li><p>Bundle Job：绑定多个Coordinator</p>
+</li>
+</ol>
+<h3 id="常用节点"><a href="#常用节点" class="headerlink" title="常用节点"></a>常用节点</h3><ol>
+<li><p>控制流节点（Control Flow Nodes）：控制流节点一般都是定义在工作流开始或者结束的位置，比如start,end,kill等。以及提供工作流的执行路径机制，如decision，fork，join等。</p>
+</li>
+<li><p>动作节点（Action  Nodes）：负责执行具体动作的节点，比如：拷贝文件，执行某个Shell脚本等等。</p>
+</li>
+</ol>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><p>所需软件链接  链接：链接：<a href="https://pan.baidu.com/s/18_iOFGL06g7_Ye-mZZRwag" target="_blank" rel="noopener">https://pan.baidu.com/s/18_iOFGL06g7_Ye-mZZRwag</a>   提取码：qlbu </p>
+<h3 id="部署-Hadoop"><a href="#部署-Hadoop" class="headerlink" title="部署 Hadoop"></a>部署 Hadoop</h3><p>这里不详细介绍，请查阅Hadoop安装，这里用的是Clouder公司的CDH版本的Hadop。</p>
+<h3 id="修改配置"><a href="#修改配置" class="headerlink" title="修改配置"></a>修改配置</h3><h4 id="core-site-xml"><a href="#core-site-xml" class="headerlink" title="core-site.xml"></a>core-site.xml</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@datanode1 hadoop]$ vim core-site.xml</span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 指定HDFS中NameNode的地址 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://datanode1:9000<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 指定hadoop运行时产生文件的存储目录 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>/opt/module/cdh/hadoop-2.5.0-cdh5.3.6/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.trash.interval <span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>60<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- Oozie Server的Hostname --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.proxyuser.hadoop.hosts<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- 允许被Oozie代理的用户组 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.proxyuser.hadoop.groups<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>*<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>hadoop.proxyuser.admin.hosts类似属性中的hadoop用户替换成你的hadoop用户。因为我的用户名就是hadoop</p>
+<h4 id="yarn-site-xml"><a href="#yarn-site-xml" class="headerlink" title="yarn-site.xml"></a>yarn-site.xml</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@datanode1 hadoop]$ vim yarn-site.xml</span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>datanode2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.log-aggregation-enable<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.log-aggregation.retain-seconds<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>86400<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!-- 任务历史服务 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.log.server.url<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>http://datanode1:19888/jobhistory/logs/<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="mapred-site-xml"><a href="#mapred-site-xml" class="headerlink" title="mapred-site.xml"></a>mapred-site.xml</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 配置 MapReduce JobHistory Server 地址 ，默认端口10020 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>datanode1:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 配置 MapReduce JobHistory Server web ui 地址， 默认端口19888 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>datanode1:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>不要忘记同步到其他集群 然后namenode -for mate 执行初始化</p>
+<h3 id="部署-Oozie"><a href="#部署-Oozie" class="headerlink" title="部署 Oozie"></a>部署 Oozie</h3><h4 id="oozie根目录下解压hadooplibs"><a href="#oozie根目录下解压hadooplibs" class="headerlink" title="oozie根目录下解压hadooplibs"></a>oozie根目录下解压hadooplibs</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxf oozie-hadooplibs-4.0.0-cdh5.3.6.tar.gz -C ../</span><br></pre></td></tr></table></figure>
+
+<h4 id="在Oozie根目录下创建libext目录"><a href="#在Oozie根目录下创建libext目录" class="headerlink" title="在Oozie根目录下创建libext目录"></a>在Oozie根目录下创建libext目录</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir libext/</span><br></pre></td></tr></table></figure>
+
+<h4 id="拷贝依赖Jar包"><a href="#拷贝依赖Jar包" class="headerlink" title="拷贝依赖Jar包"></a>拷贝依赖Jar包</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -ra hadooplibs/hadooplib-2.5.0-cdh5.3.6.oozie-4.0.0-cdh5.3.6/* libext/</span><br></pre></td></tr></table></figure>
+
+<h4 id="上传Mysql驱动包到libext目录下"><a href="#上传Mysql驱动包到libext目录下" class="headerlink" title="上传Mysql驱动包到libext目录下"></a>上传Mysql驱动包到libext目录下</h4><h4 id="上传ext-2-2-zip拷贝到libext目录下"><a href="#上传ext-2-2-zip拷贝到libext目录下" class="headerlink" title="上传ext-2.2.zip拷贝到libext目录下"></a>上传ext-2.2.zip拷贝到libext目录下</h4><h4 id="修改oozie-site-xml"><a href="#修改oozie-site-xml" class="headerlink" title="修改oozie-site.xml"></a>修改oozie-site.xml</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">属性：oozie.service.JPAService.jdbc.driver</span><br><span class="line">属性值：com.mysql.jdbc.Driver</span><br><span class="line">解释：JDBC的驱动</span><br><span class="line"></span><br><span class="line">属性：oozie.service.JPAService.jdbc.url</span><br><span class="line">属性值：jdbc:mysql:&#x2F;&#x2F;datanode1:3306&#x2F;oozie</span><br><span class="line">解释：oozie所需的数据库地址</span><br><span class="line"></span><br><span class="line">属性：oozie.service.JPAService.jdbc.username</span><br><span class="line">属性值：root</span><br><span class="line">解释：数据库用户名</span><br><span class="line"></span><br><span class="line">属性：oozie.service.JPAService.jdbc.password</span><br><span class="line">属性值：123456</span><br><span class="line">解释：数据库密码</span><br><span class="line"></span><br><span class="line">属性：oozie.service.HadoopAccessorService.hadoop.configurations</span><br><span class="line">属性值：*&#x3D;&#x2F;opt&#x2F;module&#x2F;cdh&#x2F;hadoop-2.5.0-cdh5.3.6&#x2F;etc&#x2F;hadoop</span><br><span class="line">解释：让Oozie引用Hadoop的配置文件</span><br></pre></td></tr></table></figure>
+
+<h4 id="在Mysql中创建Oozie的数据库"><a href="#在Mysql中创建Oozie的数据库" class="headerlink" title="在Mysql中创建Oozie的数据库"></a>在Mysql中创建Oozie的数据库</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql -uroot -p123456</span><br><span class="line"><span class="meta">mysql&gt;</span><span class="bash"> create database oozie;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="初始化Oozie"><a href="#初始化Oozie" class="headerlink" title="初始化Oozie"></a>初始化Oozie</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/oozie-setup.sh sharelib create -fs hdfs://datanode1:9000 -locallib oozie-sharelib-4.0.0-cdh5.3.6-yarn.tar.gz</span><br></pre></td></tr></table></figure>
+
+<h6 id="创建oozie-sql文件"><a href="#创建oozie-sql文件" class="headerlink" title="创建oozie.sql文件"></a>创建oozie.sql文件</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;oozie-setup.sh db create -run -sqlfile oozie.sql</span><br></pre></td></tr></table></figure>
+
+<h6 id="打包项目，生成war包"><a href="#打包项目，生成war包" class="headerlink" title="打包项目，生成war包"></a>打包项目，生成war包</h6><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;oozie-setup.sh prepare-war</span><br></pre></td></tr></table></figure>
+
+<p>需要zip命令 最小化安装可能需要</p>
+<h4 id="Oozie服务"><a href="#Oozie服务" class="headerlink" title="Oozie服务"></a>Oozie服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> bin/oozied.sh start</span><br><span class="line">//如需正常关闭Oozie服务，请使用：</span><br><span class="line"> bin/oozied.sh stop</span><br></pre></td></tr></table></figure>
+
+<h2 id="Web页面"><a href="#Web页面" class="headerlink" title="Web页面"></a>Web页面</h2><p><img src="https://s2.ax1x.com/2019/01/10/FOQD2T.png" alt="FOQD2T.png"></p>
+<h2 id="Oozie任务"><a href="#Oozie任务" class="headerlink" title="Oozie任务"></a>Oozie任务</h2><h3 id="调度shell"><a href="#调度shell" class="headerlink" title="调度shell"></a>调度shell</h3><p>1.解压官方模板</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxf oozie-examples.tar.gz</span><br></pre></td></tr></table></figure>
+
+<p>2.创建工作目录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir oozie-apps/</span><br></pre></td></tr></table></figure>
+
+<p>3.拷贝任务模板</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r examples/apps/shell/ oozie-apps/</span><br></pre></td></tr></table></figure>
+
+<p>4.shell脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">i=1</span><br><span class="line">mkdir /home/hadoop/oozie-test1</span><br><span class="line">cd /home/hadoop/oozie-test1</span><br><span class="line">for(( i=1;i&lt;=100;i++ ))</span><br><span class="line">do</span><br><span class="line"> d=$( date +%Y-%m-%d\ %H\:%M\:%S )</span><br><span class="line"> echo "data:$d $i"&gt;&gt;/home/hadoop/oozie-test1/logs.log</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>5.job.properties</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">nameNode&#x3D;hdfs:&#x2F;&#x2F;datanode1:9000</span><br><span class="line">jobTracker&#x3D;datanode2:8032</span><br><span class="line">queueName&#x3D;shell</span><br><span class="line">examplesRoot&#x3D;oozie-apps</span><br><span class="line"></span><br><span class="line">oozie.wf.application.path&#x3D;$&#123;nameNode&#125;&#x2F;user&#x2F;$&#123;user.name&#125;&#x2F;$&#123;examplesRoot&#125;&#x2F;shell</span><br><span class="line">EXEC&#x3D;p1.sh</span><br></pre></td></tr></table></figure>
+
+<p>6.workflow.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">workflow-app</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:workflow:0.4"</span> <span class="attr">name</span>=<span class="string">"shell-wf"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">start</span> <span class="attr">to</span>=<span class="string">"shell-node"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"shell-node"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">shell</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:shell-action:0.2"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">job-tracker</span>&gt;</span>$&#123;jobTracker&#125;<span class="tag">&lt;/<span class="name">job-tracker</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name-node</span>&gt;</span>$&#123;nameNode&#125;<span class="tag">&lt;/<span class="name">name-node</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.job.queue.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;queueName&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exec</span>&gt;</span>$&#123;EXEC&#125;<span class="tag">&lt;/<span class="name">exec</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">file</span>&gt;</span>/user/hadoop/oozie-apps/shell/$&#123;EXEC&#125;#$&#123;EXEC&#125;<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">capture-output</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">shell</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ok</span> <span class="attr">to</span>=<span class="string">"end"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">error</span> <span class="attr">to</span>=<span class="string">"fail"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">decision</span> <span class="attr">name</span>=<span class="string">"check-output"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">switch</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">case</span> <span class="attr">to</span>=<span class="string">"end"</span>&gt;</span></span><br><span class="line">                $&#123;wf:actionData('shell-node')['my_output'] eq 'Hello Oozie'&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">case</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">default</span> <span class="attr">to</span>=<span class="string">"fail-output"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">switch</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">decision</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">kill</span> <span class="attr">name</span>=<span class="string">"fail"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">message</span>&gt;</span>Shell action failed, error message[$&#123;wf:errorMessage(wf:lastErrorNode())&#125;]<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">kill</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">kill</span> <span class="attr">name</span>=<span class="string">"fail-output"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">message</span>&gt;</span>Incorrect output, expected [Hello Oozie] but was [$&#123;wf:actionData('shell-node')['my_output']&#125;]<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">kill</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">end</span> <span class="attr">name</span>=<span class="string">"end"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">workflow-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>7.上传任务配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;opt&#x2F;module&#x2F;cdh&#x2F;hadoop-2.5.0-cdh5.3.6&#x2F;bin&#x2F;hdfs dfs -put  -f  oozie-apps&#x2F; &#x2F;user&#x2F;hadoop</span><br></pre></td></tr></table></figure>
+
+<p>8.执行任务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/oozie job -oozie http://datanode1:11000/oozie -config oozie-apps/shell/job.properties -run</span><br></pre></td></tr></table></figure>
+
+<p>9.杀死任务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;oozie job -oozie http:&#x2F;&#x2F;datanode1:11000&#x2F;oozie -kill 0000004-170425105153692-oozie-z-W</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://s2.ax1x.com/2019/01/10/FOlpQS.png" alt="FOlpQS.png"></p>
+<h3 id="调度逻辑shell"><a href="#调度逻辑shell" class="headerlink" title="调度逻辑shell"></a>调度逻辑shell</h3><p>在原有的基础上进行适当修改</p>
+<p>1.job.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">nameNode</span>=<span class="string">hdfs://datanode1:9000</span></span><br><span class="line"><span class="attr">jobTracker</span>=<span class="string">datanode2:8032</span></span><br><span class="line"><span class="attr">queueName</span>=<span class="string">shell</span></span><br><span class="line"><span class="attr">examplesRoot</span>=<span class="string">oozie-apps</span></span><br><span class="line"></span><br><span class="line"><span class="meta">oozie.wf.application.path</span>=<span class="string">$&#123;nameNode&#125;/user/$&#123;user.name&#125;/$&#123;examplesRoot&#125;/shell</span></span><br><span class="line"><span class="attr">EXEC1</span>=<span class="string">p1.sh</span></span><br><span class="line"><span class="attr">EXEC2</span>=<span class="string">p2.sh</span></span><br></pre></td></tr></table></figure>
+
+<p>2.脚本  p1.sh  </p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/bin/bash               </span></span><br><span class="line"><span class="attr">mkdir</span> <span class="string">/home/hadoop/Oozie2_test_p1                 </span></span><br><span class="line"><span class="attr">cd</span> <span class="string">/home/hadoop/Oozie2_test_p1</span></span><br><span class="line"><span class="attr">i</span>=<span class="string">1</span></span><br><span class="line"><span class="meta">for((</span> <span class="string">i=1;i&lt;=100;i++ ))</span></span><br><span class="line"><span class="attr">do</span></span><br><span class="line"> <span class="attr">d</span>=<span class="string">$( date +%Y-%m-%d\ %H\:%M\:%S )</span></span><br><span class="line"> <span class="attr">echo</span> <span class="string">"data:$d $i"&gt;&gt;/home/hadoop/Oozie2_test_p1/Oozie2_p1.log</span></span><br><span class="line"><span class="attr">done</span></span><br></pre></td></tr></table></figure>
+
+<p>2.脚本  p2.sh</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">mkdir /home/hadoop/Oozie2_test_p1</span><br><span class="line">cd /home/hadoop/Oozie2_test_p1</span><br><span class="line">i=1</span><br><span class="line">for(( i=1;i&lt;=100;i++ ))</span><br><span class="line">do</span><br><span class="line"> d=$( date +%Y-%m-%d\ %H\:%M\:%S )</span><br><span class="line"> echo "data:$d $i"&gt;&gt;/home/hadoop/Oozie2_test_p1/Oozie2_p1.log</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+
+<p>3.workflow.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">workflow-app</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:workflow:0.4"</span> <span class="attr">name</span>=<span class="string">"shell-wf"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">start</span> <span class="attr">to</span>=<span class="string">"shell-node"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"shell-node"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">shell</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:shell-action:0.2"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">job-tracker</span>&gt;</span>$&#123;jobTracker&#125;<span class="tag">&lt;/<span class="name">job-tracker</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name-node</span>&gt;</span>$&#123;nameNode&#125;<span class="tag">&lt;/<span class="name">name-node</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.job.queue.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;queueName&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exec</span>&gt;</span>$&#123;EXEC1&#125;<span class="tag">&lt;/<span class="name">exec</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">file</span>&gt;</span>/user/hadoop/oozie-apps/shell/$&#123;EXEC1&#125;#$&#123;EXEC1&#125;<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">capture-output</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">shell</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ok</span> <span class="attr">to</span>=<span class="string">"p2-shell-node"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">error</span> <span class="attr">to</span>=<span class="string">"fail"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"p2-shell-node"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">shell</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:shell-action:0.2"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">job-tracker</span>&gt;</span>$&#123;jobTracker&#125;<span class="tag">&lt;/<span class="name">job-tracker</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name-node</span>&gt;</span>$&#123;nameNode&#125;<span class="tag">&lt;/<span class="name">name-node</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.job.queue.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;queueName&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">exec</span>&gt;</span>$&#123;EXEC2&#125;<span class="tag">&lt;/<span class="name">exec</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">file</span>&gt;</span>/user/hadoop/oozie-apps/shell/$&#123;EXEC2&#125;#$&#123;EXEC2&#125;<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- &lt;argument&gt;my_output=Hello Oozie&lt;/argument&gt;--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">capture-output</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">shell</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ok</span> <span class="attr">to</span>=<span class="string">"end"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">error</span> <span class="attr">to</span>=<span class="string">"fail"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">decision</span> <span class="attr">name</span>=<span class="string">"check-output"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">switch</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">case</span> <span class="attr">to</span>=<span class="string">"end"</span>&gt;</span></span><br><span class="line">                $&#123;wf:actionData('shell-node')['my_output'] eq 'Hello Oozie'&#125;</span><br><span class="line">            <span class="tag">&lt;/<span class="name">case</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">default</span> <span class="attr">to</span>=<span class="string">"fail-output"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">switch</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">decision</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">kill</span> <span class="attr">name</span>=<span class="string">"fail"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">message</span>&gt;</span>Shell action failed, error message[$&#123;wf:errorMessage(wf:lastErrorNode())&#125;]<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">kill</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">kill</span> <span class="attr">name</span>=<span class="string">"fail-output"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">message</span>&gt;</span>Incorrect output, expected [Hello Oozie] but was [$&#123;wf:actionData('shell-node')['my_output']&#125;]<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">kill</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">end</span> <span class="attr">name</span>=<span class="string">"end"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">workflow-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="调度MapReduce"><a href="#调度MapReduce" class="headerlink" title="调度MapReduce"></a>调度MapReduce</h3><p>前提：确定YARN可用</p>
+<p>1.拷贝官方模板到oozie-apps</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@datanode1 lib]$ cp &#x2F;opt&#x2F;module&#x2F;cdh&#x2F;hadoop-2.5.0-cdh5.3.6&#x2F;share&#x2F;hadoop&#x2F;mapreduce&#x2F;hadoop-mapreduce-examples-2.5.0-cdh5.3.6.jar .&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>2.配置job.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">nameNode</span>=<span class="string">hdfs://datanode1:9000</span></span><br><span class="line"><span class="attr">jobTracker</span>=<span class="string">datanode2:8032</span></span><br><span class="line"><span class="attr">queueName</span>=<span class="string">map-reduce</span></span><br><span class="line"><span class="attr">examplesRoot</span>=<span class="string">oozie-apps</span></span><br><span class="line"></span><br><span class="line"><span class="meta">oozie.wf.application.path</span>=<span class="string">$&#123;nameNode&#125;/user/$&#123;user.name&#125;/$&#123;examplesRoot&#125;/map-reduce/workflow.xml</span></span><br><span class="line"><span class="attr">outputDir</span>=<span class="string">/output</span></span><br></pre></td></tr></table></figure>
+
+<p>3.workflow.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">workflow-app</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:workflow:0.2"</span> <span class="attr">name</span>=<span class="string">"map-reduce-wf"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">start</span> <span class="attr">to</span>=<span class="string">"mr-node"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"mr-node"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">map-reduce</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">job-tracker</span>&gt;</span>$&#123;jobTracker&#125;<span class="tag">&lt;/<span class="name">job-tracker</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">name-node</span>&gt;</span>$&#123;nameNode&#125;<span class="tag">&lt;/<span class="name">name-node</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">prepare</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">delete</span> <span class="attr">path</span>=<span class="string">"/output"</span>/&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">prepare</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.job.queue.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;queueName&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 配置调度MR任务时，使用新的API --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.mapper.new-api<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.reducer.new-api<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 指定Job Key输出类型 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.job.output.key.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.io.Text<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 指定Job Value输出类型 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.job.output.value.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.io.IntWritable<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- 指定Map类 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.job.map.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.examples.WordCount$TokenizerMapper<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">             <span class="comment">&lt;!-- 指定Reduce类 --&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.job.reduce.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.examples.WordCount$IntSumReducer<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.map.tasks<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.input.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>/input<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.output.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>/_output<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">map-reduce</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">ok</span> <span class="attr">to</span>=<span class="string">"end"</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">error</span> <span class="attr">to</span>=<span class="string">"fail"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">kill</span> <span class="attr">name</span>=<span class="string">"fail"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">message</span>&gt;</span>Map/Reduce failed, error message[$&#123;wf:errorMessage(wf:lastErrorNode())&#125;]<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">kill</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">end</span> <span class="attr">name</span>=<span class="string">"end"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">workflow-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>4.拷贝jar包</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@datanode1 lib]$ cp /opt/module/cdh/hadoop-2.5.0-cdh5.3.6/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.5.0-cdh5.3.6.jar ./</span><br></pre></td></tr></table></figure>
+
+<p>5.上传任务配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/module/cdh/hadoop-2.5.0-cdh5.3.6/bin/hdfs dfs -put -f oozie-apps /user/hadoop/oozie-apps</span><br></pre></td></tr></table></figure>
+
+<p>6.执行任务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@datanode1 oozie-4.0.0-cdh5.3.6]$  bin/oozie job -oozie http://datanode1:11000/oozie -config oozie-apps/map-reduce/job.properties -run</span><br></pre></td></tr></table></figure>
+
+<p>7.查看结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@datanode1 module]$ &#x2F;opt&#x2F;module&#x2F;cdh&#x2F;hadoop-2.5.0-cdh5.3.6&#x2F;bin&#x2F;hdfs dfs -cat &#x2F;input&#x2F;*.txt</span><br><span class="line">19&#x2F;01&#x2F;10 19:13:37 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">I</span><br><span class="line">Love</span><br><span class="line">Hadoop</span><br><span class="line">and</span><br><span class="line">Sopark</span><br><span class="line">I</span><br><span class="line">Love</span><br><span class="line">BigData</span><br><span class="line">and</span><br><span class="line">AI</span><br><span class="line">[hadoop@datanode1 module]$ &#x2F;opt&#x2F;module&#x2F;cdh&#x2F;hadoop-2.5.0-cdh5.3.6&#x2F;bin&#x2F;hdfs dfs -cat &#x2F;_output&#x2F;p*</span><br><span class="line">19&#x2F;01&#x2F;10 19:13:08 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable</span><br><span class="line">AI      1</span><br><span class="line">BigData 1</span><br><span class="line">Hadoop  1</span><br><span class="line">I       2</span><br><span class="line">Love    2</span><br><span class="line">Sopark  1</span><br><span class="line">and     2</span><br></pre></td></tr></table></figure>
+
+<h3 id="调度定时任务-循环任务"><a href="#调度定时任务-循环任务" class="headerlink" title="调度定时任务/循环任务"></a>调度定时任务/循环任务</h3><p>前提：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#检查系统当前时区： </span></span></span><br><span class="line"> date -R</span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment">#注意这里，如果显示的时区不是+0800，你可以删除localtime文件夹后，再关联一个正确时区的链接过去，命令如下：</span></span></span><br><span class="line"> rm -rf /etc/localtime</span><br><span class="line"> ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime</span><br></pre></td></tr></table></figure>
+
+<p>ntp配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim &#x2F;etc&#x2F;ntp.conf</span><br></pre></td></tr></table></figure>
+
+<p>主机配置<br><a href="https://s1.ax1x.com/2018/12/17/F0EkqI.png" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2018/12/17/F0EkqI.png" alt="F0EkqI.png"></a></p>
+<p>从机配置<br><a href="https://s1.ax1x.com/2018/12/17/F0mrcD.md.png" target="_blank" rel="noopener"><img src="https://s1.ax1x.com/2018/12/17/F0mrcD.md.png" alt="F0mrcD.md.png"></a></p>
+<p>从节点同步时间</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">service ntpd restart</span><br><span class="line">chkconfig ntpd on  # 开机启动</span><br><span class="line">ntpdate -u datanode1</span><br><span class="line">crontab -e</span><br><span class="line">* */1 * * * /usr/sbin/ntpdate datanode1     #每一小时同步一次  注意 要用root创建</span><br></pre></td></tr></table></figure>
+
+<p>1.配置oozie-site.xml文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">属性：oozie.processing.timezone</span><br><span class="line">属性值：GMT+0800</span><br><span class="line">解释：修改时区为东八区区时</span><br></pre></td></tr></table></figure>
+
+<p>2.修改js框架代码</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"> vi /opt/<span class="built_in">module</span>/cdh/oozie<span class="number">-4.0</span><span class="number">.0</span>-cdh5<span class="number">.3</span><span class="number">.6</span>/oozie-server/webapps/oozie/oozie-<span class="built_in">console</span>.js</span><br><span class="line">修改如下：</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getTimeZone</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    Ext.state.Manager.setProvider(<span class="keyword">new</span> Ext.state.CookieProvider());</span><br><span class="line">    <span class="keyword">return</span> Ext.state.Manager.get(<span class="string">"TimezoneId"</span>,<span class="string">"GMT+0800"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.重启oozie服务，并重启浏览器（一定要注意清除缓存）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bin&#x2F;oozied.sh stop</span><br><span class="line">bin&#x2F;oozied.sh start</span><br></pre></td></tr></table></figure>
+
+<p>4.拷贝官方模板配置定时任务</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cp -r examples&#x2F;apps&#x2F;cron&#x2F; oozie-apps&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>5.修改job.properties</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">nameNode</span>=<span class="string">hdfs://datanode1:9000</span></span><br><span class="line"><span class="attr">jobTracker</span>=<span class="string">datanode2:8032</span></span><br><span class="line"><span class="attr">queueName</span>=<span class="string">cronTask</span></span><br><span class="line"><span class="attr">examplesRoot</span>=<span class="string">oozie-apps</span></span><br><span class="line"></span><br><span class="line"><span class="meta">oozie.coord.application.path</span>=<span class="string">$&#123;nameNode&#125;/user/$&#123;user.name&#125;/$&#123;examplesRoot&#125;/cron</span></span><br><span class="line"><span class="attr">start</span>=<span class="string">2019-01-10T21:40+0800</span></span><br><span class="line"><span class="attr">end</span>=<span class="string">2019-01-10T22:00+0800</span></span><br><span class="line"><span class="attr">workflowAppUri</span>=<span class="string">$&#123;nameNode&#125;/user/$&#123;user.name&#125;/$&#123;examplesRoot&#125;/cron</span></span><br><span class="line"></span><br><span class="line"><span class="attr">EXEC3</span>=<span class="string">p3.sh</span></span><br></pre></td></tr></table></figure>
+
+<p>6.修改coordinator.xml  注意${coord:minutes(5)}的5是最小值不能比5再小了</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">coordinator-app</span> <span class="attr">name</span>=<span class="string">"cron-coord"</span> <span class="attr">frequency</span>=<span class="string">"$&#123;coord:minutes(5)&#125;"</span> <span class="attr">start</span>=<span class="string">"$&#123;start&#125;"</span> <span class="attr">end</span>=<span class="string">"$&#123;end&#125;"</span> <span class="attr">timezone</span>=<span class="string">"GMT+0800"</span></span></span><br><span class="line"><span class="tag">                 <span class="attr">xmlns</span>=<span class="string">"uri:oozie:coordinator:0.2"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">action</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">workflow</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">app-path</span>&gt;</span>$&#123;workflowAppUri&#125;<span class="tag">&lt;/<span class="name">app-path</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>jobTracker<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;jobTracker&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>nameNode<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;nameNode&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">name</span>&gt;</span>queueName<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;queueName&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">workflow</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">coordinator-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>7.创建脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">d=$( date +%Y-%m-%d\ %H\:%M\:%S )</span><br><span class="line">echo "data:$d $i"&gt;&gt;/home/hadoop/Oozie3_p3.log</span><br></pre></td></tr></table></figure>
+
+<p>8.修改</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">workflow-app</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:workflow:0.5"</span> <span class="attr">name</span>=<span class="string">"one-op-wf"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">start</span> <span class="attr">to</span>=<span class="string">"p3-shell-node"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">action</span> <span class="attr">name</span>=<span class="string">"p3-shell-node"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">shell</span> <span class="attr">xmlns</span>=<span class="string">"uri:oozie:shell-action:0.2"</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">job-tracker</span>&gt;</span>$&#123;jobTracker&#125;<span class="tag">&lt;/<span class="name">job-tracker</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">name-node</span>&gt;</span>$&#123;nameNode&#125;<span class="tag">&lt;/<span class="name">name-node</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapred.job.queue.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>$&#123;queueName&#125;<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">              <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">exec</span>&gt;</span>$&#123;EXEC3&#125;<span class="tag">&lt;/<span class="name">exec</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">file</span>&gt;</span>/user/hadoop/oozie-apps/cron/$&#123;EXEC3&#125;#$&#123;EXEC3&#125;<span class="tag">&lt;/<span class="name">file</span>&gt;</span></span><br><span class="line">          <span class="comment">&lt;!-- &lt;argument&gt;my_output=Hello Oozie&lt;/argument&gt;--&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">capture-output</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">shell</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">ok</span> <span class="attr">to</span>=<span class="string">"end"</span>/&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">error</span> <span class="attr">to</span>=<span class="string">"fail"</span>/&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">action</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">kill</span> <span class="attr">name</span>=<span class="string">"fail"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">message</span>&gt;</span>Shell action failed, error message[$&#123;wf:errorMessage(wf:lastErrorNode())&#125;]<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">kill</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">kill</span> <span class="attr">name</span>=<span class="string">"fail-output"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">message</span>&gt;</span>Incorrect output, expected [Hello Oozie] but was [$&#123;wf:actionData('shell-node')['my_output']&#125;]<span class="tag">&lt;/<span class="name">message</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">kill</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">end</span> <span class="attr">name</span>=<span class="string">"end"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">workflow-app</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>9.提交配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/opt/module/cdh/hadoop-2.5.0-cdh5.3.6/bin/hdfs dfs -put oozie-apps/cron/ /user/hadoop/oozie-apps</span><br></pre></td></tr></table></figure>
+
+<p>10.提交任务</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/oozie job -oozie http://datanode1:11000/oozie -config oozie-apps/cron/job.properties -run</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s2.ax1x.com/2019/01/10/FOxtXD.png" alt="FOxtXD.png"></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2019/01/10/Oozie/">Oozie</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2019年01月10日 - 09时39分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/10/Oozie/" title="Oozie">https://www.hphblog.cn/2019/01/10/Oozie/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2019/01/10/Oozie/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Git使用
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2019/01/08/Sqoop/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Sqoop</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#功能"><span class="toc-number">2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模块"><span class="toc-number">3.</span> <span class="toc-text">模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#常用节点"><span class="toc-number">3.1.</span> <span class="toc-text">常用节点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#部署"><span class="toc-number">4.</span> <span class="toc-text">部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#部署-Hadoop"><span class="toc-number">4.1.</span> <span class="toc-text">部署 Hadoop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改配置"><span class="toc-number">4.2.</span> <span class="toc-text">修改配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#core-site-xml"><span class="toc-number">4.2.1.</span> <span class="toc-text">core-site.xml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#yarn-site-xml"><span class="toc-number">4.2.2.</span> <span class="toc-text">yarn-site.xml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mapred-site-xml"><span class="toc-number">4.2.3.</span> <span class="toc-text">mapred-site.xml</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#部署-Oozie"><span class="toc-number">4.3.</span> <span class="toc-text">部署 Oozie</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#oozie根目录下解压hadooplibs"><span class="toc-number">4.3.1.</span> <span class="toc-text">oozie根目录下解压hadooplibs</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在Oozie根目录下创建libext目录"><span class="toc-number">4.3.2.</span> <span class="toc-text">在Oozie根目录下创建libext目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#拷贝依赖Jar包"><span class="toc-number">4.3.3.</span> <span class="toc-text">拷贝依赖Jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#上传Mysql驱动包到libext目录下"><span class="toc-number">4.3.4.</span> <span class="toc-text">上传Mysql驱动包到libext目录下</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#上传ext-2-2-zip拷贝到libext目录下"><span class="toc-number">4.3.5.</span> <span class="toc-text">上传ext-2.2.zip拷贝到libext目录下</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#修改oozie-site-xml"><span class="toc-number">4.3.6.</span> <span class="toc-text">修改oozie-site.xml</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在Mysql中创建Oozie的数据库"><span class="toc-number">4.3.7.</span> <span class="toc-text">在Mysql中创建Oozie的数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#初始化Oozie"><span class="toc-number">4.3.8.</span> <span class="toc-text">初始化Oozie</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#创建oozie-sql文件"><span class="toc-number">4.3.8.0.1.</span> <span class="toc-text">创建oozie.sql文件</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#打包项目，生成war包"><span class="toc-number">4.3.8.0.2.</span> <span class="toc-text">打包项目，生成war包</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Oozie服务"><span class="toc-number">4.3.9.</span> <span class="toc-text">Oozie服务</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web页面"><span class="toc-number">5.</span> <span class="toc-text">Web页面</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Oozie任务"><span class="toc-number">6.</span> <span class="toc-text">Oozie任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#调度shell"><span class="toc-number">6.1.</span> <span class="toc-text">调度shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调度逻辑shell"><span class="toc-number">6.2.</span> <span class="toc-text">调度逻辑shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调度MapReduce"><span class="toc-number">6.3.</span> <span class="toc-text">调度MapReduce</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#调度定时任务-循环任务"><span class="toc-number">6.4.</span> <span class="toc-text">调度定时任务&#x2F;循环任务</span></a></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/" title="上一篇: Git使用">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2019/01/08/Sqoop/" title="下一篇: Sqoop">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

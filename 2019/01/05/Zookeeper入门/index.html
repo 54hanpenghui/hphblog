@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>Zookeeper入门 | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Zookeeper相关介绍和选举算法、应用场景等：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zookeeper入门">
+<meta property="og:url" content="https://www.hphblog.cn/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="Zookeeper相关介绍和选举算法、应用场景等：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7iYDJ.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7QBTK.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F71cqI.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F717ss.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F71OoV.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7Yn4P.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7YtNq.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7Yb5t.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7tkGV.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7tuZ9.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F708zt.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F70yQ0.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7rBJH.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F7skTO.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/616953/201611/616953-20161112085605967-1265109617.png">
+<meta property="og:image" content="https://images2015.cnblogs.com/blog/616953/201611/616953-20161112093212483-1690012026.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/01/05/F76kJe.png">
+<meta property="article:published_time" content="2019-01-05T05:24:47.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:05.684Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="Zookeeper">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/01/05/F7iYDJ.png">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-Zookeeper入门" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/" class="article-date">
+      <time datetime="2019-01-05T05:24:47.000Z" itemprop="datePublished">2019-01-05</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Zookeeper入门
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Zookeeper/" rel="tag">Zookeeper</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+         Zookeeper相关介绍和选举算法、应用场景等：<Excerpt in index | 首页摘要><a id="more"></a>
+
+<p>&lt;The rest of contents | 余下全文&gt;</p>
+<h2 id="Zookeeper-的简介"><a href="#Zookeeper-的简介" class="headerlink" title="Zookeeper 的简介"></a>Zookeeper 的简介</h2><p>Zookeeper是一个开源的分布式的，一个针对大型分布式系统的可靠协调系统的Apache项目。</p>
+<p>目标是封装好复杂易出错的关键服务，将简单易用的接口和性能高效、功能稳定的系统提供给用户；</p>
+<p>ZooKeeper已经成为Hadoop生态系统的基础组件;功能包括：配置服务、名字服务、分布式同步、组服务等</p>
+<p>从设计模式角度来理解：是一个基于观察者模式设计的分布式服务管理框架，它负责存储和管理大家都关心的数据，然后接受观察者的注册，一旦这些数据的状态发生变化，Zookeeper就将负责通知已经在Zookeeper上注册的那些观察者做出相应的反应，从而实现集群中类似Master/Slave管理模式</p>
+<p>Zookeeper=文件系统+通知机制</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ol>
+<li>Zookeeper：一个领导者（leader），多个跟随者（follower）组成的集群。</li>
+<li>Leader负责进行投票的发起和决议，更新系统状态</li>
+<li>Follower用于接收客户请求并向客户端返回结果，在选举Leader过程中参与投票</li>
+<li>集群中只要有半数以上节点存活，Zookeeper集群就能正常服务。</li>
+<li>全局数据一致：每个server保存一份相同的数据副本，client无论连接到哪个server，数据都是一致的。</li>
+<li>更新请求顺序进行，来自同一个client的更新请求按其发送顺序依次执行。</li>
+<li>数据更新原子性，一次数据更新要么成功，要么失败。</li>
+<li>实时性，在一定时间范围内，client能读到最新数据。</li>
+</ol>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><ol>
+<li>简单:Zookeeper的核心是一个简单的文件系统,文件系统提供一些简单的操作和抽象操作比如排序和通知.</li>
+<li>富有表现力的:Zookeeper的基本操作是一组丰富的构建(building block),可以用于实现多种协调数据结构和协议如：分布式队列、分布式锁、领导选举(leader election)。</li>
+<li>高可用性：Zookeeper是运行在一组机器上的，负责机器资源和进程管理。设计上有高可用性，因此应用程序完全可以依赖它，Zookeeper可以解决系统中出现单点故障的情况，实现系统的高可靠性，Zookeeper可以构建可靠的应用程序。比如Hadoop的HA。</li>
+<li>松耦合交互方式：在Zookeeper支持的交互过程中,参与者不需要彼此了解.如Zookeeper可以被用于实现“数据汇聚(rendezvous)”机制，让进程在不了解其他进程(或者网络状况)的情况下能够彼此发现并进行信息交互，参与的各方甚至可以不必要同时存在，因为一个进程可以在Zookeeper中留下一条记录i信息，在该进程结束后，另一个进程可以在Zookeeper中读取到这条记录信息。</li>
+<li>资源库：Zookeeper提供了一个通用协调模式实现方法的开源啊共享库，使得程序员免于编写协调协议程序(这类程序很难编写)，所有人都能够对这个资源库进行修改和改进，这样每个人都能够从中受益。</li>
+<li>高性能：对于以写操作为主的工作负载来说：Zookeeper的基准吞吐量已经超过每秒10000个操作；对于常规的以读操作为主的工作负载来说，吞吐量要高出好几倍。</li>
+</ol>
+<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><p>ZooKeeper数据模型的结构与Unix文件系统很类似，整体上可以看作是一棵树，每个节点称做一个ZNode。Zookeeper拥有一个层次的命名空间，这和分布式的文件系统十分相似。唯一不同的地方是命名空间中的每个节点可以有和他自身或它的子节点相关联的数据。这就好像是一个文件系统只不过文件系统中的文件和还具有目录的功能。另外，指向节点的路径必须使用规范的绝对路径来标识，并且以斜线“/”来分隔。ZooKeeper中不允许使用相对路径</p>
+<p>很显然zookeeper集群自身维护了一套数据结构。这个存储结构是一个树形结构，其上的每一个节点，我们称之为”znode”，每一个znode默认能够存储1MB的数据，每个ZNode都可以通过其路径唯一标识。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7iYDJ.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7iYDJ.png" alt="F7iYDJ.png"></a></p>
+<h3 id="Znode"><a href="#Znode" class="headerlink" title="Znode"></a>Znode</h3><p>Zookeeper目录树中的每一个节点对应着每一个Znode。每个Znode维护者一个属性结构，它包括数据的版本号(dataVersion)、时间戳(ctime、mtime)的状态信息。ZooKeeper使用节点的这些特性来实现它的特定功能。当Znode数据发生改变时，它的版本号将会增加，当客户端检索数据时，会同时检索数据的版本号，如果一个客户端执行了某个节点的更新或者删除操作，它必须提供要被操作的数据的版本号，如果所提供的版本号与实际不匹配，那么这个操作将会失败。</p>
+<h4 id="Watches"><a href="#Watches" class="headerlink" title="Watches"></a>Watches</h4><p>客户端可以在节点上设置watches(监视器)。当节点的状态发生改变时(数据的增、删、改)将会触发watch对应的操作。当watch被触发时,Zookeeper将会向客户端发送且发送一个通知，因为watch只能触发一次。</p>
+<h4 id="数据访问"><a href="#数据访问" class="headerlink" title="数据访问"></a>数据访问</h4><p>Zookeeper中的每一个节点上存储的数据需要被原子性的操作：读操作将获取与节点相关的数据，写操作也将替换掉节点相关的所有数据。另外，每一个节点都拥有自己的ACL（访问控制列表），这个列表规定了用户的权限，即限定了用户对目标节点可以执行的操作。</p>
+<h4 id="临时节点"><a href="#临时节点" class="headerlink" title="临时节点"></a>临时节点</h4><p>Zookeeper的节点分为两种：临时节点和永久节点。节点的类型在创建时即被确定，并且不能该改变。Zookeeper临时节点的生命周期依赖于他们的会话，一旦会话结束，临时节点会被自动删除，当然也可以手动删除。Zookeeper的临时节点不允许拥有子节点，相反，永久节点的生命周期不依赖于会话，并且只有客户端显示执行删除操作的时候，他们才被删除。</p>
+<h4 id="顺序节点"><a href="#顺序节点" class="headerlink" title="顺序节点"></a>顺序节点</h4><p>唯一性保证：当创建Znode的时候，用户可以请求在Zookeeper的路径末尾添加一个递增的计数。这个计数对于此节点的父节点时唯一的格式为“%010d”(10位数组，没有数值的数据位用0填充，例如0000000001)。当计数值大于2147483647，计数器会溢出。</p>
+<h3 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h3><p>Zookeeper中有多重记录时间的形式，主要包括以下几个属性：</p>
+<h4 id="Zxid"><a href="#Zxid" class="headerlink" title="Zxid"></a>Zxid</h4><p>导致Zookeeper节点状态改变的每一个操作都将使节点接收到一个zxid格式的时间戳，并且这个时间戳使全局有序的，也就是说，每一个对节点的改变都将产生一个唯一的zxid。如果zxid1的值小于zxid2的值，那么zxid1所对应的时间发生在zxid2所对应的事件之前，实际中Zookeeper的每个节点都维护着三个zxid值，分别为：cZxid、mZxid和pZid。cZxid使节点的创建时间所对应的Zxid时间戳，mZxid是节点的修改时间对应的Zxid格式时间戳。</p>
+<h4 id="版本号"><a href="#版本号" class="headerlink" title="版本号"></a>版本号</h4><p>对节点的每一个操作都将导致这个节点的版本号增加。每个节点维护者三个版本号，他们维护者三个版本号，他们分别是：version(节点数据版本号)、cversion(子节点版本号)、aversion(节点所拥有的ACL版本号)。</p>
+<h3 id="节点属性结构"><a href="#节点属性结构" class="headerlink" title="节点属性结构"></a>节点属性结构</h3><table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cZxid</td>
+<td>创建节点时的事务ID</td>
+</tr>
+<tr>
+<td>ctime</td>
+<td>创建节点的时间</td>
+</tr>
+<tr>
+<td>mZxid</td>
+<td>最后修改节点时的事务ID</td>
+</tr>
+<tr>
+<td>mtime</td>
+<td>最后修改节点时的时间</td>
+</tr>
+<tr>
+<td>pZxid</td>
+<td>表示该子节点列表最后一次修改的事务ID，添加子节点或删除子节点就会影响子节点列表，但是修改子节点的数据内容则不影响该ID</td>
+</tr>
+<tr>
+<td>cversion</td>
+<td>子节点版本号，子节点每次修改版本号加1</td>
+</tr>
+<tr>
+<td>dataversion</td>
+<td>数据版本号，数据每次修改该版本号加1</td>
+</tr>
+<tr>
+<td>aclversion</td>
+<td>权限版本号，权限每次修改该版本号加1</td>
+</tr>
+<tr>
+<td>dataLength</td>
+<td>该节点的数据长度</td>
+</tr>
+<tr>
+<td>numChildren</td>
+<td>该节点拥有子节点的数量</td>
+</tr>
+</tbody></table>
+<h2 id="观察触发器"><a href="#观察触发器" class="headerlink" title="观察触发器"></a>观察触发器</h2><p>读操作exists、getChildren和getData都被设置了watch，并且这些watch都由写操作来触发：create、delete和setData。ACL操作并不参与到watch中。当watch被触发时，watch事件被生成，它的类型由watch和触发它的操作共同决定，Zookeeper所管理的watch可以分为两类：</p>
+<ol>
+<li>data watchs：getData和exists负责设置data watch；</li>
+<li>child watchs：getChildren负责设置child watch</li>
+</ol>
+<p>我们可以通过操作返回的数据来设置不同的watch：</p>
+<ol>
+<li>getData和exists：返回关于节点的数据信息</li>
+<li>getChildren：返回孩子列表</li>
+</ol>
+<p>因此，一个成功的setData操作将触发Znode的数据watch，一个成功的create操作将触发Znode的数据watch，一个成功的delete操作将触发Znode的data wachts以及child watches。</p>
+<p>watch由客户端所连接的Zookeeper服务器在本地维护，因此可以非常容易地设置，管理和分派，当客户端连接到另一个新的服务器上时，任何的会话事件都可能触发watch。另外当从服务器断开连接的时候，watch将不会被接收。但是，当一个客户端重新建立连接的时候，任何先前注册过的watch都会被重新注册。</p>
+<p>exists操作上的watch，在被监视的Znode创建、删除或数据更新时被触发。</p>
+<p>getData操作上的watch，在被监视的Znode删除或数据更新时被触发，在创建时不能被触发，因为只有Znode存在，getData操作才会成功。</p>
+<p>getChildren操作上的watch，在被监视的Znode的子节点创建或删除，或是这个Znode自身被删除时被触发。可以通过查看watch事件类型来区分是Znode还是其他的子节点被删除；NodeDelete表示Znode被删除，NodeDeletedChanged表示子节点被删除。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7QBTK.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7QBTK.png" alt="F7QBTK.png"></a></p>
+<p>watch事件包括了设计的Znode的路径，因此对于NodeCreated和NodeDeleted事件来说，根据路径就可以简单区分出那个Znode被创建或者时被删除了。为了查询在NodeChildrenChanged事件后产生的新数据，需要调用getData。在两种情况下，Znode可能在获取watch事件或执行读写操作这两种状态下切换，在写应用程序时，必须记住这一点。</p>
+<p>Zookeeper的watch实际上需要处理两类事件：</p>
+<ul>
+<li>连接状态事件(type=None,path=null)</li>
+</ul>
+<p>这类事件不需要注册，也不需要我们连续触发，我们只需要处理就行了</p>
+<ul>
+<li>节点事件</li>
+</ul>
+<p>节点的创建，删除数据的修改。他是 one time trigger,我们需要不停的注册触触发，还可能发生事件丢失的情况。</p>
+<p>上面2类事件都在Watch中处理，也就是重载的<strong>process(Event event)</strong></p>
+<p><strong>节点事件的触发，通过函数exists，getData或getChildren来处理这类函数，有双重作用：</strong></p>
+<p><strong>① 注册触发事件</strong></p>
+<p><strong>② 函数本身的功能</strong></p>
+<p>函数的本身的功能又可以用异步的回调函数来实现，重载processResult)()过程中处理函数本身的功能。函数还可以指定自己的watch所以每个函数有4个版本。根据自己的需求来选择不同的函数，不同的版本。</p>
+<h2 id="ACL列表"><a href="#ACL列表" class="headerlink" title="ACL列表"></a>ACL列表</h2><p>ZooKeeper使用ACL来对Znode进行访问控制。ACL的实现和Unix文件访问许可非常相似：它使用许可位来对一个节点的不同操作进行允许或禁止的权限控制。但是，和标准的Unix许可不同的是，Zookeeper对于用户类别的区分，不知局限于所有者(owner)、组(group)、所有人(world)、三个级别，Zookeeper中，数据节点没有“所有者”的概念。访问者利用id表示自己的身份，并且获得与之相应的不同的访问权限。</p>
+<p>注意：</p>
+<p>传统的文件系统中，ACL分为两个维度，一个是属组，一个是权限，子目录/文件默认继承父目录的ACL。而在Zookeeper中一个ACL和一个ZooKeeper节点相对应。并且，父节点的ACL与子节点的ACL是相互独立的。也就是说，ACL不能被子节点所继承，父节点所拥有的权限与子节点所用的权限都没有任何关系。</p>
+<p>Zookeeper支持可配置的认证机制。它利用一个三元组来定义客户端的访问权限：(scheme:expression, perms) 。其中：</p>
+<p>1.scheme：定义了expression的含义。</p>
+<p>如：host:host1.corp.com,READ）,标识了一个名为host1.corp.com的主机,有该数据节点的读权限。</p>
+<p>2.Perms：标识了操作权限。</p>
+<p>如：（ip:19.22.0.0/16, READ）,表示IP地址以19.22开头的主机,有该数据节点的读权限。</p>
+<p>Zookeeper的ACL也可以从三个维度来理解：一是，scheme; 二是，user; 三是，permission，通常表示为scheme:id：permissions，如下图所示。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F71cqI.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F71cqI.png" alt="F71cqI.png"></a></p>
+<p>1.world : id格式：anyone。</p>
+<p>如：world:anyone代表任何人，zookeeper中对所有人有权限的结点就是属于world:anyone的。</p>
+<p>2.auth : 它不需要id。</p>
+<p>注：只要是通过authentication的user都有权限，zookeeper支持通过kerberos来进行认证, 也支持username/password形式的认证。</p>
+<p>3.digest: id格式：username:BASE64(SHA1(password))。</p>
+<p>它需要先通过username:password形式的authentication。</p>
+<p>4.ip: id格式：客户机的IP地址。</p>
+<p>设置的时候可以设置一个ip段。如：ip:192.168.1.0/16, 表示匹配前16个bit的IP段</p>
+<p>5.super: 超级用户模式。</p>
+<p>在这种scheme情况下，对应的id拥有超级权限，可以做任何事情</p>
+<p>ZooKeeper权限定义如下图所示：</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F717ss.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F717ss.png" alt="F717ss.png"></a></p>
+<p>ZooKeeper内置的ACL模式如下图所示：</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F71OoV.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F71OoV.png" alt="F71OoV.png"></a></p>
+<p>当会话建立的时候，客户端将会进行自我验证。另外，ZooKeeper Java API支持三种标准的用户权限，它们分别为：</p>
+<p>1.ZOO_PEN_ACL_UNSAFE：对于所有的ACL来说都是完全开放的，任何应用程序可以在节点上执行任何操作，比如创建、列出并删除子节点。</p>
+<p>2.ZOO_READ_ACL_UNSAFE：对于任意的应用程序来说，仅仅具有读权限。</p>
+<p>3.ZOO_CREATOR_ALL_ACL：授予节点创建者所有权限。需要注意的是，设置此权限之前，创建者必须已经通了服务器的认证。</p>
+<p>代码实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.zookeeper.CreateMode;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.KeeperException;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooDefs;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.ZooKeeper;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.data.ACL;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.data.Id;</span><br><span class="line"><span class="keyword">import</span> org.apache.zookeeper.server.auth.DigestAuthenticationProvider;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.security.NoSuchAlgorithmException;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NewDigest</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> NoSuchAlgorithmException, KeeperException, InterruptedException, IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">        List acls = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="comment">//添加第一个id,采用用户名密码的形式</span></span><br><span class="line">        Id id1 = <span class="keyword">new</span> Id(<span class="string">"digest"</span>, DigestAuthenticationProvider.generateDigest(<span class="string">"admin:admin"</span>));</span><br><span class="line">        ACL acl1 = <span class="keyword">new</span> ACL(ZooDefs.Perms.ALL, id1);</span><br><span class="line">        acls.add(acl1);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//添加第二个id,所有用户可获得去权限</span></span><br><span class="line">        Id id2 = <span class="keyword">new</span> Id(<span class="string">"world"</span>, <span class="string">"anyone"</span>);</span><br><span class="line">        ACL acl2 = <span class="keyword">new</span> ACL(ZooDefs.Perms.READ, id2);</span><br><span class="line">        ZooKeeper zk = <span class="keyword">new</span> ZooKeeper(<span class="string">"datanode1:2181,datanode2:2181,datanode3:2181"</span>, <span class="number">200</span>, <span class="keyword">null</span>);</span><br><span class="line"></span><br><span class="line">        zk.addAuthInfo(<span class="string">"digest"</span>,<span class="string">"admin:admin"</span>.getBytes());</span><br><span class="line">        zk.create(<span class="string">"/test"</span>,<span class="string">"data"</span>.getBytes(),acls,CreateMode.PERSISTENT);</span><br><span class="line">        System.out.println(<span class="string">"创建成功"</span>);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="执行过程"><a href="#执行过程" class="headerlink" title="执行过程"></a>执行过程</h2><p>Zookeeper服务可以以以两种模式运行，在单机模式下，只有一个Zookeeper服务器，便于用来测试，但是它没有高可用和性能恢复的保障。在工业界，Zookeeper以复合模式运行在一组键ensemble的集群上。Zookeeper通过复制来获得高可用，同时，只要ensemble中大部分机器运作，就可以提供服务，在2n+1个节点的ensemble中，可以承受n台机器出现故障。</p>
+<p>ZooKeeper的思想非常简单：它所需要做的就是保证对Znode树的每一次修改都复制到ensemble中的大部分机器上去。如果机器中的小部分出故障了，那么至少有一台机器将会恢复到最新状态，其他的则保存这副本，直到最终达到最新状态。Zookeeper采用Zab协议，它分为两个阶段，并且可能被无限的重复。</p>
+<h3 id="领导者选举"><a href="#领导者选举" class="headerlink" title="领导者选举"></a>领导者选举</h3><p>在ensemble中的机器要参与一个选择特殊成员的进程，这个成员叫领导者，其他机器脚跟随者。在大部分的跟随者与他们的领导者同步了状态以后，这个阶段才算完成。</p>
+<p>当leader崩溃或者leader失去大多数的follower，这时候zk进入<strong>恢复模式</strong>，恢复模式需要重新选举出一个新的leader，让所有的Server都恢复到一个正确的状态。Zk的选举算法有两种：一种是基于<strong>basic paxos</strong>实现的，另外一种是基于<strong>fast paxos</strong>算法实现的。系统默认的选举算法为fast paxos。先介绍basic paxos流程：</p>
+<p>1.选举线程由<strong>当前Server</strong>发起选举的线程担任，其主要功能是对投票结果进行统计，并选出推荐的Server；</p>
+<p>2.选举线程首先向所有Server发起一次<strong>询问</strong>(包括自己)；</p>
+<p>3 .选举线程收到回复后，验证是否是自己发起的询问(验证zxid是否一致)，然后获取对方的id(myid)，并存储到当前询问对象列表中，最后获取对方提议的leader相关信息(id,zxid)，并将这些信息存储到当次选举的投票记录表中；</p>
+<p>4.收到所有Server回复以后，就计算出zxid最大的那个Server，并将这个Server相关信息设置成<strong>下一次要投票的Server</strong></p>
+<p>5.线程将当前zxid最大的Server设置为当前Server要推荐的Leader，如果此时获胜的Server获得n/2 + 1的Server票数， 设置当前推荐的leader为获胜的Server，将根据获胜的Server相关信息设置自己的状态，否则，继续这个过程，直到leader被选举出来。</p>
+<p>通过流程分析我们可以得出：要使Leader获得多数Server的支持，则Server总数必须是奇数2n+1，且存活的Server的数目不得少于n+1。</p>
+<p>fast paxos流程是在选举过程中，某Server首先向所有Server提议自己要成为leader，当其它Server收到提议以后，解决epoch和zxid的冲突，并接受对方的提议，然后向对方发送接受提议完成的消息，重复这个流程，最后一定能选举出Leader。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7Yn4P.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7Yn4P.png" alt="F7Yn4P.png"></a></p>
+<h3 id="原子广播"><a href="#原子广播" class="headerlink" title="原子广播"></a>原子广播</h3><p>所有的<strong>写操作</strong>请求被传送给领导者，并通过<strong>广播</strong>将更新信息告诉跟随者。当大部分跟随者执行了修改之后，领导者就提交更新操作，客户端将得到更新成功的回应。未获得一致性的协议被设计为原子的，因此无论修改失败与否，他都分两阶段提交。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7YtNq.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7YtNq.png" alt="F7YtNq.png"></a></p>
+<p>如果领导者出故障了，剩下的机器将会再次进行领导者选举，并在新领导被选出前继续执行任务。如果在不久后老的领导者恢复了，那么它将以跟随者的身份继续运行。领导者选举非常快，由发布的结果所知，大约是200毫秒，因此在选举时性能不会明显减慢。</p>
+<p>所有在ensemble中的机器在更新他们内存中的Znode树之前会将更新信息写入磁盘。读操作请求可由任何机器服务，他们只设计内存查找，因此非常快。</p>
+<ol>
+<li>leader等待server连接；</li>
+<li>Follower连接leader，将最大的zxid发送给leader；</li>
+<li>Leader根据follower的zxid确定同步点；</li>
+<li>完成同步后通知follower 已经成为uptodate状态；</li>
+<li>Follower收到uptodate消息后，又可以重新接受client的请求进行服务了。</li>
+</ol>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7Yb5t.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7Yb5t.png" alt="F7Yb5t.png"></a></p>
+<p>每一个Znode树的更新都会给定一个唯一的全局标识，叫zxid（表示ZooKeeper事务“ID”）。更新是被排序的，因此如果zxid的z1&lt;z2，那么z1就比z2先执行。对于ZooKeeper来说，这是分布式系统中排序的唯一标准。</p>
+<p>所有在ensemble中的机器在更新它们内存中的Znode树之前会先<strong>将更新信息写入磁盘</strong>。读操作请求可由任何机器服务，同时，由于他们只涉及内存查找，因此非常快。</p>
+<h3 id="Leader工作流程"><a href="#Leader工作流程" class="headerlink" title="Leader工作流程"></a>Leader工作流程</h3><p>Leader主要有三个功能：</p>
+<p>1 .<strong>恢复数据</strong>；</p>
+<p>2 .维持与Learner的心跳，接收Learner请求并判断Learner的请求消息类型；</p>
+<p>3 .Learner的消息类型主要有PING消息、REQUEST消息、ACK消息、REVALIDATE消息，根据不同的消息类型，进行不同的处理。</p>
+<p>PING消息是指Learner的心跳信息；</p>
+<p>REQUEST消息是Follower发送的提议信息，包括写请求及同步请求；</p>
+<p>ACK消息是Follower的对提议的回复，超过半数的Follower通过，则commit该提议；</p>
+<p>REVALIDATE消息是用来延长SESSION有效时间。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7tkGV.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7tkGV.png" alt="F7tkGV.png"></a></p>
+<h3 id="Follower工作流程"><a href="#Follower工作流程" class="headerlink" title="Follower工作流程"></a>Follower工作流程</h3><p>Follower主要有四个功能：</p>
+<ol>
+<li>向Leader发送请求（PING消息、REQUEST消息、ACK消息、REVALIDATE消息）；</li>
+<li>接收Leader消息并进行处理；</li>
+<li>接收Client的请求，如果为写请求，发送给Leader进行投票；</li>
+<li>返回Client结果。</li>
+</ol>
+<p>Follower的消息循环处理如下几种来自Leader的消息：</p>
+<p>1 .PING消息： 心跳消息；</p>
+<p>2 .PROPOSAL消息：Leader发起的提案，要求Follower投票；</p>
+<p>3 .COMMIT消息：服务器端最新一次提案的信息；</p>
+<p>4 .UPTODATE消息：表明同步完成；</p>
+<p>5 .REVALIDATE消息：根据Leader的REVALIDATE结果，关闭待revalidate的session还是允许其接受消息；</p>
+<p>6 .SYNC消息：返回SYNC结果到客户端，这个消息最初由客户端发起，用来强制得到最新的更新。</p>
+<p>Follower的工作流程简图如下所示，在实际实现中，Follower是通过5个线程来实现功能的。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7tuZ9.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7tuZ9.png" alt="F7tuZ9.png"></a></p>
+<h2 id="ZooKeeper一致性"><a href="#ZooKeeper一致性" class="headerlink" title="ZooKeeper一致性"></a>ZooKeeper一致性</h2><p>在ensemble中的领导者和跟随着非常灵活，跟随者通过更新号来滞后领导者11，结果导致了只要大部分而不是所有的ensemble中的元素确认更新，就能被提交了。对于ZooKeeper来说，一个较好的智能模式是将客户端连接到跟着领导者的ZooKeeper服务器上。客户端可能被连接到领导者上，但他不能控制它，而且在如下情况时，甚至可能不知道。参见下图：</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F708zt.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F708zt.png" alt="F708zt.png"></a></p>
+<p>每一个Znode树的更新都会给定一个唯一的全局标识，叫zxid（表示ZooKeeper事务“ID”）。更新是被排序的，因此如果zxid的z1&lt;z2，那么z1就比z2先执行。对于ZooKeeper来说，这是分布式系统中排序的唯一标准。</p>
+<p>ZooKeeper是一种高性能、可扩展的服务。ZooKeeper的读写速度非常快，并且读的速度要比写快。另外，在进行读操作的时候，ZooKeeper依然能够为旧的数据提供服务。这些都是由ZooKeeper所提供的一致性保证的，它具有如下特点：</p>
+<p>（1）顺序一致性</p>
+<p>任何一个客户端的更新都按他们发送的顺序排序，也就意味着如果一个客户端将Znode z的值更新为值a，那么在之后的操作中，他会将z更新为b，在客户端发现z带有值b之后，就不会再看见带有值a的z。</p>
+<p>（2）原子性</p>
+<p>更新不成功就失败，这意味着如果更新失败了，没有客户端会知道。☆☆</p>
+<p>（3）单系统映像</p>
+<p>无论客户端连接的是哪台服务器，他与系统看见的视图一样。这就意味着，如果一个客户端在相同的会话时连接了一台新的服务器，他将不会再看见比在之前服务器上看见的更老的系统状态，当服务器系统出故障，同时客户端尝试连接ensemble中的其他机器时，故障服务器的后面那台机器将不会接受连接，直到它连接到故障服务器。</p>
+<p>（4）容错性</p>
+<p>一旦更新成功后，那么在客户端再次更新他之前，他就固定了，将不再被修改，这就会保证产生下面两种结果：</p>
+<p>如果客户端成功的获得了正确的返回代码，那么说明更新已经成功。如果不能够获得返回代码（由于通信错误、超时等原因），那么客户端将不知道更新是否生效。</p>
+<p>当故障恢复的时候，任何客户端能够看到的执行成功的更新操作将不会回滚。</p>
+<p>（5）实时性</p>
+<p>在任何客户端的系统视图上的的时间间隔是有限的，因此他在超过几十秒的时间内部会过期。这就意味着，服务器不会让客户端看一些过时的数据，而是关闭，强制客户端转到一个更新的服务器上。</p>
+<p>解释一下：</p>
+<p>由于性能原因，读操作由ZooKeeper服务器的内存提供，而且不参与写操作的全局排序。这一特性可能会导致来自使用ZooKeeper外部机制交流的客户端与ZooKeeper状态的不一致。举例来说，客户端A将Znode z的值a更新为a’，A让B来读z，B读到z的值是a而不是a’。这与ZooKeeper的保证机制是相容的（不允许的情况较作“同步一致的交叉客户端视 图”）。为了避免这种情况的发生，B在读取z的值之前，应该先调用z上的sync。Sync操作强制B连接上的ZooKeeper服务器与leader保 持一致这样，当B读到z的值时，他将成为A设置的值（或是之后的值）</p>
+<p>容易混淆的是：</p>
+<p>sync操作只能被异步调用12。这样操作的原因是你不需要等待他的返回，因为ZooKeeper保证了任何接下去的操作将会发生在sync在服务器上执行以后，即使操作是在sync完成前被调用的。</p>
+<p>这些已执行的保证后，ZooKeeper更高级功能的设计与实现将会变得非常容易，例如：leader选举、队列，以及可撤销锁等机制的实现。</p>
+<h2 id="会话"><a href="#会话" class="headerlink" title="会话"></a>会话</h2><p>ZooKeeper<strong>客户端</strong>与ensemble中的服务器列表配置一致，在启动时，他尝试与表中的一个服务器相连接。如果连接失败了，他就尝试表中的其他服务器，以此类推，知道他最终连接到其中一个，或者ZooKeeper的所有服务器都无法获得时，连接失败。<br>一旦与ZooKeeper服务器连接成功，服务器会创建与客户端的一个新的对话。每个回话都有<strong>超时时段</strong>，这是应用程序在创建它时设定的。如果服务器没有在超时时段内得到请求，他可能会中断这个会话。一旦会话被中断了，他可能不再被打开，而且任何与会话相连接的临时节点都将丢失。<br>无论什么时候会话持续空闲长达一定时间，都会由客户端发送ping请求保持活跃（犹如心跳）。时间段要足够小以监测服务器故障（由读操作超时反应），并且能再回话超市时间段内重新连接到另一个服务器。<br>在ZooKeeper中有几个time参数。<strong>tick time</strong>是ZooKeeper中的基本时间长度，为ensemble里的服务器所使用，用来定义对于交互运行的调度。其他设置以tick time的名义定义，或者至少由它来约束。<br>创建更复杂的临时性状态的应用程序应该支持更长的会话超时，因为重新构建的代价会更昂贵。在一些情况下，我们可以让应用程序在一定会话时间内能够重启，并且避免会话过期。（这可能更适合执行维护或是升级）每个会话都由服务器给定一个唯一的身份和密码，而且如果是在建立连接时被传递给ZooKeeper的话，只要没有过期它能够恢复会话。<br>这些特性可以视为一种可以避免会话过期的优化，但它并不能代替用来处理会话过期。会话过期可能出现在机器突然故障时，或是由于任何原因导致的应用程序安全关闭了，但在会话中断前没有重启。</p>
+<p>Zookeeper对象的转变是通过生命周期中的不同状态来实现的。可以使用getState()方法在任何时候查询他的状态：</p>
+<p>public states getSate()</p>
+<p>Zookeeper状态事务：</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F70yQ0.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F70yQ0.png" alt="F70yQ0.png"></a></p>
+<p>getState()方法的返回类型是states，states是枚举类型代表Zookeeper对象可能所处的不同状态，一个Zookeeper实例可能一次只处于一个状态。一个新建的Zookeeper实例正在于Zookeeper服务器建立连接时，是处于<strong>CONNECTING</strong>状态的。一旦连接建立好以后，他就变成了<strong>Connected</strong>状态。<br>使用Zookeeper的客户端可以通过注册Watcher的方法来获取状态转变的消息。一旦进入了CONNNECTED状态，Watcher将获得一个KeepState值为SyncConnected的WatchedEvent。</p>
+<p>注意Zookeeper的状态改变。传递给Zookeeper对象构造函数的(默认)watcher，被用来检测状态的改变。</p>
+<ol>
+<li>了解Zookeeper的状态改变。传递给Zookeeper对象构造函数的(默认)watcher，被用来检测状态的改变。</li>
+<li>了解Znode的改变。检测Znode的改变既可以使用专门的实例设置到读操说，也可以使用读操作默认的watcher。</li>
+</ol>
+<p>Zookeeper实例可能时区或重新连接Zookeeper服务，在CONNETCTED和CONNECTING状态中切换。如果连接段考，watcher得到一个Disconnected事件，需要注意的是这些状态的迁移是由Z哦哦keeper实例自己发起的，如果连接断开他将自动尝试自动连接。</p>
+<p>如果任何一个close()方法调用，或者会话由Expired了的KeepState提示过期时,Zookeeper可能会装变成第三种状态CLOSED状态。一旦处于CLOSE状态,Zookeeper的对象将不再是活动的了(可以使用states的isActive()方法进行测试,而且不能被重用。客户端必须建立一个新的Zookeeper实例才能连接到Zookeeper服务。</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>Zookeeper是一个高可用的分布式数据管理与系统协调框架。基于Paxos算法实现的，使该框架保证了分布式环境中数据的强一致性，也是基于这样的特性，使得Zookeeper解决了很多分布式问题。</p>
+<h3 id="数据发布与订阅-配置中心"><a href="#数据发布与订阅-配置中心" class="headerlink" title="数据发布与订阅(配置中心)"></a>数据发布与订阅(配置中心)</h3><p>　数据发布/订阅系统，即配置中心。需要发布者将数据发布到Zookeeper的节点上，供订阅者进行数据订阅，进而达到动态获取数据的目的，实现配置信息的集中式管理和数据的动态更新。发布/订阅一般有两种设计模式：推模式和拉模式，服务端主动将数据更新发送给所有订阅的客户端称为推模式；客户端主动请求获取最新数据称为拉模式，Zookeeper采用了推拉相结合的模式，客户端向服务端注册自己需要关注的节点，一旦该节点数据发生变更，那么服务端就会向相应的客户端推送Watcher事件通知，客户端接收到此通知后，主动到服务端获取最新的数据。</p>
+<p>　　若将配置信息存放到Zookeeper上进行集中管理，在通常情况下，应用在启动时会主动到Zookeeper服务端上进行一次配置信息的获取，同时，在指定节点上注册一个Watcher监听，这样在配置信息发生变更，服务端都会实时通知所有订阅的客户端，从而达到实时获取最新配置的目的。</p>
+<p> 分布式搜索服务中，索引的元数据信息和服务器集群机器的节点状态放在ZK的一些指定系欸但，共各个客户端订阅使用。</p>
+<p> 分布式日志收集系统。这个系统的核心工作使收集分布在不同机器的日志。收集器通常使按照应用来分配收集任务端元，因此需要在ZK上创建一个以应用名位path的节点P，并将这个应用的所有机器ip，以子节点的形式注册到节点P上，这样一来能够实现机器变动的时候，能够实时通知到收集器调整任务分配。</p>
+<p>系统中有些信息需要动态获取，并且还会存在人工手动去修改这个信息的发问。通常是暴露出接口，例如JMX接口，来获取一些运行时的信息。引入ZK之后，就不用自己实现一套方案了，只要将这些信息存放到指定的ZK节点上即可。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7rBJH.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7rBJH.png" alt="F7rBJH.png"></a></p>
+<h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h3><p>　　负载均衡是一种相当常见的计算机网络技术，用来对多个计算机、网络连接、CPU、磁盘驱动或其他资源进行分配负载，以达到优化资源使用、最大化吞吐率、最小化响应时间和避免过载的目的。</p>
+<p>　　使用Zookeeper实现动态DNS服务</p>
+<ul>
+<li>域名配置：首先在Zookeeper上创建一个节点来进行域名配置，如DDNS/app1/server.app1.company1.com。</li>
+<li>域名解析：<strong>应用首先从域名节点中获取IP地址和端口的配置，进行自行解析。同时，应用程序还会在域名节点上注册一个数据变更Watcher监听，以便及时收到域名变更的通知。</strong></li>
+<li>域名变更：若发生IP或端口号变更，此时需要进行域名变更操作，此时，只需要对指定的域名节点进行更新操作，Zookeeper就会向订阅的客户端发送这个事件通知，客户端之后就再次进行域名配置的获取。</li>
+</ul>
+<h3 id="命名服务"><a href="#命名服务" class="headerlink" title="命名服务"></a>命名服务</h3><p>　命名服务是分步实现系统中较为常见的一类场景，分布式系统中，被命名的实体通常可以是集群中的机器、提供的服务地址或远程对象等，通过命名服务，客户端可以根据指定名字来获取资源的实体、服务地址和提供者的信息。Zookeeper也可帮助应用系统通过资源引用的方式来实现对资源的定位和使用，广义上的命名服务的资源定位都不是真正意义上的实体资源，在分布式环境中，上层应用仅仅需要一个全局唯一的名字。Zookeeper可以实现一套分布式全局唯一ID的分配机制。</p>
+<p>阿里巴巴集团开源的分布式服务框架Dubbo中使用Zookeeper为命名服务，维护全局的地址服务列表在Dubbo实现中：</p>
+<p>服务提供自己的提供者在启动的时候，向ZK上指定节点/dubbo/${serviceName}/providers目录下写入自己的URL地址，这个操作就完成了服务的发布。</p>
+<p>服务消费者启动的时候订阅/dubbo/serviceName/providers目录下提供者URL地址，并向/dubbo/serviceName/providers目录下提供者URL地址，并向/dubbo/serviceName}/consumers写下自己的URL地址。</p>
+<p><strong>注意：所有向ZK上注册的地址都是临时节点，这样就能够保证服务提供者和消费者能过够自动感应资源的拜年话。另外，Dubbo还针对服务粒度的监控，方法是订阅/dubbo/${serviceName}目录下所有提供者和消费者信息</strong></p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F7skTO.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F7skTO.png" alt="F7skTO.png"></a></p>
+<h3 id="分布式通知-协调"><a href="#分布式通知-协调" class="headerlink" title="分布式通知/协调"></a>分布式通知/协调</h3><p>　　Zookeeper中特有的Watcher注册于异步通知机制，能够很好地实现分布式环境下不同机器，甚至不同系统之间的协调与通知，从而实现对数据变更的实时处理。通常的做法是不同的客户端都对Zookeeper上的同一个数据节点进行Watcher注册，监听数据节点的变化（包括节点本身和子节点），若数据节点发生变化，那么所有订阅的客户端都能够接收到相应的Watcher通知，并作出相应处理。</p>
+<p>　在绝大多数分布式系统中，系统机器间的通信无外乎<strong>心跳检测</strong>、<strong>工作进度汇报</strong>和<strong>系统调度</strong>。</p>
+<p>　　① <strong>心跳检测</strong>，不同机器间需要检测到彼此是否在正常运行，可以使用Zookeeper实现机器间的心跳检测，基于其临时节点特性（临时节点的生存周期是客户端会话，客户端若当即后，其临时节点自然不再存在），可以让不同机器都在Zookeeper的一个指定节点下创建临时子节点，不同的机器之间可以根据这个临时子节点来判断对应的客户端机器是否存活。通过Zookeeper可以大大减少系统耦合。</p>
+<p>　　② <strong>工作进度汇报</strong>，通常任务被分发到不同机器后，需要实时地将自己的任务执行进度汇报给分发系统，可以在Zookeeper上选择一个节点，每个任务客户端都在这个节点下面创建临时子节点，这样不仅可以判断机器是否存活，同时各个机器可以将自己的任务执行进度写到该临时节点中去，以便中心系统能够实时获取任务的执行进度。</p>
+<p>　　③ <strong>系统调度</strong>，Zookeeper能够实现如下系统调度模式：分布式系统由控制台和一些客户端系统两部分构成，控制台的职责就是需要将一些指令信息发送给所有的客户端，以控制他们进行相应的业务逻辑，后台管理人员在控制台上做一些操作，实际上就是修改Zookeeper上某些节点的数据，Zookeeper可以把数据变更以时间通知的形式发送给订阅客户端。</p>
+<h3 id="集群管理"><a href="#集群管理" class="headerlink" title="集群管理"></a>集群管理</h3><p>　　Zookeeper的两大特性：</p>
+<p>　　<strong>· 客户端如果对Zookeeper的数据节点注册Watcher监听，那么当该数据及诶单内容或是其子节点列表发生变更时，Zookeeper服务器就会向订阅的客户端发送变更通知。</strong></p>
+<p>　　<strong>· 对在Zookeeper上创建的临时节点，一旦客户端与服务器之间的会话失效，那么临时节点也会被自动删除。</strong></p>
+<p>　　利用其两大特性，可以实现集群机器存活监控系统，若监控系统在/clusterServers节点上注册一个Watcher监听，那么但凡进行动态添加机器的操作，就会在/clusterServers节点下创建一个临时节点：/clusterServers/[Hostname]，这样，监控系统就能够实时监测机器的变动情况。下面通过分布式日志收集系统的典型应用来学习Zookeeper如何实现集群管理。</p>
+<p>　　分布式日志收集系统的核心工作就是收集分布在不同机器上的系统日志，在典型的日志系统架构设计中，整个日志系统会把所有需要收集的日志机器分为多个组别，每个组别对应一个收集器，这个收集器其实就是一个后台机器，用于收集日志，对于大规模的分布式日志收集系统场景，通常需要解决两个问题：</p>
+<p>　　<strong>· 变化的日志源机器</strong></p>
+<p>　　<strong>· 变化的收集器机器</strong></p>
+<p>　　无论是日志源机器还是收集器机器的变更，最终都可以归结为如何快速、合理、动态地为每个收集器分配对应的日志源机器。使用Zookeeper的场景步骤如下</p>
+<p>　　① <strong>注册收集器机器</strong>，在Zookeeper上创建一个节点作为收集器的根节点，例如/logs/collector的收集器节点，每个收集器机器启动时都会在收集器节点下创建自己的节点，如/logs/collector/[Hostname]</p>
+<p><a href="https://images2015.cnblogs.com/blog/616953/201611/616953-20161112085605967-1265109617.png" target="_blank" rel="noopener"><img src="https://images2015.cnblogs.com/blog/616953/201611/616953-20161112085605967-1265109617.png" alt="img"></a></p>
+<p>　　② <strong>任务分发</strong>，所有收集器机器都创建完对应节点后，系统根据收集器节点下子节点的个数，将所有日志源机器分成对应的若干组，然后将分组后的机器列表分别写到这些收集器机器创建的子节点，如/logs/collector/host1上去。这样，收集器机器就能够根据自己对应的收集器节点上获取日志源机器列表，进而开始进行日志收集工作。</p>
+<p>　　③ <strong>状态汇报</strong>，完成任务分发后，机器随时会宕机，所以需要有一个收集器的状态汇报机制，每个收集器机器上创建完节点后，还需要再对应子节点上创建一个状态子节点，如/logs/collector/host/status，每个收集器机器都需要定期向该结点写入自己的状态信息，这可看做是心跳检测机制，通常收集器机器都会写入日志收集状态信息，日志系统通过判断状态子节点最后的更新时间来确定收集器机器是否存活。</p>
+<p>　　④ <strong>动态分配</strong>，若收集器机器宕机，则需要动态进行收集任务的分配，收集系统运行过程中关注/logs/collector节点下所有子节点的变更，一旦有机器停止汇报或有新机器加入，就开始进行任务的重新分配，此时通常由两种做法：</p>
+<p>　　<strong>· 全局动态分配</strong>，当收集器机器宕机或有新的机器加入，系统根据新的收集器机器列表，立即对所有的日志源机器重新进行一次分组，然后将其分配给剩下的收集器机器。</p>
+<p>　　<strong>· 局部动态分配</strong>，每个收集器机器在汇报自己日志收集状态的同时，也会把自己的负载汇报上去，如果一个机器宕机了，那么日志系统就会把之前分配给这个机器的任务重新分配到那些负载较低的机器，同样，如果有新机器加入，会从那些负载高的机器上转移一部分任务给新机器。</p>
+<p>　　上述步骤已经完整的说明了整个日志收集系统的工作流程，其中有两点注意事项。</p>
+<p>　　①<strong>节点类型</strong>，在/logs/collector节点下创建临时节点可以很好的判断机器是否存活，但是，若机器挂了，其节点会被删除，记录在节点上的日志源机器列表也被清除，所以需要选择持久节点来标识每一台机器，同时在节点下分别创建/logs/collector/[Hostname]/status节点来表征每一个收集器机器的状态，这样，既能实现对所有机器的监控，同时机器挂掉后，依然能够将分配任务还原。</p>
+<p>　　② <strong>日志系统节点监听</strong>，若采用Watcher机制，那么通知的消息量的网络开销非常大，需要采用日志系统主动轮询收集器节点的策略，这样可以节省网络流量，但是存在一定的延时。</p>
+<p>　　2.6 Master选举</p>
+<p>　　在分布式系统中，Master往往用来协调集群中其他系统单元，具有对分布式系统状态变更的决定权，如在读写分离的应用场景中，客户端的写请求往往是由Master来处理，或者其常常处理一些复杂的逻辑并将处理结果同步给其他系统单元。利用Zookeeper的强一致性，能够很好地保证在分布式高并发情况下节点的创建一定能够保证全局唯一性，即Zookeeper将会保证客户端无法重复创建一个已经存在的数据节点。</p>
+<p>　　首先创建/master_election/2016-11-12节点，客户端集群每天会定时往该节点下创建临时节点，如/master_election/2016-11-12/binding，这个过程中，只有一个客户端能够成功创建，此时其变成master，其他节点都会在节点/master_election/2016-11-12上注册一个子节点变更的Watcher，用于监控当前的Master机器是否存活，一旦发现当前Master挂了，其余客户端将会重新进行Master选举。</p>
+<p><a href="https://images2015.cnblogs.com/blog/616953/201611/616953-20161112093212483-1690012026.png" target="_blank" rel="noopener"><img src="https://images2015.cnblogs.com/blog/616953/201611/616953-20161112093212483-1690012026.png" alt="img"></a></p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>在Zookeeper，分布式锁使全部同步的，在同一时刻不会由相同的客户客户端认为他们持有相同的锁：</p>
+<ol>
+<li>Zookeeper调用create()方法来床架哪一个路径格式位“<em>locknode</em>/lock”的节点，此节点类型为sequence(连续)和ephemeral(临时)。创建的节点位临时节点，并且所有的节点连续编号，即为“lock-i”的格式。</li>
+<li>在创建锁节点上调用getChildren()方法，以获取锁目录下最小编号节点，并且不设置watch；</li>
+<li>步骤2获取的节点桥好事步骤1客户端创建的节点，客户端会获取该种类型的锁，然后退出操作。</li>
+<li>客户端在锁目录上调用exists()方法，并且设置watch来监视锁目录下序号对应自己次小的连续临时节点的状态。</li>
+<li>如果监视节点状态发生变化，则跳转到步骤2，继续进行后续的操作，直至退出锁竞争。</li>
+</ol>
+<p>Zookeeper的解锁非常简单，客户端只需要将加索步骤1中创建的临时节点和删除即可。</p>
+<p><a href="https://s2.ax1x.com/2019/01/05/F76kJe.png" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/01/05/F76kJe.png" alt="F76kJe.png"></a></p>
+<h2 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h2><p><a href="https://www.cnblogs.com/leesf456/p/6036548.html" target="_blank" rel="noopener">https://www.cnblogs.com/leesf456/p/6036548.html</a></p>
+<p><a href="https://blog.csdn.net/kingcat666/article/details/77749547" target="_blank" rel="noopener">https://blog.csdn.net/kingcat666/article/details/77749547</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2019年01月05日 - 13时24分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/" title="Zookeeper入门">https://www.hphblog.cn/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          ZooKeeper的安装和API
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">HBase优化</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeeper-的简介"><span class="toc-number">1.</span> <span class="toc-text">Zookeeper 的简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特点"><span class="toc-number">2.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特性"><span class="toc-number">3.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据模型"><span class="toc-number">4.</span> <span class="toc-text">数据模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Znode"><span class="toc-number">4.1.</span> <span class="toc-text">Znode</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Watches"><span class="toc-number">4.1.1.</span> <span class="toc-text">Watches</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#数据访问"><span class="toc-number">4.1.2.</span> <span class="toc-text">数据访问</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#临时节点"><span class="toc-number">4.1.3.</span> <span class="toc-text">临时节点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#顺序节点"><span class="toc-number">4.1.4.</span> <span class="toc-text">顺序节点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#时间"><span class="toc-number">4.2.</span> <span class="toc-text">时间</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Zxid"><span class="toc-number">4.2.1.</span> <span class="toc-text">Zxid</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#版本号"><span class="toc-number">4.2.2.</span> <span class="toc-text">版本号</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#节点属性结构"><span class="toc-number">4.3.</span> <span class="toc-text">节点属性结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#观察触发器"><span class="toc-number">5.</span> <span class="toc-text">观察触发器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ACL列表"><span class="toc-number">6.</span> <span class="toc-text">ACL列表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#执行过程"><span class="toc-number">7.</span> <span class="toc-text">执行过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#领导者选举"><span class="toc-number">7.1.</span> <span class="toc-text">领导者选举</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#原子广播"><span class="toc-number">7.2.</span> <span class="toc-text">原子广播</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Leader工作流程"><span class="toc-number">7.3.</span> <span class="toc-text">Leader工作流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Follower工作流程"><span class="toc-number">7.4.</span> <span class="toc-text">Follower工作流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ZooKeeper一致性"><span class="toc-number">8.</span> <span class="toc-text">ZooKeeper一致性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#会话"><span class="toc-number">9.</span> <span class="toc-text">会话</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用场景"><span class="toc-number">10.</span> <span class="toc-text">应用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据发布与订阅-配置中心"><span class="toc-number">10.1.</span> <span class="toc-text">数据发布与订阅(配置中心)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#负载均衡"><span class="toc-number">10.2.</span> <span class="toc-text">负载均衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命名服务"><span class="toc-number">10.3.</span> <span class="toc-text">命名服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式通知-协调"><span class="toc-number">10.4.</span> <span class="toc-text">分布式通知&#x2F;协调</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#集群管理"><span class="toc-number">10.5.</span> <span class="toc-text">集群管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#分布式锁"><span class="toc-number">10.6.</span> <span class="toc-text">分布式锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博客"><span class="toc-number">11.</span> <span class="toc-text">参考博客</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/" title="上一篇: ZooKeeper的安装和API">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/" title="下一篇: HBase优化">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

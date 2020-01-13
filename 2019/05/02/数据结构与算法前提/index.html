@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>数据结构与算法前置 | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="数据结构绪论学习笔记：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据结构与算法前置">
+<meta property="og:url" content="https://www.hphblog.cn/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="数据结构绪论学习笔记：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115443.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115559.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115645.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115749.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502120210.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502150942.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502154912.png">
+<meta property="article:published_time" content="2019-05-02T03:34:18.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:05.173Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="绪论">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115443.png">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-数据结构与算法前提" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/" class="article-date">
+      <time datetime="2019-05-02T03:34:18.000Z" itemprop="datePublished">2019-05-02</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      数据结构与算法前置
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BB%AA%E8%AE%BA/" rel="tag">绪论</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+         数据结构绪论学习笔记：<Excerpt in index | 首页摘要><a id="more"></a> 
+
+
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>数据结构是一门研究非等值计算的程序设计问题的操作对象,以及他们之间的关系核操作等相关问题的学科。</p>
+<p>简而言之数据结构是计算机存储、组织数据的方式。数据结构是指相互之间存在一种或多种特定关系的数据元素的集合。通常情况下，精心选择的数据结构可以带来更高的运行或者存储效率。数据结构往往同高效的检索算法和索引技术有关。</p>
+<h3 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h3><p>客观描述事务的符号，计算机中可以操作的对象，可以被计算机识别，并输入给计算机处理的符号集合。不仅仅包括整型、实型等数值类型，还包括字符、图像、视频等非数值型。前提为：</p>
+<ol>
+<li>可以被输入到计算机。</li>
+<li>可以被计算机程序处理。</li>
+</ol>
+<h3 id="数据元素"><a href="#数据元素" class="headerlink" title="数据元素"></a>数据元素</h3><p>组成数据的有意义的基本单位，通常作为整体被称为记录。通俗来讲是一个类的子集，比如禽类的子集：鸭</p>
+<h3 id="数据项"><a href="#数据项" class="headerlink" title="数据项"></a>数据项</h3><p>一个数据元素可以由若干个数据项组成，数据详是数据不可分割的最小单位。</p>
+<h3 id="数据对象"><a href="#数据对象" class="headerlink" title="数据对象"></a>数据对象</h3><p>性质相同的数据元素的集合，是数据的子集。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>数据结构是相互之间存在一种或者多种特定关系的数据元素的集合。</p>
+<h2 id="划分"><a href="#划分" class="headerlink" title="划分"></a>划分</h2><h3 id="逻辑结构"><a href="#逻辑结构" class="headerlink" title="逻辑结构"></a>逻辑结构</h3><p>逻数据对象中元素之间的相互关系。</p>
+<h4 id="集合结构"><a href="#集合结构" class="headerlink" title="集合结构"></a>集合结构</h4><p>元素中的数据元素除了同属于一个集合外，没有其他关系。</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115443.png" alt=""></p>
+<h4 id="线性结构"><a href="#线性结构" class="headerlink" title="线性结构"></a>线性结构</h4><p>线性结构中的数据元素之间是一对一的关系</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115559.png" alt=""></p>
+<h4 id="树形结构"><a href="#树形结构" class="headerlink" title="树形结构"></a>树形结构</h4><p>树型结构中的数据元素之间存在一种一对多的层次关系</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115645.png" alt=""></p>
+<h4 id="图形数据结构"><a href="#图形数据结构" class="headerlink" title="图形数据结构"></a>图形数据结构</h4><p>图形数据结构的元素是多对多的关系</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502115749.png" alt=""></p>
+<h3 id="物理结构"><a href="#物理结构" class="headerlink" title="物理结构"></a>物理结构</h3><p>数据的逻辑结构在计算机中的存储形式</p>
+<h4 id="顺序结构存储"><a href="#顺序结构存储" class="headerlink" title="顺序结构存储:"></a>顺序结构存储:</h4><p>数据元素存放在地址连续的存储单元内，数据之间的逻辑关系核物理关系是一致的。</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502120210.png" alt=""></p>
+<h4 id="链式存储结构"><a href="#链式存储结构" class="headerlink" title="链式存储结构"></a>链式存储结构</h4><p>元素存放在任意的存储单元里，存储单元可以连续，也可以不连续。</p>
+<h3 id="抽象数据类型"><a href="#抽象数据类型" class="headerlink" title="抽象数据类型"></a>抽象数据类型</h3><p>一组性质相同的值的集合及定义在此几何上的一些操作的总称。</p>
+<h4 id="原子类型"><a href="#原子类型" class="headerlink" title="原子类型"></a>原子类型</h4><p>不可以再分解的基本类型，包括整型、实型、字符型等。</p>
+<h4 id="结构类型"><a href="#结构类型" class="headerlink" title="结构类型"></a>结构类型</h4><p>由若干个类型组合而成，是可以再分解的，比如整型数组是由若干个整型数据组成的。</p>
+<h2 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h2><p>解决特定问题求解步骤的描述，在计算机中表现为指令集的有限序列，并且每条指令集表示一个或者多个操作。</p>
+<h3 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h3><h4 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h4><p>零个或多个输入，至少由一个或者多个输出。</p>
+<h4 id="有穷性"><a href="#有穷性" class="headerlink" title="有穷性"></a>有穷性</h4><p>算法再执行有限步骤之后，自动结束而不是无限循环，并且每一个步骤要再可接受的时间内完成。</p>
+<h4 id="确定性"><a href="#确定性" class="headerlink" title="确定性"></a>确定性</h4><p>算法的每一步骤都具有具体的含义，不会出现二义性。即在相同的输入输出只能由相同的结果。</p>
+<h4 id="可行性"><a href="#可行性" class="headerlink" title="可行性"></a>可行性</h4><p>算法的每一步必须可行，每一步都能通过执行有限次数完成。</p>
+<h3 id="设计要求"><a href="#设计要求" class="headerlink" title="设计要求"></a>设计要求</h3><h4 id="正确性"><a href="#正确性" class="headerlink" title="正确性"></a>正确性</h4><p>算法至少应该具有输入、输出和加工处理无歧义性，能够正确反映问题的需求，能够得到问题的正确答案。</p>
+<ol>
+<li>程序没有语法错误。</li>
+<li>算法程序对于合法的输入数据能够得到满足要求的输出结果。</li>
+<li>算法程序对于非法的输入数据能够满足规格说明的结果。</li>
+<li>算法程序对于精心选择的，甚至刁难的测试数据都要有满足要求的输入输出。</li>
+</ol>
+<h4 id="可读性"><a href="#可读性" class="headerlink" title="可读性"></a>可读性</h4><p>便于阅读理解、和交流。</p>
+<h4 id="健壮性"><a href="#健壮性" class="headerlink" title="健壮性"></a>健壮性</h4><p>输入数据不合法时，算法能够做出相关处理，而不是产生异常或莫名奇妙的结果。</p>
+<h4 id="时间效率高和存储量低"><a href="#时间效率高和存储量低" class="headerlink" title="时间效率高和存储量低"></a>时间效率高和存储量低</h4><p>时间效率是指算法执行的时间，对于同一个问题有多种算法解决。执行时间短的算法效率高，执行时间长的效率低。存储量需求是指在执行过程中需要的最大存储空间。设计算法应该要尽量满足时间效率高和存储量低的需求。</p>
+<h2 id="算法度量方法"><a href="#算法度量方法" class="headerlink" title="算法度量方法"></a>算法度量方法</h2><h3 id="事后统计方法"><a href="#事后统计方法" class="headerlink" title="事后统计方法"></a>事后统计方法</h3><p>通过设计好的测试程序和数据，利用计算机计时对不同算法表程序运行的时间进行比较，从而确定算法效率的高低。</p>
+<h4 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h4><ol>
+<li>需要提前编制好程序。</li>
+<li>依赖计算机硬件和软件等环境。</li>
+<li>算法测试数据设计困难。</li>
+</ol>
+<h3 id="事前分析估算方法"><a href="#事前分析估算方法" class="headerlink" title="事前分析估算方法"></a>事前分析估算方法</h3><p>计算机程序编制之前，需要统计方法对算法进行估算。</p>
+<h4 id="影响因素"><a href="#影响因素" class="headerlink" title="影响因素"></a>影响因素</h4><p>高级语言程序编写的程序在计算机上运行时间取决于：</p>
+<ol>
+<li>算法采用的策略和方法 (<strong>根本</strong>)</li>
+<li>编译产生的代码质量</li>
+<li>问题输入的规模</li>
+<li>机器执行指令的熟度，</li>
+</ol>
+<h2 id="算法时间复杂度"><a href="#算法时间复杂度" class="headerlink" title="算法时间复杂度"></a>算法时间复杂度</h2><p>语句总的执行次数$T(n)$是关于问题规模$n$的函数，进而分析$T(n)$随着$n$的情况变化而确定$T(n)$的规模级。算法的时间复杂度，也就是算法的时间度量，记作：$T(n)$=$O(f(n))$，它表示随着问题规模$n$的增大，算法的执行时间的增长率和$f(n)$的增长率相同，称作算法的逐渐时间复杂度，简称时间复杂度。其中$f(n)$是问题规模$n$的某个函数。</p>
+<p>假设每行代码执行的时间都一样，为 unit_time。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cal</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> sum = <span class="number">0</span>;		<span class="comment">//执行一次</span></span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">1</span>;		<span class="comment">//执行一次</span></span><br><span class="line">  <span class="keyword">for</span> (; i &lt;= n; ++i) &#123;	<span class="comment">//执行n次</span></span><br><span class="line">    sum = sum + i;	<span class="comment">//执行n次</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> sum;	   <span class="comment">//总的时间复杂度为2n+2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cal</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> sum = <span class="number">0</span>;	<span class="comment">//执行一次</span></span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">1</span>;	<span class="comment">//执行一次</span></span><br><span class="line">  <span class="keyword">int</span> j = <span class="number">1</span>;	<span class="comment">//执行一次</span></span><br><span class="line">  <span class="keyword">for</span> (; i &lt;= n; ++i) &#123;	<span class="comment">//执行n次</span></span><br><span class="line">    j = <span class="number">1</span>;					<span class="comment">//执行n次</span></span><br><span class="line">    <span class="keyword">for</span> (; j &lt;= n; ++j) &#123;	<span class="comment">//执行n*n次</span></span><br><span class="line">      sum = sum +  i * j;	<span class="comment">//执行n*n次</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;						<span class="comment">//总的时间复杂度为2n^2+2n+3</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：当$n$很大的时候，我们通常会忽略掉公式中的低阶、常量、系数三部分并不左右增长趋势，而公式中的低阶、常量、系数三部分并不左右增 长趋势，所以都可以忽略。我们只需要记录一个最大量级就可以了。</p>
+<h3 id="技巧"><a href="#技巧" class="headerlink" title="技巧"></a>技巧</h3><h4 id="只关注循环执行次数最多的一段代码"><a href="#只关注循环执行次数最多的一段代码" class="headerlink" title="只关注循环执行次数最多的一段代码"></a>只关注循环执行次数最多的一段代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cal</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (; i &lt;= n; ++i) &#123; <span class="comment">//n次</span></span><br><span class="line">    sum = sum + i;    <span class="comment">// n 次</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> sum;</span><br><span class="line">&#125;                        <span class="comment">//去掉常数项系数O(n)</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="加法法则"><a href="#加法法则" class="headerlink" title="加法法则"></a>加法法则</h4><p>总复杂度等于量级最大的那段代码的复杂度</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cal</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> sum_1 = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> p = <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">for</span> (; p &lt; <span class="number">100</span>; ++p) &#123;   <span class="comment">//常数 </span></span><br><span class="line">     sum_1 = sum_1 + p;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="keyword">int</span> sum_2 = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> q = <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">for</span> (; q &lt; n; ++q) &#123;		<span class="comment">//n次</span></span><br><span class="line">     sum_2 = sum_2 + q;	<span class="comment">//n次</span></span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">int</span> sum_3 = <span class="number">0</span>;</span><br><span class="line">   <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">for</span> (; i &lt;= n; ++i) &#123;  <span class="comment">//n次</span></span><br><span class="line">     j = <span class="number">1</span>; </span><br><span class="line">     <span class="keyword">for</span> (; j &lt;= n; ++j) &#123;   <span class="comment">// n^2</span></span><br><span class="line">       sum_3 = sum_3 +  i * j;  <span class="comment">//n^2</span></span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">return</span> sum_1 + sum_2 + sum_3;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>$\mathrm{T} 1(\mathrm{n})=\mathrm{O}(\mathrm{f}(\mathrm{n}))$,$\mathrm{T} 2(\mathrm{n})=\mathrm{O}(\mathrm{g}(\mathrm{n}))$那么$T(n)=T 1(n)+T 2(n)=\max (O(n)), O(g(n)) )=O(\max (f(n)g(n) )$</p>
+<h4 id="乘法法则"><a href="#乘法法则" class="headerlink" title="乘法法则"></a>乘法法则</h4><p>嵌套代码的复杂度等于嵌套内外代码复杂度的乘积</p>
+<p>$\mathrm{T} 1(\mathrm{n})=\mathrm{O}(\mathrm{f}(\mathrm{n})), \quad \mathrm{T} 2(\mathrm{n})=\mathrm{O}(\mathrm{g}(\mathrm{n}))$那么$\mathrm{T}(\mathrm{n})=\mathrm{T} 1(\mathrm{n})^{\star} \mathrm{T} 2(\mathrm{n})=\mathrm{O}(\mathrm{f}(\mathrm{n}))^{\star} \mathrm{O}(\mathrm{g}(\mathrm{n}))=\mathrm{O}\left(\mathrm{f}(\mathrm{n})^{\star} \mathrm{g}(\mathrm{n})\right)$</p>
+<p>假设$\mathrm{T} 1(\mathrm{n})=\mathrm{O}(\mathrm{n}), \quad \mathrm{T} 2(\mathrm{n})=\mathrm{O}\left(\mathrm{n}^{2}\right)$，那么$\mathrm{T} 1(\mathrm{n})^{*} \mathrm{T} 2(\mathrm{n})=\mathrm{O}\left(\mathrm{n}^{3}\right)$.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cal</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">int</span> ret = <span class="number">0</span>; </span><br><span class="line">   <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">for</span> (; i &lt; n; ++i) &#123;  <span class="comment">//n次</span></span><br><span class="line">     ret = ret + f(i);</span><br><span class="line">   &#125; </span><br><span class="line"> &#125; </span><br><span class="line"> </span><br><span class="line"> <span class="function"><span class="keyword">int</span> <span class="title">f</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (; i &lt; n; ++i) &#123;    <span class="comment">//n次</span></span><br><span class="line">    sum = sum + i;</span><br><span class="line">  &#125; </span><br><span class="line">  <span class="keyword">return</span> sum;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="常见复杂度"><a href="#常见复杂度" class="headerlink" title="常见复杂度"></a>常见复杂度</h3><p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502150942.png" alt=""></p>
+<h4 id="O-1"><a href="#O-1" class="headerlink" title="$O(1)$"></a>$O(1)$</h4><p>O(1) 只是常量级时间复杂度的一种表示方法，并不是指只执行了一行代码。也就是说算法执行的步骤是有限的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">6</span>;</span><br><span class="line"><span class="keyword">int</span> sum = i + j;</span><br></pre></td></tr></table></figure>
+
+<h4 id="O-log-n-O-nlogn"><a href="#O-log-n-O-nlogn" class="headerlink" title="$O(\log n)$O($ nlogn $)"></a>$O(\log n)$O($ nlogn $)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i=<span class="number">1</span>;</span><br><span class="line"><span class="keyword">while</span> (i &lt;= n)  &#123;</span><br><span class="line">  i = i * <span class="number">2</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码停止的时的时候为i&lt;=n,那么如何求n呢，</p>
+<p>$2^0<em>2^1</em>2^2<em>2^3</em>2^4<em>2^5*</em>2^6*<em>2^6</em>2^7……..2^x$,通过我们学习的数学知识基本上可以知道$2^n=n$求解的答案，为</p>
+<p>$x=\log _{2} n$,也就是说这段代码的时间复杂度为$O(log _{2} n)$</p>
+<p>我们把代码改一下呢</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">i=<span class="number">1</span>;</span><br><span class="line"><span class="keyword">while</span> (i &lt;= n)  &#123;</span><br><span class="line">  i = i * <span class="number">3</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这段代码的时间复杂度就应该为$O\left(\log _{3} n\right)$，但是$\log _{3} n$=$\log _{3} 2^{<em>} \log _{2} n$，$\mathrm{O}\left(\log _{3} n\right)=\mathrm{O}\left(\mathrm{C}^{</em>}\right.$$\log _{2} n )$,其中$\mathrm{C}=\log _{3} 2$为常量，可忽略，即$O(C(n))=O(f(n))$,所以$\mathrm{O}\left(\log _{2} n\right)$等价于$\mathrm{O}\left(\log _{3} \mathrm{n}\right)$，因此在对数复杂度中，我们可以忽略底的对数，统一标识为$O(logn)$</p>
+<h4 id="O-n-log-n"><a href="#O-n-log-n" class="headerlink" title="$O(n \log n)$"></a>$O(n \log n)$</h4><p>一段代码的复杂度为$O(logn)$，我们循环执行n遍就是$O(n \log n)$。</p>
+<h4 id="O-m-n"><a href="#O-m-n" class="headerlink" title="$O(m+n)$"></a>$O(m+n)$</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cal</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> sum_1 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (; i &lt; m; ++i) &#123;</span><br><span class="line">    sum_1 = sum_1 + i;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> sum_2 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> j = <span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (; j &lt; n; ++j) &#123;</span><br><span class="line">    sum_2 = sum_2 + j;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> sum_1 + sum_2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>m 和 n 是表示两个数据规模。我们无法事先评估 m 和 n 谁的量级大，所以我们在表示复杂度的时候，就不能简单地利用加法法则，省略掉其中一个。所以，上面代码的时间复杂 度就是 O(m+n)。</p>
+<h4 id="O-m-n-1"><a href="#O-m-n-1" class="headerlink" title="O(m*n)"></a>O(m*n)</h4><p>$\mathrm{T} 1(\mathrm{m})^{\star} \mathrm{T} 2(\mathrm{n})=\mathrm{O}(\mathrm{f}(\mathrm{m}) * \mathrm{f}(\mathrm{n}))$仍然有效。</p>
+<h2 id="空间复杂度分析"><a href="#空间复杂度分析" class="headerlink" title="空间复杂度分析"></a>空间复杂度分析</h2><p>空间复杂度全称就是渐进空间复杂度（asymptotic space complexity），表示算法的 存储空间与数据规模之间的增长关系。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>; <span class="comment">//空间存储变量</span></span><br><span class="line">  <span class="keyword">int</span>[] a = <span class="keyword">new</span> <span class="keyword">int</span>[n]; <span class="comment">//申请大小为n的int类型数组空间量为O(n)</span></span><br><span class="line">  <span class="keyword">for</span> (i; i &lt;n; ++i) &#123;</span><br><span class="line">    a[i] = i * i;     <span class="comment">//其余代码未占用更多空间整段代码的空间的空间复杂度为O(n)</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (i = n-<span class="number">1</span>; i &gt;= <span class="number">0</span>; --i) &#123;</span><br><span class="line">    print out a[i]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="复杂度图"><a href="#复杂度图" class="headerlink" title="复杂度图"></a>复杂度图</h2><p>$O(1)&lt;O(\log n)&lt;O(n)&lt;O(n \log n)&lt;O\left(n^{2}\right)&lt;O\left(n^{3}\right)&lt;O\left(n^{n}\right)&lt;O\left(n^{n}\right)$</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E7%BB%AA%E8%AE%BA/20190502154912.png" alt=""></p>
+<h3 id="最好、最坏情况时间复杂度"><a href="#最好、最坏情况时间复杂度" class="headerlink" title="最好、最坏情况时间复杂度"></a>最好、最坏情况时间复杂度</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// n 表示数组 array 的长度</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> n, <span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> pos = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (array[i] == x) pos = i;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> pos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在一个无序的数组（array）中，查找变量 x 出现的 位置。如果没有找到，就返回 -1。按这段代码的复杂度是 $O(n)$，其中，n 为数组的长度。假设我们在中途中找到了 x 我们就可以结束循环了。我们修改一下代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// n 表示数组 array 的长度</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span>[] array, <span class="keyword">int</span> n, <span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> pos = -<span class="number">1</span>;</span><br><span class="line">  <span class="keyword">for</span> (; i &lt; n; ++i) &#123;</span><br><span class="line">    <span class="keyword">if</span> (array[i] == x) &#123;</span><br><span class="line">       pos = i;</span><br><span class="line">       <span class="keyword">break</span>;  <span class="comment">//找到他的时候跳出</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> pos;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果我们在第一个位置就找到了它，那么它的时间复杂度就应该为$O(1)$,如果我们在最后找到那么它的时间复杂度为$O(n)$</p>
+<p>这里我们就引入了三个新的概念：<font color="red"> 最好情况时间复杂度、最坏情况时间复杂度和平均情况时间复杂度</font></p>
+<p>因此相对应的是最好情况时间复杂度为$O(1)$，最坏情况时间复杂度为$O(n)$.</p>
+<h3 id="平均情况时间复杂度"><a href="#平均情况时间复杂度" class="headerlink" title="平均情况时间复杂度"></a>平均情况时间复杂度</h3><p>最好情况时间复杂度和最坏情况时间复杂度对应的都是极端情况下的代码复杂度，发生的概率其实并不大。为了更好地表示平均情况下的复杂度，我们引入另一个概念：平均情况时间复杂度(平均时间复杂度)。</p>
+<p>要查找的变量 x 在数组中的位置，有 n+1 种情况：在数组的 0～n-1 位置中和不在数组中。我们把 每种情况下，查找需要遍历的元素个数累加起来，然后再除以 n+1，就可以得到需要遍历的元素个 数的平均值：</p>
+<p>$\frac{1+2+3+\cdots+n+n}{n+1}=\frac{n(n+3)}{2(n+1)}$</p>
+<p>大 O 标记法中，可以省略掉系数、低阶、常量因此我们得到的平均时间复杂度为$O(n)$</p>
+<p>但是我们忽略了一个问题这 n+1 种 情况，出现的概率并不是一样的。因此我们需要引入概率论的一些知识。</p>
+<p>要查找的变量 x，要么在数组里，要么就不在数组里。这两种情况对应的概率统计起来很麻烦，我们假设在数组中与不在数组中的概率都为 1/2。另外，要查找的数据 出现在 0～n-1 这 n 个位置的概率也是一样的，为 1/n。所以，根据概率乘法法则，要查找的数据出 现在 0～n-1 中任意位置的概率就是 $=\frac{1}{2 n}$。</p>
+<p>因此我们将式子完善一下。</p>
+<p>$1 \times \frac{1}{2 n}+2 \times \frac{1}{2 n}+3 \times \frac{1}{2 n}+\dots+n \times \frac{1}{2 n}+n \times \frac{1}{2}=\frac{3 n+1}{4}$</p>
+<p>$\frac{3 n+1}{4}$这个值是概率论中的加权平均值，也叫作期望值，所以平均时间复杂度的全称应该叫加权平均时间复杂度或者期望时间复杂度。根据大$O$表示法来表示时间复杂度依然是$O(n)$</p>
+<h3 id="均摊时间复杂度"><a href="#均摊时间复杂度" class="headerlink" title="均摊时间复杂度"></a>均摊时间复杂度</h3><p>均摊时间复杂度又叫摊还分析（或者叫平摊分析）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// array 表示一个长度为 n 的数组</span></span><br><span class="line"><span class="comment">// 代码中的 array.length 就等于 n</span></span><br><span class="line"><span class="keyword">int</span>[] array = <span class="keyword">new</span> <span class="keyword">int</span>[n];</span><br><span class="line"><span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insert</span><span class="params">(<span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">   <span class="keyword">if</span> (count == array.length) &#123; </span><br><span class="line">      <span class="keyword">int</span> sum = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; ++i)  &#123;<span class="comment">//for 循环遍历数组</span></span><br><span class="line">         sum = sum + array[i];	<span class="comment">//求和</span></span><br><span class="line">      &#125;</span><br><span class="line">      array[<span class="number">0</span>] = sum;	<span class="comment">//sum 值放到数组的第一个位</span></span><br><span class="line">      count = <span class="number">1</span>;</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   array[count] = val; <span class="comment">//清空数组</span></span><br><span class="line">   ++count; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数组中有空闲空间，我们只需将数据插入到数组下标为 count 的位置就可以 了，最好情况时间复杂度为 O(1)。最坏的情况下，数组中没有空闲空间了，我们需要先做一次 数组的遍历求和，然后再将数据插入，所以最坏情况时间复杂度为O(n)。<br>用概率论的方法来分析平均时间复杂度。<br>数组的长度是 n，根据数据插入的位置的不同，我们可以分为 n 种情况，每种情况的时间复杂 度是 O(1)。除此之外，还有一种“额外”的情况，就是在数组没有空闲空间时插入一个数据，这个时 候的时间复杂度是 O(n)。而且，这 n+1 种情况发生的概率一样，都是$\frac{1}{n+1}$。根据加权平均的计算方法，我们求得的平均时间复杂度就是：</p>
+<p>$1 \times \frac{1}{n+1}+1 \times \frac{1}{n+1}+\dots+1 \times \frac{1}{n+1}+n \times \frac{1}{n+1}=O(1)$</p>
+<p>这里不需要引入概率论的知识也可以：find() 函数在极端情况下，复杂度才为 O(1)。但 insert() 在大部分情况下，时间复杂度都为 O(1)。只有个别情况下，复杂度才比较高，为 O(n)。这是 insert()第一个区别于 find() 的地方。</p>
+<p>对于 insert() 函数来说，O(1) 时间复杂度的插入和 O(n) 时间复杂度 的插入，出现的频率是非常有规律的，而且有一定的前后时序关系，一般都是一个 O(n) 插入之后， 紧跟着 n-1 个 O(1) 的插入操作，循环往复。</p>
+<p>针对这样一种特殊场景的复杂度分析，我们并不需要像之前讲平均复杂度分析方法那样，找出所有的输入情况及相应的发生概率，然后再计算加权平均值。我们引入了<strong>摊还分析法</strong>，通过摊还分析得到的时间复杂度我们起了一个名字，叫均摊时间复杂度。</p>
+<p>每一次 O(n) 的插入操作，都会跟着 n-1 次 O(1) 的 插入操作，所以把耗时多的那次操作均摊到接下来的 n-1 次耗时少的操作上，均摊下来，这一组连续的操作的均摊时间复杂度就是 O(1)。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>《数据结构与算法之美》</p>
+<p>《大话数据结构》</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2019年05月02日 - 11时34分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/" title="数据结构与算法前置">https://www.hphblog.cn/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          数据结构之数组
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Java项目架构演进和SpringCloud总结</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简介"><span class="toc-number">1.</span> <span class="toc-text">简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据"><span class="toc-number">1.1.</span> <span class="toc-text">数据</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据元素"><span class="toc-number">1.2.</span> <span class="toc-text">数据元素</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据项"><span class="toc-number">1.3.</span> <span class="toc-text">数据项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#数据对象"><span class="toc-number">1.4.</span> <span class="toc-text">数据对象</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小结"><span class="toc-number">2.</span> <span class="toc-text">小结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#划分"><span class="toc-number">3.</span> <span class="toc-text">划分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#逻辑结构"><span class="toc-number">3.1.</span> <span class="toc-text">逻辑结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#集合结构"><span class="toc-number">3.1.1.</span> <span class="toc-text">集合结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#线性结构"><span class="toc-number">3.1.2.</span> <span class="toc-text">线性结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#树形结构"><span class="toc-number">3.1.3.</span> <span class="toc-text">树形结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#图形数据结构"><span class="toc-number">3.1.4.</span> <span class="toc-text">图形数据结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#物理结构"><span class="toc-number">3.2.</span> <span class="toc-text">物理结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#顺序结构存储"><span class="toc-number">3.2.1.</span> <span class="toc-text">顺序结构存储:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#链式存储结构"><span class="toc-number">3.2.2.</span> <span class="toc-text">链式存储结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#抽象数据类型"><span class="toc-number">3.3.</span> <span class="toc-text">抽象数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#原子类型"><span class="toc-number">3.3.1.</span> <span class="toc-text">原子类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#结构类型"><span class="toc-number">3.3.2.</span> <span class="toc-text">结构类型</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法"><span class="toc-number">4.</span> <span class="toc-text">算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#特性"><span class="toc-number">4.1.</span> <span class="toc-text">特性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#输入输出"><span class="toc-number">4.1.1.</span> <span class="toc-text">输入输出</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#有穷性"><span class="toc-number">4.1.2.</span> <span class="toc-text">有穷性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#确定性"><span class="toc-number">4.1.3.</span> <span class="toc-text">确定性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可行性"><span class="toc-number">4.1.4.</span> <span class="toc-text">可行性</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#设计要求"><span class="toc-number">4.2.</span> <span class="toc-text">设计要求</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#正确性"><span class="toc-number">4.2.1.</span> <span class="toc-text">正确性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#可读性"><span class="toc-number">4.2.2.</span> <span class="toc-text">可读性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#健壮性"><span class="toc-number">4.2.3.</span> <span class="toc-text">健壮性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#时间效率高和存储量低"><span class="toc-number">4.2.4.</span> <span class="toc-text">时间效率高和存储量低</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法度量方法"><span class="toc-number">5.</span> <span class="toc-text">算法度量方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#事后统计方法"><span class="toc-number">5.1.</span> <span class="toc-text">事后统计方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#缺陷"><span class="toc-number">5.1.1.</span> <span class="toc-text">缺陷</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#事前分析估算方法"><span class="toc-number">5.2.</span> <span class="toc-text">事前分析估算方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#影响因素"><span class="toc-number">5.2.1.</span> <span class="toc-text">影响因素</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#算法时间复杂度"><span class="toc-number">6.</span> <span class="toc-text">算法时间复杂度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#技巧"><span class="toc-number">6.1.</span> <span class="toc-text">技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#只关注循环执行次数最多的一段代码"><span class="toc-number">6.1.1.</span> <span class="toc-text">只关注循环执行次数最多的一段代码</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#加法法则"><span class="toc-number">6.1.2.</span> <span class="toc-text">加法法则</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#乘法法则"><span class="toc-number">6.1.3.</span> <span class="toc-text">乘法法则</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#常见复杂度"><span class="toc-number">6.2.</span> <span class="toc-text">常见复杂度</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#O-1"><span class="toc-number">6.2.1.</span> <span class="toc-text">$O(1)$</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#O-log-n-O-nlogn"><span class="toc-number">6.2.2.</span> <span class="toc-text">$O(\log n)$O($ nlogn $)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#O-n-log-n"><span class="toc-number">6.2.3.</span> <span class="toc-text">$O(n \log n)$</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#O-m-n"><span class="toc-number">6.2.4.</span> <span class="toc-text">$O(m+n)$</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#O-m-n-1"><span class="toc-number">6.2.5.</span> <span class="toc-text">O(m*n)</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#空间复杂度分析"><span class="toc-number">7.</span> <span class="toc-text">空间复杂度分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#复杂度图"><span class="toc-number">8.</span> <span class="toc-text">复杂度图</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#最好、最坏情况时间复杂度"><span class="toc-number">8.1.</span> <span class="toc-text">最好、最坏情况时间复杂度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#平均情况时间复杂度"><span class="toc-number">8.2.</span> <span class="toc-text">平均情况时间复杂度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#均摊时间复杂度"><span class="toc-number">8.3.</span> <span class="toc-text">均摊时间复杂度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考资料"><span class="toc-number">9.</span> <span class="toc-text">参考资料</span></a></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/" title="上一篇: 数据结构之数组">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/" title="下一篇: Java项目架构演进和SpringCloud总结">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>

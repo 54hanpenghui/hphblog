@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.hphblog.cn/2020/01/05/Flink%E5%88%9D%E8%AF%86/</loc>
+    <lastmod>2020-01-13</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/03/AOP%E6%A6%82%E8%BF%B0/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/07/DockerFile/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/16/Flume/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/11/Git%E4%BD%BF%E7%94%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/20/Hadoop%E7%9A%84RPC/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/31/HBase%E4%BC%98%E5%8C%96/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/03/Hive/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/18/Hive%E8%B0%83%E4%BC%98/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/05/JdbcTemplate/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/22/Mapreduce/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/04/memcached/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/11/MongoDB%E8%81%9A%E5%90%88/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/18/MyBatis%E7%9A%84CURD/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/10/Oozie/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/03/Redis/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/08/Spark%E4%B9%8BGraphX/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/27/Spark%E4%B9%8BRDD/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/30/Spark%E4%B9%8BSparkSQL/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/07/Spark%E4%B9%8BStructuredStreaming/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/09/SpringBoot%E4%B8%8EJPA/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/27/SpringCloud%E4%B8%8Ezuul/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/02/Spring%E6%A6%82%E8%BF%B0/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/08/Sqoop/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/24/SSM%E9%9B%86%E6%88%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/19/Yarn/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/03/19/SSM%E6%95%B4%E5%90%88/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/</loc>
+    <lastmod>2020-01-12</lastmod>
+  </url>
+</urlset>

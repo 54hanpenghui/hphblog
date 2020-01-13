@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="baidu-site-verification" content="L6Lm9d5Crl"/>
+  
+  
+  
+  
+  <title>MapReduce的工作机制 | 菜鸟清风</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="《Hadoop权威指南》中的MapReduce工作机制和Shuffle：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MapReduce的工作机制">
+<meta property="og:url" content="https://www.hphblog.cn/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="菜鸟清风">
+<meta property="og:description" content="《Hadoop权威指南》中的MapReduce工作机制和Shuffle：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/25/Fc1h8S.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/24/F64LfP.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/24/F6jll9.png">
+<meta property="og:image" content="https://s1.ax1x.com/2018/12/24/FcSwUP.png">
+<meta property="article:published_time" content="2018-12-24T00:49:40.000Z">
+<meta property="article:modified_time" content="2020-01-12T13:08:35.943Z">
+<meta property="article:author" content="清风笑丶">
+<meta property="article:tag" content="MapReduce">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2018/12/25/Fc1h8S.png">
+  
+    <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+<meta name="generator" content="Hexo 4.2.0"></head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/avatar.jpg" class="js-avatar">
+            
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/">清风笑丶</a></h1>
+        </hgroup>
+        
+        
+            <form>
+                <input type="text" class="st-default-search-input search" id="local-search-input" placeholder="搜索一下" autocomplete="off">
+            </form>
+            <div id="local-search-result"></div>
+        
+        
+            <script type="text/javascript">
+                (function() {
+                    'use strict';
+                    function getMatchData(keyword, data) {
+                        var matchData = [];
+                        for(var i =0;i<data.length;i++){
+                            if(data[i].title.toLowerCase().indexOf(keyword)>=0) 
+                                matchData.push(data[i])
+                        }
+                        return matchData;
+                    }
+                    var $input = $('#local-search-input');
+                    var $resultContent = $('#local-search-result');
+                    $input.keyup(function(){
+                        $.ajax({
+                            url: '/search.json',
+                            dataType: "json",
+                            success: function( json ) {
+                                var str='<ul class=\"search-result-list\">';                
+                                var keyword = $input.val().trim().toLowerCase();
+                                $resultContent.innerHTML = "";
+                                if ($input.val().trim().length <= 0) {
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                }
+                                var results = getMatchData(keyword, json);
+                                if(results.length === 0){
+                                    $resultContent.empty();
+                                    $('#switch-area').show();
+                                    return;
+                                } 
+                                for(var i =0; i<results.length; i++){
+                                    str += "<li><a href='"+ results[i].url +"' class='search-result-title'>"+ results[i].title +"</a></li>";
+                                }
+                                str += "</ul>";
+                                $resultContent.empty();
+                                $resultContent.append(str);
+                                $('#switch-area').hide();
+                            }
+                        });
+                    });
+                })();
+            </script>
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a  href="/archives/">所有文章</a></li>
+                        
+                            <li><a  href="/categories/Java/">Java</a></li>
+                        
+                            <li><a  href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                        
+                            <li><a  href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                        
+                            <li><a  href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github"  target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                            
+                                <a class="fl zhihu"  target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl mail"  target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/AVL%E6%A0%91/" style="font-size: 10px;">AVL树</a> <a href="/tags/Docker/" style="font-size: 14.44px;">Docker</a> <a href="/tags/Dubbo/" style="font-size: 10px;">Dubbo</a> <a href="/tags/Elasticsearch/" style="font-size: 17.78px;">Elasticsearch</a> <a href="/tags/Eureka/" style="font-size: 10px;">Eureka</a> <a href="/tags/Feign/" style="font-size: 10px;">Feign</a> <a href="/tags/Flink/" style="font-size: 10px;">Flink</a> <a href="/tags/Flume/" style="font-size: 11.11px;">Flume</a> <a href="/tags/Git/" style="font-size: 10px;">Git</a> <a href="/tags/GraphX/" style="font-size: 10px;">GraphX</a> <a href="/tags/HBase/" style="font-size: 11.11px;">HBase</a> <a href="/tags/HDFS/" style="font-size: 11.11px;">HDFS</a> <a href="/tags/Hadoop/" style="font-size: 13.33px;">Hadoop</a> <a href="/tags/Hbase/" style="font-size: 11.11px;">Hbase</a> <a href="/tags/Hive/" style="font-size: 13.33px;">Hive</a> <a href="/tags/Hystrix/" style="font-size: 10px;">Hystrix</a> <a href="/tags/JPA/" style="font-size: 10px;">JPA</a> <a href="/tags/JSP/" style="font-size: 10px;">JSP</a> <a href="/tags/JSR107/" style="font-size: 10px;">JSR107</a> <a href="/tags/JVM/" style="font-size: 14.44px;">JVM</a> <a href="/tags/JavaWeb/" style="font-size: 10px;">JavaWeb</a> <a href="/tags/Kafka/" style="font-size: 14.44px;">Kafka</a> <a href="/tags/MapReduce/" style="font-size: 14.44px;">MapReduce</a> <a href="/tags/Memcached/" style="font-size: 10px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 15.56px;">MongoDB</a> <a href="/tags/Mybatis/" style="font-size: 15.56px;">Mybatis</a> <a href="/tags/Oozie/" style="font-size: 10px;">Oozie</a> <a href="/tags/RDD/" style="font-size: 14.44px;">RDD</a> <a href="/tags/REST/" style="font-size: 10px;">REST</a> <a href="/tags/RPC/" style="font-size: 10px;">RPC</a> <a href="/tags/RabbitMQ/" style="font-size: 11.11px;">RabbitMQ</a> <a href="/tags/Redis/" style="font-size: 15.56px;">Redis</a> <a href="/tags/Ribbon/" style="font-size: 10px;">Ribbon</a> <a href="/tags/SSM/" style="font-size: 11.11px;">SSM</a> <a href="/tags/SparKSQL/" style="font-size: 12.22px;">SparKSQL</a> <a href="/tags/Spark/" style="font-size: 20px;">Spark</a> <a href="/tags/SparkStreaming/" style="font-size: 12.22px;">SparkStreaming</a> <a href="/tags/Spring/" style="font-size: 14.44px;">Spring</a> <a href="/tags/Spring-Security/" style="font-size: 10px;">Spring Security</a> <a href="/tags/SpringBoot/" style="font-size: 16.67px;">SpringBoot</a> <a href="/tags/SpringBoot-Admin/" style="font-size: 10px;">SpringBoot Admin</a> <a href="/tags/SpringCloud/" style="font-size: 18.89px;">SpringCloud</a> <a href="/tags/SpringConfig/" style="font-size: 10px;">SpringConfig</a> <a href="/tags/SpringMVC/" style="font-size: 15.56px;">SpringMVC</a> <a href="/tags/Sqoop/" style="font-size: 10px;">Sqoop</a> <a href="/tags/Structured-Streaming/" style="font-size: 10px;">Structured Streaming</a> <a href="/tags/Thymeleaf/" style="font-size: 10px;">Thymeleaf</a> <a href="/tags/Zookeeper/" style="font-size: 11.11px;">Zookeeper</a> <a href="/tags/zuul/" style="font-size: 10px;">zuul</a> <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="font-size: 11.11px;">二叉树</a> <a href="/tags/%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">任务</a> <a href="/tags/%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/" style="font-size: 10px;">优先队列</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 10px;">哈希表</a> <a href="/tags/%E5%A0%86/" style="font-size: 10px;">堆</a> <a href="/tags/%E5%AD%97%E5%85%B8%E6%A0%91/" style="font-size: 10px;">字典树</a> <a href="/tags/%E5%B9%B6%E6%9F%A5%E9%9B%86/" style="font-size: 10px;">并查集</a> <a href="/tags/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" style="font-size: 10px;">微服务</a> <a href="/tags/%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/" style="font-size: 10px;">技术选型</a> <a href="/tags/%E6%95%B0%E7%BB%84/" style="font-size: 10px;">数组</a> <a href="/tags/%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/" style="font-size: 10px;">日志框架</a> <a href="/tags/%E6%A0%88/" style="font-size: 10px;">栈</a> <a href="/tags/%E7%BA%A2%E9%BB%91%E6%A0%91/" style="font-size: 10px;">红黑树</a> <a href="/tags/%E7%BB%AA%E8%AE%BA/" style="font-size: 10px;">绪论</a> <a href="/tags/%E9%80%92%E5%BD%92/" style="font-size: 10px;">递归</a> <a href="/tags/%E9%93%BE%E8%A1%A8/" style="font-size: 10px;">链表</a> <a href="/tags/%E9%98%9F%E5%88%97/" style="font-size: 10px;">队列</a>
+                    </div>
+                </section>
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://blog.csdn.net/weixin_39084521?t=1">csdn</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://segmentfault.com/u/qingfengxiao">segmentfault</a>
+                    
+                      <a target="_blank"  class="main-nav-link switch-friends-link" href="https://www.jianshu.com/u/67dbb2933255">简书</a>
+                    
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">文科男,理工芯。有借必有贷,有问必有答。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">清风笑丶</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/avatar.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">清风笑丶</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/Java/">Java</a></li>
+                
+                    <li><a href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93">数据库</a></li>
+                
+                    <li><a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">数据结构</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/bigdataxiaohan" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/qing-feng-xiao-zhu-15/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="mail" target="_blank" href="mailto:467008580@qq.com" title="mail">mail</a>
+                    
+                </div>
+            </nav>
+        </header>
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-MapReduce的工作机制" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a  href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/" class="article-date">
+      <time datetime="2018-12-24T00:49:40.000Z" itemprop="datePublished">2018-12-24</time>
+</a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MapReduce的工作机制
+    </h1>
+  
+
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MapReduce/" rel="tag">MapReduce</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+         《Hadoop权威指南》中的MapReduce工作机制和Shuffle：<Excerpt in index | 首页摘要><a id="more"></a>
+
+
+
+<h2 id="框架"><a href="#框架" class="headerlink" title="框架"></a>框架</h2><p>Hadoop2.x引入了一种新的执行机制MapRedcue 2。这种新的机制建议在Yarn的系统上，目前用于执行的框架可以通过mapreduce.framework.name属性进行设置，值“local“表示本地作业运行器，“classic”值是经典的MapReduce框架(也称MapReduce1，它使用一个jobtracker和多个tasktracker)，yarn表示新的框架。</p>
+<h2 id="MR工作运行机制"><a href="#MR工作运行机制" class="headerlink" title="MR工作运行机制"></a>MR工作运行机制</h2><p>Hadoop的运行工作机制需要下面5个独立实体：</p>
+<p>客户端，提交Mapreduce工作。</p>
+<p> YARN资源管理器（ResourceManager），负责协调集群上计算机资源的分配。</p>
+<p>YARN节点管理(NodeManager)，负责启动和监视集群中机器上的计算容器(container)。</p>
+<p>MapReduce的application master（简写为MRAppMaster），负责协调运行MapReduce的作业，它 和MapReduce任务在容器中运行，这些容器由资源管理器节点管理器进行管理。</p>
+<p>分布式文件系统（一般为HDFS），用来与其他实体间共享作业文件。</p>
+<p><img src="https://s1.ax1x.com/2018/12/25/Fc1h8S.png" alt="Fc1h8S.png"></p>
+<h3 id="作业提交"><a href="#作业提交" class="headerlink" title="作业提交"></a>作业提交</h3><p>可以通过一个简单的方法调用来运行MapReduce作业：Job对象的submit()方法。注意也可以调用waitForCompletion()，它用于提交以前没有提交过的作业，并等待它的完成。submit()方法调用了封装了大量的处理细节。Job的submit()方法创建了一个内部的JobSummiter实例，并且调用其submitJobInternal()方法（参见上图步骤1），提交作业后，waitForCompletion()每秒轮询作业进度，如果发现自己上次报告由改变，便把进度报告到控制台。作业完成后，如果成功，就是显示出计数器；如果失败，则导致作业失败的错误会记录到控制台。</p>
+<p>JobSummiter 所实现的作业提交过程如下所述：</p>
+<ul>
+<li>Client 向资源提管理器请求一个新应用ID，用于MapReduce作业ID。（参见步骤2）</li>
+<li>检查作业的输出说明，例如：如果没有指定目录或者输出目录已经存在，作业就不提交，错误抛回给MapReduce程序。</li>
+<li>计算作业的输入分片。如果分片无法计算，比如输入路径不存在，作业就不提交，错误返回MapReduce程序 。</li>
+<li>将运行作业所需要的资源（包括作业Jar文件、配置文件和计算所得的输入分片）复制到一个以作业ID命名的HDFS目录中(请参见步骤3a)。作业Jar的副本较多(由mapreduce.client.submit.file.relication属性控制。默认值：10)，因此在运行作业的任务时，集群中有很多个副本可供节点管理器访问。保存成功后，Client即可以从HDFS获取文件原信息(步骤3b)。</li>
+<li>通过调用资源管理器的submitApplication()方法提交作业。参见步骤4。</li>
+</ul>
+<h3 id="作业初始化"><a href="#作业初始化" class="headerlink" title="作业初始化"></a>作业初始化</h3><p>资源管理器收到调用它的submitApplication()消息后，便将请求传递给YARN调度器（scheduler）。调度器分配一个容器，然后资源管理器在节点管理器的管理下在容器中启动application master的进程。（步骤5a和5b）。</p>
+<p>MapReduce作业的application master是一个Java应用程序，它的主类是MRAppMaster。由于接接收来自任务的进度和完成报告（步骤6），因此application master对作业的初始化是通过创建多个簿记对象以保持对作业进度的追踪来完成的。接下来，它接收来自共享文件系统的、在客户端计算的输入分片（步骤7）。然后对每一个分片创建一个map对象以及由mapreduce.job.reduces属性（通过作业的setNumReduceTask()方法设置）确定的多个reduce任务对象。任务 ID（Task ID）在此时分配。</p>
+<p>application master 必须决定如何运行构成MapReduce作业的各个任务。如果作业很小，就选择和自己在同一个JVM上运行任务。在一个节点顺序运行这些任务相比，当application master 判断在新的容器中分配和运行任务的开销大于并行运行它们的开销时，就会发生这一情况。这样的小作业称为uber任务。</p>
+<p>小作业：默认情况下小作业就是少于mapper且只有一个输入大小小于一个HDFS块的作业(通过设置mapreduce.job.ubertask.maxmaps)和mapreduce.job.ubertask.maxbytes可以改变这几个值）。必须明确启动uber任务（对于单个作业，或者是对整个集群），具体方案是将mapreduce.job.ubertask.enable设置成true。</p>
+<p>最后，在任何任务运行之前，application master调用setupJob()方法设置OutputCmmitter。FileOutputCmmitter为默认值，表示将建立作业的最终输出目录及任务输出的临时作业空间。</p>
+<h3 id="任务分配"><a href="#任务分配" class="headerlink" title="任务分配"></a>任务分配</h3><p>如果作业不合适作为uber任务运行，那么applicationmaster就会为该作业中所有map任务和reduce任务请求容器（步骤8）.首先为Map任务发出请求，该请求优先级要高于reduce的任务请求，这是因为所有的map任务须在reduce的排序阶段能够启动（shuffle）。直到有5%的map任务已经完成时，为reduce任务的请求才会发出。</p>
+<p>reduce任务能够在集群中任意位置运行，但是map的任务请求有着数据本地化局限，这也是任务调度器所关注的，在理想的情况下，任务是数据本地化(data local)的，因为这在分片驻留的统一节点上运行。可选的情况是，任务可能是机架本地化(rack local)的，意味着任务在分片驻留的统一节点运行。即和分片在同一机架而非同一个节点上运行，有些任务既不是数据本地化的，也不是机架本地化的，他们会从别的机架，而不是运行所在的机架上获取自己的数据。对于一个特定作业运行，可以通过查看作业的计数器来确定每个本地化层次上运行的任务数量。</p>
+<p>请求也为任务制定了内存需求和CPU数。默认情况下，每个map任务和reduce任务都分配到1024MB的内存和一个虚拟的内核，这些值可以在每个作业的基础上进行配置：</p>
+<ul>
+<li>mapreduce.map.memory.mb</li>
+<li>mapreduce.reduce.memory.mb</li>
+<li>mapreduce.map.cpu.vcores</li>
+<li>mapreduce.map.cpu.vcores.memory.mb</li>
+</ul>
+<h3 id="任务执行"><a href="#任务执行" class="headerlink" title="任务执行"></a>任务执行</h3><p>一旦资源管理器的调度器为任务分配了一个特定节点上的容器，application master就通过与节点管理器来启动容器（步骤9a 和 9b），该任务由主类为YarnChild的一个Java应用程序执行。在它运行任务之前，首先将任务需要的资源本地化，包括作业的配置、JAR文件和所有来自分布式缓存的文件(步骤10).最后，运行map任务和reduce任务(步骤 11)。</p>
+<p>YarnChild在指定的JVM中运行，因此用户定义的map和reduce函数(甚至是YarnChild)中的任何缺陷不会影响到节点管理器。例如导致其崩溃或挂起。</p>
+<p>每个任务都能够执行搭建(setup)和提交(commit)动作，他们和任务本身在同一个JVM中运行，并由作业的OutputCommitter确定。对于基于文件的作业，提交动作将任务输出由临时位置搬移到最终位置。提交协议确保当前推测(speculative execution)被启用时，只有一个任务副本被提交，其他的都被取消。</p>
+<h3 id="进度和状态的更新"><a href="#进度和状态的更新" class="headerlink" title="进度和状态的更新"></a>进度和状态的更新</h3><p>MapReduce作业是长时间运行的批量作业，运行时间范围从数秒到数小时。可能是一个很长时间段，所以对于用户而言，能够得知关于作业进展的一些反馈时很重要的。一个作业和他的每个任务都有一个状态(status)，包括：作业或任务的状态(比如，运行中，成功完成，失败)、map和reduce的进度、作业计数器的值、状态消息或描述(可以由用户代码来设置)。这些状态在作业期间不断改变。</p>
+<p>任务在运行时，对其他进度(progress 即任务完成百分比) 保持追踪。对map任务，任务进度是已处理输入所占的比例。对于reduce，系统会估计已处理reduce输入的比例。整个部过程分为三部分，与shuffle的三个阶段对应（详情参见shuffle和排序）。比如如果任务已经执行reducer一般的输入，那么任务的进度是5/6,这是因为已经完成复制和排序阶段（每个占1/3），并且已经完成reduce阶段的一半1/6）。</p>
+<p><strong>MapReduce中的进度的组成：进度并不总是可测量的，但是虽然如此，它能告诉Hadoop有个任务正在做一些事情比如:正在些输出记录的任务是由进度的，即使此时这个进度不能用需要写的总量的百分比来表示（因为即便是产生这些输出的任务，也可能不知道需求写的总量。进度报告很重要，构成进度的所有操作如下：</strong></p>
+<ul>
+<li>读入一条输入记录(在mapper或reducer中)。</li>
+<li>写入一条输出记录(在mapper或reducer中)。</li>
+<li>设状态描述（通过Reporter或者TaskAttemptConetext的setStatus()方法）。</li>
+<li>增加计数器的值（使用Reporter的incrCounter()方法或Counter的increment()方法）。</li>
+<li>调用Reporter或TaskAttemptContext的progress()方法。</li>
+</ul>
+<p>任务也有一组计数器，负责对任务运行过程中各个事件进行计数，这些技术其要么内置于框架中，列入一些如的map输出记录数，要么由用户自己定义。</p>
+<p>当map任务或reduce任务运行时，子进程和自己的父application master通过 umbilical 接口通信。每隔3秒，任务通过这个umbilicali接口想自己的application master报告进度和状态(包括计数器),application master会形成一个作业的汇聚视图(aggregate view)。</p>
+<p>资源管理器的界面显示了所有运行中的应用程序，并且分别由链接指应用各自的application master的界面，这些界面展示了MapReduce作业的诸多细节，包括进度。</p>
+<p>在作业期间，客户端每秒轮询一次 application master以接收最新的状态(轮询时间间隔通过mapreduce.client.progressmonitor.polinterval设置)。客户端也可以用Job的getStatus()方法得到一个JobStatus的实例，后者包含作业的所有状态信息。</p>
+<p><img src="https://s1.ax1x.com/2018/12/24/F64LfP.png" alt="F64LfP.png"></p>
+<h3 id="作业完成"><a href="#作业完成" class="headerlink" title="作业完成"></a>作业完成</h3><p>当application master收到作业最后一个任务已完成的通知后，便把作业状态设置为“成功”。然后在Job轮询状态时，便一直到任务已经完成，于是Job打印一条消息告知用户，然后从waitForCompletion()方法返回。Job的统计信息和计数值也在这个时候输出到控制台。如果ApplicationMaster有相应的设置，也会发送一个HTTP做作业通知。希望收到回调指令的客户端可以通过mapreduce.job.end-notification.url属性来进行这项设置。</p>
+<p>最后，作业完成时，application master和任务管理器清理其工作状态(这样中间输出将被删除)，OutputCommitter的commitJob()方法会被调用，作业信息由历史服务器存档，以便日后用户需要时可以查询。</p>
+<h2 id="Shuffle-与-排序"><a href="#Shuffle-与-排序" class="headerlink" title="Shuffle 与 排序"></a>Shuffle 与 排序</h2><p>MapReduce确保每个redcuer的输入都是按键排序，将map的输出作为输入传给reducer的过程称为shuffle。学习shuffle时如何工作，因为它有助于我们了解工作机制方便我们优化MapReduce程序。shuffle属于不断被优化和改进的代码库的一部分，因此下面描述了一些细节（可能会随着版本升级而改变）。从许多方面来看，shuffle是MapReduce的“心脏”，是MapReduce最核心的部分。</p>
+<h3 id="map端"><a href="#map端" class="headerlink" title="map端"></a>map端</h3><p>map函数开始产生输出时，并不是简单地将它写到磁盘。这个过程更复杂，它利用缓冲地方式写到内存并出于效率的考虑进行预排序。</p>
+<p><img src="https://s1.ax1x.com/2018/12/24/F6jll9.png" alt="F6jll9.png"></p>
+<p>每个map任务都有一个环形内存缓冲区用于存储任务输出。在默认情况下，缓冲区为100M这个值可以通过改变mapreduce.task.io.sort.mb来调整。一旦缓冲区内容达到阈值(mapreduce.map.sort.spill.percent，默认时0.8或者80%)，一个后台线程便开始把内容溢写(split)到磁盘。在溢出些到磁盘的过程中，map输出继续写到缓冲区，但如果在此间缓存被填满，map会被阻塞直到写磁盘过程完成。溢写过程按轮询方式将缓冲区中的内容写道mapreduce.cluster.local.dir属性在作业特定子目录下指定目录中。</p>
+<p>在写磁盘之前，线程首先根据数据最终要传的reducer把数据分成相应的分区(partion)。在每个分区中，后台线程案件进行内存中排序，如果有一个combiner函数，它就在排序后的输出上运行。运行combiner函数使得map输出结果更紧凑，因此减少到写到磁盘的数据和传递给reducer的数据。</p>
+<p>每次内存缓冲区到达溢出的阈值，就会新建一个一溢出文件(splil file)，因此在map任务写完其最后一个输出记录之后，会有几个溢出文件。在任务完成之前。溢出文件被合并成一个已分区且已排序的输出文件。配置属性mapreduce.task.io.sort.factor控制一次最多能合并多少流，默认值是10。</p>
+<p>如果至少存在3个溢出文件(通过mapreduce.combine.minspills属性设置)时，则(combine.minspills属性设置)时，则combiner就会在输出文件写到磁盘之前再次运行，combiner可以在输入上反复运行，但并不影响最终结果。如果只有1或2个溢写文件，那么由于map输出规模减少，因而不值得调用combiner带来的开销，因此不会为该map输出再次运行combiner。</p>
+<p>在将压缩map输出写到磁盘的过程中对它进行压缩往往时很好的主意，因为这样会写磁盘的速度更快，节约磁盘空间，并且减少传给reducer的数据量，在默认的情况下输出是不压缩的，但只要将mapreduce.map.output.compress设置为true，就可以启用此功能。</p>
+<p>reducer通过HTTP得到输出文件的分区。用于文件分区的工作线程的数量由任务的mapreduce.shuffle.max.threads属性控制，此属性针对的时每一个节点管理器，而不是针对每个map任务，默认值是0将最大线程设置为机器处理器数量的两倍。</p>
+<h3 id="reducer端"><a href="#reducer端" class="headerlink" title="reducer端"></a>reducer端</h3><p>map输出文件位于运行map任务的tasktracker的本地磁盘<strong>（注意：尽管map输出经常写道maptasktracker的本地磁盘，但是reduce输出并不这样）</strong>，现在tasktracker需要为分区文件运行reduce任务，并且reduce任务需要集群上若干map任务的map输出作为其特殊的分区文件，每一个map任务的完成时间可能不同，因此在每个任务完成时，reduce任务就开始复制其输出。默认值是5个线程，但是默认值可以通过设置mapreduce.reduce.shuffle.parallelcopies属性设置。</p>
+<p>reducer如何知道要从哪台机器取得map输出：</p>
+<p>map任务完成后，他们会用心跳机制通知他们的application master。因此对于指定作业，application master知道map输出和主机位置之间的映射关系。reducer中的一个线程定期询问master以便获取map输出主机的位置，直到获得所有输出位置。</p>
+<p>由于第一个reducer可能失败，因此主机并没有在第一个reducer检测到输出时就立即从磁盘上删除他们，相反，主机会等待，直到application告诉他删除map的输出，这是作业完成后执行的。</p>
+<p>如果map的输出相当小，会被复制到reduce任务的JVM内存中（缓冲区大小由mapreduce.reduce.shuffle.input.buffer.percent属性控制，用于指定此用途的堆空间的百分比），否则，map输出被复制到磁盘。一旦内存缓冲区达到阈值大小（由mapreduce.reduce.merge.percent决定）或达到map输出阈值（由mapreduce.reduce.merge.inmem.threshold控制），则合并后溢出写到磁盘中。如果指定combiner，则在合并期间运行它以降低写入磁盘的数据量。</p>
+<p>随着磁盘上副本增多，后台线程会将他们合并为更大的、排好序的文件。这会为后面的合并节省一些时间，注意为了合并，压缩的map输出通过map任务都必须在内存中被解压缩。复制完所有map输出后，reduce任务进入排序阶段(更准确的说时合并阶段，而排序时在map端进行的)，这个阶段将合并map输出，维持其顺序排序。这是循环进行的。比如，如果有50个map输出，而合并因子是10（10默认设置，由mapreduce.task.io.sort.factor属性设置，与map的合并类似），合并将进行5趟。每趟将10个文件合并成一个文件，因此最后有5个中间文件。</p>
+<p>在最后阶段，即reduce阶段，直接把数据输入reduce函数，从而省略了一次磁盘往返的形成，并没有将这个5个文件合并成一个已经排序的文件作为最后一趟。最后的合并可以来及内存和磁盘片段。</p>
+<p>每趟合并的文件数实际上比实例中展示的有所不同，目标是合并最小数量的文件以便满足最后一趟的合并系数。因此如果有40个文件，我们不会在四趟中每趟合并10个文件从而得到4个文件，相反第一次只合并4个文件随后三趟合并完整的10个文件，在最后一趟中，4个已经合并的文件和与下来的6个（未合并的）文件共合计10个文件如图所述。                   </p>
+<p><img src="https://s1.ax1x.com/2018/12/24/FcSwUP.png" alt="FcSwUP.png"></p>
+<p>这合并并没有改变合并次数，它只是一个优化措施，目的是尽量减少写到磁盘的数据量，因为最后一趟总是直接合并到reduce。</p>
+<p>在reduce阶段，对已经排序输出中的每个键调用reduce函数。此阶段的输出直接写到输出文件系统，一般为HDFS。如果采用HDFS，由于节点管理器也运行数据节点。所以第一个块副本将被写到本地磁盘文件。</p>
+<h2 id="配置调优"><a href="#配置调优" class="headerlink" title="配置调优"></a>配置调优</h2><h4 id="map端-1"><a href="#map端-1" class="headerlink" title="map端"></a>map端</h4><table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>类型</th>
+<th>默认值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mapreduce.task.io.sort.mb</td>
+<td>int</td>
+<td>100</td>
+<td>排序map输出是所使用的内存缓存缓冲区的大小，以兆字节为单位。</td>
+</tr>
+<tr>
+<td>mapreduce.map.sort.spill.precent</td>
+<td>float</td>
+<td>0.80</td>
+<td>map输出内存缓冲和利用开始磁盘一些过程的边界索引，这两者使用比例的阈值。</td>
+</tr>
+<tr>
+<td>mapreduce.task.io.sort.factor</td>
+<td>int</td>
+<td>10</td>
+<td>排序文件时，一次最多合并的流数。这个属性也在reduce中使用，将此值增加到100是很常见的。</td>
+</tr>
+<tr>
+<td>mapreduce.map.combine.minspills</td>
+<td>int</td>
+<td>3</td>
+<td>运行combiner所需最少溢出文件数（如果已经指定combiner）。</td>
+</tr>
+<tr>
+<td>mapreduce.map.out.put.compress</td>
+<td>boolean</td>
+<td>fasle</td>
+<td>是否压缩map输出。</td>
+</tr>
+<tr>
+<td>mapreduce.output.compress.codec</td>
+<td>classname</td>
+<td>org.apache.hadoop.io.compress.DefaultCodec</td>
+<td>用于map输出的压缩解码器。</td>
+</tr>
+<tr>
+<td>mapreduce.shuffle.max.threads</td>
+<td>int</td>
+<td>0</td>
+<td>每个节点管理器的工作线程数，用于将map输出到reducer。这是集群范围设置，这是集群的范围的设置，不能由单个作业设置，0表示使用Netty默认值，即两倍于可用的处理器数。</td>
+</tr>
+</tbody></table>
+<p>总的原则是给shuffle过程尽量多提供内存空间。然而一有个平衡问题，也就是要确保map函数和reduce函数能够得到足够的内存来运行。这就是为什么写map函数和reduce函数时尽量少用内存的原因。他们不一般不应该无限使用内存(例如，应避免在map中堆积数据)。</p>
+<p>运行map任务和reduce任务的JVM，其内存大小由mapred.child.java.opts属性设置，任务节点上的内存应该尽可能设置的大些。</p>
+<p> 在map端，可以通过避免多次溢写磁盘来获得最佳性能；一次最佳的情况。如果能估算map输出大小，就可以合理地设置mapreduce.task.io.sort.*属性来尽可能减少溢写的次数，具体而言，如果可以，就要增加mapreduce.task.io.sort.mb的值。MapReduce设计计数器（“SPILLED_RECORDS”）计算在作业运行整个阶段中溢写磁盘的记录数，对于调优很有帮助。注意，这个计数器包括map和reduce两端的溢出写。</p>
+<p>在reduce端，中间数据全部驻留在内存时，就能够获得最佳性能，在默认情况下，这就是不可能发生的，因为所有内存一般都会预留给reduce函数。但如果reduce函数的内存需求不大，把mapreduce.reduce.merge.inmem.threshold设置为0，把mapreduce.reduce.input.buffer.percent设置为1.0或者更低的值。</p>
+<h4 id="reduce端"><a href="#reduce端" class="headerlink" title="reduce端"></a>reduce端</h4><table>
+<thead>
+<tr>
+<th>属性名称</th>
+<th>类型</th>
+<th>默认值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mapreduce.reduces.shuffle.parallelcopies</td>
+<td>int</td>
+<td>5</td>
+<td>用于map输出复制到reduce的线程数。</td>
+</tr>
+<tr>
+<td>mapreduce.reduce.shuffle.maxfetchfailures</td>
+<td>int</td>
+<td>10</td>
+<td>在声明之前，reducer获取一个map输出花的最大时间。</td>
+</tr>
+<tr>
+<td>mapreduce.task.shuffle.maxfetchfailures</td>
+<td>int</td>
+<td>10</td>
+<td>排序文件时一次最多合并流的数量，这个属性也在map端使用</td>
+</tr>
+<tr>
+<td>mapreduces.reduce.shuffle.input.buffer.percent</td>
+<td>float</td>
+<td>0.70</td>
+<td>在shuffle的复制阶段，分配给map输出的缓冲区对空间的百分比。</td>
+</tr>
+<tr>
+<td>mapreduce.reduce.shuffle.merge.percent</td>
+<td>float</td>
+<td>0.66</td>
+<td>map输出缓冲区(由map.job.shuffle.input.buffer.percent定义)的阈值使用比例。用于启动合并并输出和磁盘溢写出的过程。</td>
+</tr>
+<tr>
+<td>mapreduce.reduce.merge.inmem.thresholld</td>
+<td>int</td>
+<td>1000</td>
+<td>启动合并输出和磁盘溢写的过程的map输出的阈值数。0或者更小的数意味着没有阈值限制，溢写行为由mapreduce.reduce.shuffle.percent单独控制。</td>
+</tr>
+<tr>
+<td>mapreduce.reduce.input.buffer.percent</td>
+<td>float</td>
+<td>0.0</td>
+<td>在reduce的过程中，在内存中保存map输出的空间占整个堆空间的比例。reduce阶段开始时，内存中的map输出大小不能大于这个值。默认情况下，在reduce任务开始之前，所有的map输出都合并到磁盘上，以便为reducer提供尽可能多的内存，然而，如果reducer需要的内存较少，可以增加此值来最小化访问磁盘的次数。</td>
+</tr>
+</tbody></table>
+<p>​                    </p>
+<p>​                                                                    参考资料:《Hadoop权威指南》</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a  href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></p>
+        <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
+        <p><span>发布时间:</span>2018年12月24日 - 08时49分</p>
+        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/" title="MapReduce的工作机制">https://www.hphblog.cn/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/　　作者: 清风笑丶" title=""></span>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" target="_blank" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a  href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          MapReduce源码刨析
+        
+      </div>
+    </a>
+  
+  
+    <a  href="/2018/12/22/Mapreduce/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">MapReduce入门和优化方案</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#框架"><span class="toc-number">1.</span> <span class="toc-text">框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MR工作运行机制"><span class="toc-number">2.</span> <span class="toc-text">MR工作运行机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#作业提交"><span class="toc-number">2.1.</span> <span class="toc-text">作业提交</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#作业初始化"><span class="toc-number">2.2.</span> <span class="toc-text">作业初始化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#任务分配"><span class="toc-number">2.3.</span> <span class="toc-text">任务分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#任务执行"><span class="toc-number">2.4.</span> <span class="toc-text">任务执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进度和状态的更新"><span class="toc-number">2.5.</span> <span class="toc-text">进度和状态的更新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#作业完成"><span class="toc-number">2.6.</span> <span class="toc-text">作业完成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shuffle-与-排序"><span class="toc-number">3.</span> <span class="toc-text">Shuffle 与 排序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#map端"><span class="toc-number">3.1.</span> <span class="toc-text">map端</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#reducer端"><span class="toc-number">3.2.</span> <span class="toc-text">reducer端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#配置调优"><span class="toc-number">4.</span> <span class="toc-text">配置调优</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#map端-1"><span class="toc-number">4.0.1.</span> <span class="toc-text">map端</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#reduce端"><span class="toc-number">4.0.2.</span> <span class="toc-text">reduce端</span></a></li></ol></li></ol></li></ol>
+</div>
+<style>
+    .left-col .switch-btn {
+        display: none;
+    }
+    .left-col .switch-area {
+        display: none;
+    }
+</style>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+            $(".switch-btn, .switch-area").fadeOut(300);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+            $(".switch-btn, .switch-area").fadeIn(500);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+        $(".switch-btn, .switch-area").show();
+    }
+</script>
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+        <section class="changyan" id="comments">
+  <!--<div id="uyan_frame"></div>-->
+  <div id="SOHUCS"></div>
+  <script charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/changyan.js"></script>
+  <script type="text/javascript">
+    window.changyan.api.config({
+      appid: 'cyu9wWYgq',
+      conf: 'prod_cca6a7c58b43f725f8489bdcee045320'
+    });
+  </script>
+  <style>#feedAv{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+  <style>#pop_ad{ margin-top: -250px !important;transform: scale(0) !important;}</style>
+</section>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a  href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/" title="上一篇: MapReduce源码刨析">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a  href="/2018/12/22/Mapreduce/" title="下一篇: MapReduce入门和优化方案">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2020/01/05/Flink%E5%88%9D%E8%AF%86/">Flink初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/10/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%903/">Spark内核解析3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%902/">Spark内核解析2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/09/Spark%E5%86%85%E6%A0%B8%E8%A7%A3%E6%9E%90/">Spark内核解析1</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/08/Spark%E4%B9%8BGraphX/">Spark之GraphX</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/07/Spark%E4%B9%8BStructuredStreaming/">Spark之StructuredStreaming</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/06/Spark%E4%B9%8BSparkStreaming%E7%9A%84DStream%E6%93%8D%E4%BD%9C/">Spark之SparkStreaming的DStream操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/05/Spark%E4%B9%8BSparkStreaming%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkStreaming数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/03/Spark%E4%B9%8BSparkStreaming%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之SparkStreaming理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/06/01/Spark%E4%B9%8BSparkSQL%E6%95%B0%E6%8D%AE%E6%BA%90/">Spark之SparkSQL数据源</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL%E5%AE%9E%E6%88%98/">Spark之SparkSQL实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/30/Spark%E4%B9%8BSparkSQL/">Spark之SparkSQL理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/29/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%873/">Spark之RDD实战篇3</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/28/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%872/">Spark之RDD实战2</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E5%AE%9E%E6%88%98%E7%AF%87/">Spark之RDD实战篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/27/Spark%E4%B9%8BRDD%E7%90%86%E8%AE%BA%E7%AF%87/">Spark之RDD理论篇</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/Spark%E7%94%9F%E6%80%81%E5%9C%88%E5%8F%8A%E5%AE%89%E8%A3%85/">Spark生态圈及安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/26/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%93%88%E5%B8%8C%E8%A1%A8/">数据结构之哈希表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E7%BA%A2%E9%BB%91%E6%A0%91/">数据结构之红黑树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/">数据结构之AVL树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%B9%B6%E6%9F%A5%E9%9B%86/">数据结构之并查集</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/14/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%AD%97%E5%85%B8%E6%A0%91/">数据结构之字典树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/10/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E5%A0%86%E4%B8%8E%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97/">数据结构之堆与优先队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/07/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E4%BA%8C%E5%8F%89%E6%A0%91/">数据结构之二叉树</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/06/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%80%92%E5%BD%92/">数据结构之递归</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/04/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%93%BE%E8%A1%A8/">数据结构之链表</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E9%98%9F%E5%88%97/">数据结构之队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/03/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%A0%88/">数据结构之栈</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8B%E6%95%B0%E7%BB%84/">数据结构之数组</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/05/02/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E5%89%8D%E6%8F%90/">数据结构与算法前置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/28/Java%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84%E6%BC%94%E8%BF%9B%E5%92%8CSpringCloud%E6%80%BB%E7%BB%93/">Java项目架构演进和SpringCloud总结</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8ESpringConfig%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83/">SpringCloud与SpringConfig分布式配置中心</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8Ezuul/">SpringCloud与zuul</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/27/SpringCloud%E4%B8%8EHystrix%E6%96%AD%E8%B7%AF%E5%99%A8/">SpringCloud与Hystrix断路器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/26/SpringCloud%E4%B8%8EFeign%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud与Feign</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/25/SpringCloud%E7%9A%84Ribbon%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">SpringCloud的Ribbon负载均衡</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/23/SpringCloud%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0Eureka/">SpringCloud注册与发现Eureka</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/21/SpringCloud%E4%B8%8EREST%E5%BE%AE%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/18/%E5%BE%AE%E6%9C%8D%E5%8A%A1%E4%B8%8ESpringCloud/">微服务与SpringCloud</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E5%92%8C%E7%9B%91%E6%8E%A7%E7%AE%A1%E7%90%86/">SpringBoot和监控管理</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/14/SpringBoot%E4%B8%8ESpringCloud%E9%9B%86%E6%88%90/">SpringBoot与SpringCloud集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E5%AE%89%E5%85%A8/">SpringBoot与安全</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/13/SpringBoot%E4%B8%8E%E4%BB%BB%E5%8A%A1/">SpringBoot与任务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/SpringBoot%E5%92%8CElasticSearch%E9%9B%86%E6%88%90/">SpringBoot和Elasticsearch集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/12/Elasticsearch%E7%AE%80%E4%BB%8B/">Elasticsearch简介</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8CRabbitMQ%E9%9B%86%E6%88%90/">SpringBoot和RabbitMQ集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/11/SpringBoot%E5%92%8C%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">消息队列RabbitMQ</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/10/SpringBoot%E4%B8%8ERedis%E7%BC%93%E5%AD%98/">SpringBoot与Redis缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E5%92%8C%E7%BC%93%E5%AD%98/">SpringBoot和缓存</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/09/SpringBoot%E4%B8%8EJPA/">SpringBoot与JPA</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E4%B8%8EMybatis%E7%9A%84%E9%9B%86%E6%88%90/">SpringBoot与Mybatis的集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/08/SpringBoot%E6%95%B0%E6%8D%AE%E8%AE%BF%E9%97%AE/">SpringBoot数据访问</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/07/DockerFile/">DockerFile</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Docker%E5%AD%98%E5%82%A8%E5%8D%B7/">Docker存储卷</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/06/Dokcer%E7%BD%91%E7%BB%9C/">Dokcer网络</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/05/Docker%E7%9A%84%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">Docker的基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/04/Docker%E5%88%9D%E8%AF%86%E4%B8%8E%E5%AE%89%E8%A3%85/">Docker初识与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/03/SpringBoot%E4%BD%BF%E7%94%A8%E5%A4%96%E7%BD%AE%E7%9A%84Servlet%E5%AE%B9%E5%99%A8/">SpringBoot使用外置的Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/04/02/SpringBoot%E9%85%8D%E7%BD%AE%E5%B5%8C%E5%85%A5%E5%BC%8FServlet%E5%AE%B9%E5%99%A8/">SpringBoot配置嵌入式Servlet容器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BSpringMVC%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE/">SpringBoot之SpringMVC自动配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E4%B9%8BThymeleaf/">SpringBoot之Thymeleaf</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/29/SpringBoot%E7%9A%84Web%E5%BC%80%E5%8F%91/">SpringBoot的Web开发</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E7%9A%84%E6%97%A5%E5%BF%97%E6%A1%86%E6%9E%B6/">SpringBoot的日志框架</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/28/SpringBoot%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D%E6%8E%A2%E7%A9%B6/">SpringBoot自动装配探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">SpringBoot的配置文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/25/SpringBoot%E5%88%9D%E8%AF%86/">SpringBoot初识</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/24/SSM%E9%9B%86%E6%88%90/">SSM集成</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/SSM%E6%95%B4%E5%90%88/">SSM整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/">Mybatis之动态SQL</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/19/Mybatis%E7%9A%84resultMap%E8%87%AA%E5%AE%9A%E4%B9%89%E6%98%A0%E5%B0%84/">Mybatis的resultMap自定义映射</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E7%9A%84CURD/">MyBatis的CURD</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/">MyBatis全局配置文件和映射文件</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/16/Mybatis%E5%85%A5%E9%97%A8/">Mybatis入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/13/Spring%E5%92%8CSpringMVC%E6%95%B4%E5%90%88/">Spring和SpringMVC整合</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/12/SpringMV%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B%E5%88%86%E6%9E%90/">SpringMV工作流程分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/11/SpringMVC%E8%BF%9B%E9%98%B6/">SpringMVC处理Json、文件上传、拦截器</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/07/Spring%E5%A4%84%E7%90%86%E8%AF%B7%E6%B1%82%E6%88%96%E5%93%8D%E5%BA%94%E6%95%B0%E6%8D%AE/">SpringMVC处理请求或响应数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/06/SpringMVC%E6%A6%82%E8%BF%B0/">SpringMVC概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/Spring%E4%BA%8B%E5%8A%A1%E6%A6%82%E8%BF%B0/">Spring声明式事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/05/JdbcTemplate/">JdbcTemplate</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/03/AOP%E6%A6%82%E8%BF%B0/">AOP概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/SpringIOC%E5%AE%B9%E5%99%A8%E5%92%8CBean%E7%9A%84%E9%85%8D%E7%BD%AE/">Spring IOC容器和Bean的配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/03/02/Spring%E6%A6%82%E8%BF%B0/">Spring概述</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/18/Hive%E8%B0%83%E4%BC%98/">Hive调优</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/17/Hive%E6%9F%A5%E8%AF%A2/">Hive查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/16/Hive%E6%95%B0%E6%8D%AE%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Hive数据据类型 DDL DML</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/15/Kafka-API%E5%AE%9E%E6%88%98/">KafkaAPI实战</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/11/Git%E4%BD%BF%E7%94%A8/">Git使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/10/Oozie/">Oozie</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/08/Sqoop/">Sqoop</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/07/Flume%E6%A1%88%E4%BE%8BGanglia%E7%9B%91%E6%8E%A7/">Flume案例Ganglia监控</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/">ZooKeeper的安装和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/">Zookeeper入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E4%BC%98%E5%8C%96/">HBase优化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/31/HBase%E7%9A%84Shell%E5%91%BD%E4%BB%A4%E5%92%8CJavaAPI/">HBase的Shell命令和JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/HBase%E6%95%B0%E6%8D%AE%E6%A8%A1%E5%9E%8B%E5%92%8C%E8%AF%BB%E5%86%99%E5%8E%9F%E7%90%86/">HBase数据模型和读写原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/30/Hbase%E5%8E%9F%E7%90%86%E5%92%8C%E5%AE%89%E8%A3%85/">HBase原理和安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B2/">MapReduce高级编程2</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/28/MapReduce%E9%AB%98%E7%BA%A7%E7%BC%96%E7%A8%8B/">MapReduce高级编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/25/MapReduce%E7%BC%96%E7%A8%8B%E5%88%A8%E6%9E%90/">MapReduce源码刨析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/24/MapReduce%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%9C%BA%E5%88%B6/">MapReduce的工作机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/22/Mapreduce/">MapReduce入门和优化方案</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84RPC/">Hadoop的RPC工作原理</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/20/Hadoop%E7%9A%84IO%E6%93%8D%E4%BD%9C/">Hadoop的I/O操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/Yarn/">Yarn</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/19/HDFS%E9%AB%98%E7%BA%A7%E5%8A%9F%E8%83%BD/">HDFS高级功能</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/18/HDFS%E7%9A%84%E6%93%8D%E4%BD%9CSHELL%E5%92%8CAPI/">HDFS的操作SHELL和API</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E5%88%86%E5%B8%83%E5%BC%8F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9FHDFS/">Hadoop分布式文件系统HDFS</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/17/Hadoop%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%88%86%E5%B8%83%E5%BC%8F%E5%AE%89%E8%A3%85/">Hadoop简介与分布式安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E7%9A%84JavaAPI/">Elasticsearch的JavaAPI</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%BA%E5%88%B6%E6%8E%A2%E7%A9%B6/">Elasticsearch分布式机制探究</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E8%81%9A%E5%90%88%E5%88%86%E6%9E%90/">Elasticsearch聚合分析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/16/Elasticsearch%E5%A2%9E%E5%88%A0%E6%94%B9%E6%9F%A5/">Elasticsearch增删改查</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/ElasticSearch%E7%B4%A2%E5%BC%95/">ElasticSearch索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/15/Elasticsearch%E7%AE%80%E4%BB%8B%E4%B8%8E%E5%AE%89%E8%A3%85/">Elasticsearch简介与安装</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/12/MongoDB%E8%BF%9B%E9%98%B6/">MongoDB进阶</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/11/MongoDB%E8%81%9A%E5%90%88/">MongoDB聚合</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/10/MongoDB%E7%B4%A2%E5%BC%95/">MongoDB索引</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E6%9F%A5%E8%AF%A2/">MongoDB查询</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/09/MongoDB%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4/">MongoDB基础命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/08/MongoDB%E5%85%A5%E9%97%A8/">MongoDB入门</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E7%9A%84%E9%9B%86%E7%BE%A4%E6%A8%A1%E5%BC%8F/">Redis的集群模式</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">Redis主从复制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/07/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/04/memcached/">Memcached</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Redis/">Redis</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/12/03/Hive/">Hive</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/Flume/">Flume架构</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/16/kafka%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%88%86%E6%9E%90/">Kafka深度解析</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E5%91%BD%E4%BB%A4%E6%93%8D%E4%BD%9C/">Kafka命令操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E4%BB%8B%E7%BB%8D%E4%B8%8E%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">Kafka与消息队列</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/14/Kafka%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/">Kafka和的安装与配置</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%88%86%E6%9E%90%E5%B7%A5%E5%85%B7/">Java虚拟机------JVM分析工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/12/Java%E8%99%9A%E6%8B%9F%E6%9C%BA-JVM%E5%B8%B8%E8%A7%81%E5%8F%82%E6%95%B0/">Java虚拟机--------JVM常见参数</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/11/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8/">Java虚拟机------垃圾收集器</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F/">Java虚拟机------JVM内存区域</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/10/Java%E8%99%9A%E6%8B%9F%E6%9C%BA------JVM%E4%BB%8B%E7%BB%8D/">Java虚拟机------JVM介绍</a></li></ul>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+    <script>
+        $(".post-list").addClass("toc-article");
+        // $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#toc, .switch-btn, .switch-area").toggle();
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+                $(".switch-btn, .switch-area").fadeToggle(300);
+            }
+        })
+    </script>
+
+
+
+
+    <script>
+        
+    </script>
+
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2020 清风笑丶
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo &nbsp;&nbsp;</a><a href="https://github.com/maochunguang" target="_blank">Blog</a> by tommy
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >极客到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 2;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+<!-- Google Analytics -->
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-129731340-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?a138f5cac94c7795df86f17cea34efc4";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
