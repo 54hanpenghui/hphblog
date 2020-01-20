@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.hphblog.cn/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/</loc>
+    <lastmod>2020-01-20</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2018/12/19/Yarn/</loc>
+    <lastmod>2020-01-20</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/</loc>
+    <lastmod>2020-01-20</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/</loc>
+    <lastmod>2020-01-20</lastmod>
+  </url>  <url>
+    <loc>https://www.hphblog.cn/2020/01/20/Flink%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84/</loc>
+    <lastmod>2020-01-20</lastmod>
+  </url>  <url>
     <loc>https://www.hphblog.cn/2020/01/05/Flink%E5%88%9D%E8%AF%86/</loc>
     <lastmod>2020-01-13</lastmod>
   </url>  <url>
@@ -176,9 +191,6 @@
     <lastmod>2020-01-12</lastmod>
   </url>  <url>
     <loc>https://www.hphblog.cn/2019/03/18/MyBatis%E5%85%A8%E5%B1%80%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6/</loc>
-    <lastmod>2020-01-12</lastmod>
-  </url>  <url>
-    <loc>https://www.hphblog.cn/2019/03/19/Mybatis%E4%B9%8B%E5%8A%A8%E6%80%81SQL/</loc>
     <lastmod>2020-01-12</lastmod>
   </url>  <url>
     <loc>https://www.hphblog.cn/2019/01/10/Oozie/</loc>
@@ -367,16 +379,7 @@
     <loc>https://www.hphblog.cn/2019/03/24/SSM%E9%9B%86%E6%88%90/</loc>
     <lastmod>2020-01-12</lastmod>
   </url>  <url>
-    <loc>https://www.hphblog.cn/2018/12/19/Yarn/</loc>
-    <lastmod>2020-01-12</lastmod>
-  </url>  <url>
     <loc>https://www.hphblog.cn/2019/03/19/SSM%E6%95%B4%E5%90%88/</loc>
-    <lastmod>2020-01-12</lastmod>
-  </url>  <url>
-    <loc>https://www.hphblog.cn/2019/01/06/ZooKeeper%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8CAPI/</loc>
-    <lastmod>2020-01-12</lastmod>
-  </url>  <url>
-    <loc>https://www.hphblog.cn/2019/01/05/Zookeeper%E5%85%A5%E9%97%A8/</loc>
     <lastmod>2020-01-12</lastmod>
   </url>  <url>
     <loc>https://www.hphblog.cn/2019/05/22/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B9%8BAVL%E6%A0%91/</loc>
