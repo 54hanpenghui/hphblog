@@ -16,15 +16,14 @@
 <meta property="og:site_name" content="菜鸟清风">
 <meta property="og:description" content="SpringBoot与Dubbot集成：">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://images-1253879422.cos.ap-chengdu.myqcloud.com/springboot/dubbo/dubbo.png?q-sign-algorithm=sha1&q-ak=AKIDqWx9oGfRM2TeZFnsofHfpkSwBB5mjOJ1&q-sign-time=1555206290;1555207190&q-key-time=1555206290;1555207190&q-header-list=&q-url-param-list=&q-signature=80f8f1b3029fad001910b0365676fec806d339fb">
 <meta property="og:image" content="https://s2.ax1x.com/2019/04/13/ALv6Gn.png">
 <meta property="article:published_time" content="2019-04-13T12:32:31.000Z">
-<meta property="article:modified_time" content="2020-01-12T13:08:16.619Z">
+<meta property="article:modified_time" content="2020-01-21T02:13:38.263Z">
 <meta property="article:author" content="清风笑丶">
 <meta property="article:tag" content="SpringBoot">
 <meta property="article:tag" content="Dubbo">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://images-1253879422.cos.ap-chengdu.myqcloud.com/springboot/dubbo/dubbo.png?q-sign-algorithm=sha1&q-ak=AKIDqWx9oGfRM2TeZFnsofHfpkSwBB5mjOJ1&q-sign-time=1555206290;1555207190&q-key-time=1555206290;1555207190&q-header-list=&q-url-param-list=&q-signature=80f8f1b3029fad001910b0365676fec806d339fb">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/04/13/ALv6Gn.png">
   
     <link rel="alternative" href="/https://blog.csdn.net/weixin_39084521/rss/list" title="菜鸟清风" type="application/atom+xml">
   
@@ -331,7 +330,6 @@
           
          SpringBoot与Dubbot集成：<Excerpt in index | 首页摘要><a id="more"></a>
 
-<h2 id="Dubbo简介"><a href="#Dubbo简介" class="headerlink" title="Dubbo简介"></a>Dubbo简介</h2><p><img src="https://images-1253879422.cos.ap-chengdu.myqcloud.com/springboot/dubbo/dubbo.png?q-sign-algorithm=sha1&q-ak=AKIDqWx9oGfRM2TeZFnsofHfpkSwBB5mjOJ1&q-sign-time=1555206290;1555207190&q-key-time=1555206290;1555207190&q-header-list=&q-url-param-list=&q-signature=80f8f1b3029fad001910b0365676fec806d339fb" alt=""></p>
 <p>Dubbo是阿里巴巴公司开源的一个高性能优秀的服务框架使得应用可通过高性能的 RPC 实现服务的输出和输入功能可以和Spring框架无缝集成。</p>
 <p>Dubbo是一款高性能、轻量级的开源Java RPC框架，它提供了三大核心能力：面向接口的远程方法调用，智能容错和负载均衡，以及服务自动注册和发现。</p>
 <h2 id="核心"><a href="#核心" class="headerlink" title="核心"></a>核心</h2><p>*<em>Remoting: *</em>网络通信框架，实现了sync-over-async 和request-response 消息机制.</p>
@@ -361,7 +359,7 @@
         <p><span>本文标题:</span><a  href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/">SpringBoot与Dubbo集成</a></p>
         <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
         <p><span>发布时间:</span>2019年04月13日 - 20时32分</p>
-        <p><span>最后更新:</span>2020年01月12日 - 21时08分</p>
+        <p><span>最后更新:</span>2020年01月21日 - 10时13分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/" title="SpringBoot与Dubbo集成">https://www.hphblog.cn/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/</a>
             <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2019/04/13/SpringBoot%E4%B8%8EDubbo%E9%9B%86%E6%88%90/　　作者: 清风笑丶" title=""></span>
@@ -398,7 +396,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Dubbo简介"><span class="toc-number">1.</span> <span class="toc-text">Dubbo简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#核心"><span class="toc-number">2.</span> <span class="toc-text">核心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特性"><span class="toc-number">3.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeepr"><span class="toc-number">4.</span> <span class="toc-text">Zookeepr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">4.1.</span> <span class="toc-text">安装</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#核心"><span class="toc-number">1.</span> <span class="toc-text">核心</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#特性"><span class="toc-number">2.</span> <span class="toc-text">特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zookeepr"><span class="toc-number">3.</span> <span class="toc-text">Zookeepr</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">3.1.</span> <span class="toc-text">安装</span></a></li></ol></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
