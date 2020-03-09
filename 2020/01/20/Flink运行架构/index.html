@@ -18,8 +18,12 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200120120550.png">
 <meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200120112358.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200123122411.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200123125002.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200123125025.png">
+<meta property="og:image" content="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200123131302.png">
 <meta property="article:published_time" content="2020-01-20T03:11:39.000Z">
-<meta property="article:modified_time" content="2020-01-21T01:41:27.788Z">
+<meta property="article:modified_time" content="2020-01-23T05:46:13.043Z">
 <meta property="article:author" content="清风笑丶">
 <meta property="article:tag" content="Flink">
 <meta name="twitter:card" content="summary">
@@ -371,11 +375,30 @@
 <p>Flink任务提交后，Client向HDFS上传Flink的Jar包和配置，之后向Yarn ResourceManager提交任务，ResourceManager分配Container资源并通知对应的NodeManager启动ApplicationMaster，ApplicationMaster启动后加载Flink的Jar包和配置构建环境，然后启动JobManager，之后ApplicationMaster向ResourceManager申请资源启动TaskManager，ResourceManager分配Container资源后，由ApplicationMaster通知资源所在节点的NodeManager启动TaskManager，NodeManager加载Flink的Jar包和配置构建环境并启动TaskManager，TaskManager启动后向JobManager发送心跳包，并等待JobManager向其分配任务。</p>
 <p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200120112358.png" alt=""></p>
 <p>当 Flink 集群启动后，首先会启动一个 JobManger 和一个或多个的 TaskManager。Client提交任务给JobManager，JobManager调度任务到各个TaskManager执行，TaskManager将心跳和统计信息汇报给JobManager。TaskManager之间以流的形式进行数据的传输，JobManger,TaskManager,Client均为独立的JVM进程。</p>
+<h2 id="相关组件"><a href="#相关组件" class="headerlink" title="相关组件"></a>相关组件</h2><ul>
+<li><p><strong>Client</strong> 为提交 Job 的客户端，是任务的执行的起点，负责接收用户的程序代码，然后创建数据流，数据流提交给JobManager方便下一步执行，执行后Client可以将结果返回给用户。</p>
+</li>
+<li><p><strong>JobManager</strong>负责调度Job并协调Task 做 checkpoint，在集群中至少会有一个JobManager、可以有多个<strong>JobManager</strong>并行运行并分担职责。，从 Client 处接收到 Job 和 JAR 包等资源后，会生成优化后的执行计划，并以 Task 的单元调度到各个 TaskManager 去执行。</p>
+</li>
+<li><p><strong>TaskManager</strong> 每一个worker(TaskManager)是一个JVM进程，它可能会在独立的线程上执行一个或多个subtask。在启动的时候就设置好了槽位数（Slot），每个 slot 能启动一个 Task，Task 为线程。从 JobManager 处接收需要部署的 Task，部署启动后，与自己的上游建立 Netty 连接，接收数据并处理。TaskManager并不是最细粒度的概念，每个TaskManager像一个容器一样，包含一个多或多个Slot。</p>
+</li>
+<li><p><strong>Slot</strong>是TaskManager资源粒度的划分，每个Slot都有自己独立的内存。所有Slot平均分配TaskManger的内存，比如TaskManager分配给Solt的内存为8G，两个Slot，每个Slot的内存为4G，四个Slot，每个Slot的内存为2G，Slot仅划分内存，不涉及cpu的划分。每个Slot可以运行多个task，而且一个task会以单独的线程来运行。资源slot化意味着一个subtask将不需要跟来自其他job的subtask竞争被管理的内存，取而代之的是它将拥有一定数量的内存储。这里不涉及到CPU的隔离，只涉及到内存的隔离。</p>
+<p>通过调整task slot的数量，允许用户定义subtask之间如何互相隔离。如果一个TaskManager一个slot，那将意味着每个task group运行在独立的JVM中（该JVM可能是通过一个特定的容器启动的），而一个TaskManager多个slot意味着更多的subtask可以共享同一个JVM。而在同一个JVM进程中的task将共享TCP连接（基于多路复用）和心跳消息。它们也可能共享数据集和数据结构，因此这减少了每个task的负载。</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200123122411.png" alt=""></p>
+<p><strong>注意</strong>：</p>
 <ul>
-<li><strong>Client</strong> 为提交 Job 的客户端，可以是运行在任何机器上（与 JobManager 环境连通即可），负责接收用户的程序代码，为其创建数据流，将数据流提交给JobManager。提交 Job 后，Client 可以结束进程（Streaming的任务），也可以不结束并等待结果返回。</li>
-<li><strong>JobManager</strong> 主要负责调度 Job 并协调 Task 做 checkpoint，从 Client 处接收到 Job 和 JAR 包等资源后，会生成优化后的执行计划，并以 Task 的单元调度到各个 TaskManager 去执行。</li>
-<li><strong>TaskManager</strong> 在启动的时候就设置好了槽位数（Slot），每个 slot 能启动一个 Task，Task 为线程。从 JobManager 处接收需要部署的 Task，部署启动后，与自己的上游建立 Netty 连接，接收数据并处理。</li>
+<li>TaskSlot是静态的概念，是指TaskManager具有的并发执行能力，可以通过参数taskmanager.numberOfTaskSlots进行配置，而并行度parallelism是动态概念，即TaskManager运行程序时实际使用的并发能力，可以通过参数parallelism.default进行配置。也就是说，假设一共有3个TaskManager，每一个TaskManager中的分配3个TaskSlot，也就是每个TaskManager可以接收3个task，一共9个TaskSlot，如果我们设置parallelism.default=1，即运行程序默认的并行度为1，9个TaskSlot只用了1个，有8个空闲，因此，设置合适的并行度才能提高效率。</li>
 </ul>
+</li>
+</ul>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200123125002.png" alt=""></p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200123125025.png" alt=""></p>
+<h2 id="执行图"><a href="#执行图" class="headerlink" title="执行图"></a>执行图</h2><p>Flink 中的执行图可以分成四层：<strong>StreamGraph</strong> -&gt; <strong>JobGraph</strong> -&gt; <strong>ExecutionGraph</strong> -&gt; <strong>物理执行图</strong>。</p>
+<p><strong>StreamGraph</strong>：是根据用户通过 Stream API 编写的代码生成的最初的图。用来表示程序的拓扑结构。</p>
+<p><strong>JobGraph</strong>：StreamGraph经过优化后生成了 JobGraph，提交给 JobManager 的数据结构。主要的优化为，将多个符合条件的节点 chain 在一起作为一个节点，这样可以减少数据在节点之间流动所需要的序列化/反序列化/传输消耗。</p>
+<p><strong>ExecutionGraph</strong>：JobManager 根据 JobGraph 生成ExecutionGraph。ExecutionGraph是JobGraph的并行化版本，是调度层最核心的数据结构。</p>
+<p><strong>物理执行图</strong>：JobManager 根据 ExecutionGraph 对 Job 进行调度后，在各个TaskManager 上部署 Task 后形成的图，并不是一个具体的数据结构。</p>
+<p><img src="https://hphimages-1253879422.cos.ap-beijing.myqcloud.com/%E5%A4%A7%E6%95%B0%E6%8D%AE/Flink/20200123131302.png" alt=""></p>
 
       
     </div>
@@ -387,7 +410,7 @@
         <p><span>本文标题:</span><a  href="/2020/01/20/Flink%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84/">Flink运行架构</a></p>
         <p><span>文章作者:</span><a  href="/" title="访问 清风笑丶 的个人博客">清风笑丶</a></p>
         <p><span>发布时间:</span>2020年01月20日 - 11时11分</p>
-        <p><span>最后更新:</span>2020年01月21日 - 09时41分</p>
+        <p><span>最后更新:</span>2020年01月23日 - 13时46分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2020/01/20/Flink%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84/" title="Flink运行架构">https://www.hphblog.cn/2020/01/20/Flink%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84/</a>
             <span class="copy-path" data-clipboard-text="原文: https://www.hphblog.cn/2020/01/20/Flink%E8%BF%90%E8%A1%8C%E6%9E%B6%E6%9E%84/　　作者: 清风笑丶" title=""></span>
@@ -415,7 +438,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#组件"><span class="toc-number">1.</span> <span class="toc-text">组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JobManager"><span class="toc-number">1.1.</span> <span class="toc-text">JobManager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TaskManager"><span class="toc-number">1.2.</span> <span class="toc-text">TaskManager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResourceManager"><span class="toc-number">1.3.</span> <span class="toc-text">ResourceManager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dispatcher"><span class="toc-number">1.4.</span> <span class="toc-text">Dispatcher</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YARN-提交"><span class="toc-number">2.</span> <span class="toc-text">YARN 提交</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#组件"><span class="toc-number">1.</span> <span class="toc-text">组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JobManager"><span class="toc-number">1.1.</span> <span class="toc-text">JobManager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TaskManager"><span class="toc-number">1.2.</span> <span class="toc-text">TaskManager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ResourceManager"><span class="toc-number">1.3.</span> <span class="toc-text">ResourceManager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Dispatcher"><span class="toc-number">1.4.</span> <span class="toc-text">Dispatcher</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#YARN-提交"><span class="toc-number">2.</span> <span class="toc-text">YARN 提交</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#相关组件"><span class="toc-number">3.</span> <span class="toc-text">相关组件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#执行图"><span class="toc-number">4.</span> <span class="toc-text">执行图</span></a></li></ol>
 </div>
 <style>
     .left-col .switch-btn {
